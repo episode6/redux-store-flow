@@ -11,6 +11,5 @@ dependencyResolutionManagement {
 rootProject.name = "redux-store-flow"
 
 include(
-  ":api",
   ":core",
 )

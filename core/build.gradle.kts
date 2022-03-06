@@ -8,7 +8,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        api(project(":api"))
+        api(libs.kotlinx.coroutines.core)
       }
     }
     val commonTest by getting {
