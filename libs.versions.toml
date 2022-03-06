@@ -1,6 +1,7 @@
 [versions]
 gradle-core = "7.1"
 kotlin-core = "1.5.32"
+kotlinx-coroutines = "1.5.2"
 dokka-core = "1.5.31"
 
 # test utils
@@ -10,6 +11,8 @@ mockk-core = "1.12.1"
 [libraries]
 gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
 gradle-plugin-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-core" }
+
+kotlinx-coroutines-core = { module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # test utils
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk-core" }
