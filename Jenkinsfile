@@ -15,7 +15,13 @@ node {
         '')
   }
 
-  gradleRunner.buildAndTest()
+    stage('build') {
+    runGradle("build", "clean assemble", false)
+  }
+
+  stage('test') {
+    runGradle("test", "check", false) // KMP doesnt output xmls
+  }
 
   stage('docgen') {
     gradleRunner.runGradle("docgen", "dokkaHtml", false)
