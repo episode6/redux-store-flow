@@ -15,12 +15,17 @@ node {
         '')
   }
 
-    stage('build') {
-    runGradle("build", "clean assemble", false)
+  
+  stage('clean') {
+    gradleRunner.runGradle("clean", "clean", false)
+  }
+
+  stage('build') {
+    gradleRunner.runGradle("build", "assemble", false)
   }
 
   stage('test') {
-    runGradle("test", "check", false) // KMP doesnt output xmls
+    gradleRunner.runGradle("test", "check", false) // KMP doesnt output xmls
   }
 
   stage('docgen') {
