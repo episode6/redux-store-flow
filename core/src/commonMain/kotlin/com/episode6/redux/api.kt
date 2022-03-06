@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
  * Represents a redux store backed by a [StateFlow]
  */
 interface StoreFlow<T : Any> : StateFlow<T> {
-  val scope: CoroutineScope
   val initialValue: T
   val dispatch: Dispatch
+  val scope: CoroutineScope
 }
 
 /**
