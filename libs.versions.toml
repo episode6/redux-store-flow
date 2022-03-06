@@ -1,0 +1,24 @@
+[versions]
+gradle-core = "7.1"
+kotlin-core = "1.5.32"
+dokka-core = "1.5.31"
+
+# test utils
+assertk-core = "0.25"
+mockk-core = "1.12.1"
+
+[libraries]
+gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
+gradle-plugin-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-core" }
+
+# test utils
+assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk-core" }
+assertk-jvm = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk-core" }
+mockk-core = { module = "io.mockk:mockk", version.ref = "mockk-core" }
+
+
+[bundles]
+gradle-plugins = [
+    "gradle-plugin-kotlin",
+    "gradle-plugin-dokka",
+]
