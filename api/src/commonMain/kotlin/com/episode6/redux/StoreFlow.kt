@@ -9,10 +9,27 @@ import kotlinx.coroutines.flow.StateFlow
 interface StoreFlow<T : Any> : StateFlow<T> {
   val scope: CoroutineScope
   val initialValue: T
-  fun dispatch(action: Action)
+  val dispatch: Dispatch
 }
 
 /**
  * Identifies a redux action that can be dispatched/interpreted by a [StoreFlow]
  */
 interface Action
+
+/**
+ * Function that dispatches an action to a [StoreFlow]
+ */
+typealias Dispatch = (Action) -> Unit
+
+/**
+ * Reduces a state + action to a new state
+ */
+typealias Reducer<T> = T.(Action) -> T
+
+/**
+ * Gets the chance to interfere with a [StoreFlow]'s dispatch of actions
+ */
+fun interface Middleware<T : Any> {
+  fun CoroutineScope.interfere(store: StoreFlow<T>, next: Dispatch): Dispatch
+}
