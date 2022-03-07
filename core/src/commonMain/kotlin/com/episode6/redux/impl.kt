@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Suppress("FunctionName") fun <State : Any?> StoreFlow(
   initialValue: State,
   reducer: Reducer<State>,
-  middlewares: List<Middleware<State>>,
+  middlewares: List<Middleware<State>> = emptyList(),
   scope: CoroutineScope = MainScope() + Dispatchers.Default,
 ): StoreFlow<State> = StoreFlowImpl(initialValue, reducer, middlewares, scope)
 

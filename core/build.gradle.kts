@@ -13,6 +13,8 @@ kotlin {
     }
     val commonTest by getting {
       dependencies {
+        implementation(libs.kotlinx.coroutines.core)
+        implementation(libs.kotlinx.coroutines.test)
         implementation(libs.mockk.core)
         implementation(libs.assertk.core)
       }

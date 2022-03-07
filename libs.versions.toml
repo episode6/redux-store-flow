@@ -13,6 +13,7 @@ gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 gradle-plugin-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-core" }
 
 kotlinx-coroutines-core = { module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module="org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
 # test utils
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk-core" }
