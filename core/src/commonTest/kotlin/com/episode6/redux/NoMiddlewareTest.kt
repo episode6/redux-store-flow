@@ -11,7 +11,7 @@ class NoMiddlewareTest {
   @Test fun testValue_default() = runTest {
     val store = stopLightStore()
 
-    assertThat(store.value).hasOnlyRedLightOn()
+    assertThat(store.value).hasLights(red = true)
   }
 
   @Test fun testValue_switchLight() = runTest {
@@ -20,7 +20,7 @@ class NoMiddlewareTest {
     store.dispatch(SetGreenLightOn(true))
     store.dispatch(SetRedLightOn(false))
 
-    assertThat(store.value).hasOnlyGreenLightOn()
+    assertThat(store.value).hasLights(green = true)
   }
 }
 

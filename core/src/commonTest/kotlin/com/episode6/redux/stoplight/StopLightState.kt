@@ -2,8 +2,7 @@ package com.episode6.redux.stoplight
 
 import assertk.Assert
 import assertk.all
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
+import assertk.assertions.isEqualTo
 import assertk.assertions.prop
 import com.episode6.redux.Action
 import com.episode6.redux.Middleware
@@ -31,27 +30,12 @@ fun CoroutineScope.createStopLightStore(middlewares: List<Middleware<StopLightSt
     scope = this
   )
 
-fun Assert<StopLightState>.hasGreenLightOn() = prop(StopLightState::greenLight).isTrue()
-fun Assert<StopLightState>.hasGreenLightOff() = prop(StopLightState::greenLight).isFalse()
-fun Assert<StopLightState>.hasYellowLightOn() = prop(StopLightState::yellowLight).isTrue()
-fun Assert<StopLightState>.hasYellowLightOff() = prop(StopLightState::yellowLight).isFalse()
-fun Assert<StopLightState>.hasRedLightOn() = prop(StopLightState::redLight).isTrue()
-fun Assert<StopLightState>.hasRedLightOff() = prop(StopLightState::redLight).isFalse()
-
-fun Assert<StopLightState>.hasOnlyGreenLightOn() = all {
-  hasGreenLightOn()
-  hasYellowLightOff()
-  hasRedLightOff()
-}
-
-fun Assert<StopLightState>.hasOnlyYellowLightOn() = all {
-  hasGreenLightOff()
-  hasYellowLightOn()
-  hasRedLightOff()
-}
-
-fun Assert<StopLightState>.hasOnlyRedLightOn() = all {
-  hasGreenLightOff()
-  hasYellowLightOff()
-  hasRedLightOn()
+fun Assert<StopLightState>.hasLights(
+  green: Boolean = false,
+  yellow: Boolean = false,
+  red: Boolean = false,
+) = all {
+  prop(StopLightState::greenLight).isEqualTo(green)
+  prop(StopLightState::yellowLight).isEqualTo(yellow)
+  prop(StopLightState::redLight).isEqualTo(red)
 }
