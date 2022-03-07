@@ -30,6 +30,7 @@ fun CoroutineScope.createStopLightStore(middlewares: List<Middleware<StopLightSt
     scope = this
   )
 
+fun Assert<StopLightState>.hasDefaultLights() = hasLights(red = true)
 fun Assert<StopLightState>.hasLights(
   green: Boolean = false,
   yellow: Boolean = false,

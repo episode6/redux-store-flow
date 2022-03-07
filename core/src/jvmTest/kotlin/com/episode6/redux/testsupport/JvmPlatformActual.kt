@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
-actual fun runTest(testBody: suspend CoroutineScope.() -> Unit) = runBlockingTest {
-  val job = launch(block = testBody)
+actual fun runTest(testBody: suspend FlowTestScope.() -> Unit) = runBlockingTest {
+  val job = launch { flowTestScope().testBody() }
   job.cancelAndJoin()
 }
