@@ -15,6 +15,15 @@ import kotlinx.coroutines.flow.StateFlow
   scope: CoroutineScope = MainScope() + Dispatchers.Default,
 ): StoreFlow<State> = StoreFlowImpl(initialValue, reducer, middlewares, scope)
 
+/**
+ * Creates a new [StoreFlow], a redux store backed by a [StateFlow]
+ */
+@Suppress("FunctionName") fun <State : Any?> CoroutineScope.StoreFlow(
+  initialValue: State,
+  reducer: Reducer<State>,
+  vararg middlewares: Middleware<State>
+): StoreFlow<State> = StoreFlow(initialValue, reducer, middlewares.toList(), this)
+
 private class StoreFlowImpl<T : Any?>(
   override val initialValue: T,
   reducer: Reducer<T>,

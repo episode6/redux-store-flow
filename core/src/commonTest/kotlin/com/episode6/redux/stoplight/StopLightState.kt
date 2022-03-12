@@ -22,12 +22,11 @@ data class SetRedLightOn(val on: Boolean) : ReduceStopLight({ copy(redLight = on
 
 fun StopLightState.reduce(action: Action): StopLightState = (action as? ReduceStopLight)?.reducer?.invoke(this) ?: this
 
-fun CoroutineScope.createStopLightStore(middlewares: List<Middleware<StopLightState>> = emptyList()): StoreFlow<StopLightState> =
+fun CoroutineScope.createStopLightStore(vararg middlewares: Middleware<StopLightState>): StoreFlow<StopLightState> =
   StoreFlow(
     initialValue = StopLightState(),
     reducer = StopLightState::reduce,
     middlewares = middlewares,
-    scope = this
   )
 
 fun Assert<StopLightState>.hasDefaultLights() = hasLights(red = true)

@@ -1,10 +1,8 @@
 package com.episode6.redux
 
-import assertk.all
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.prop
 import com.episode6.redux.stoplight.*
 import com.episode6.redux.testsupport.runTest
 import io.mockk.*
@@ -12,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
 
 private typealias StateAndAction = Pair<StopLightState, Action>
+
 private interface CaptureState {
   fun capture(stateAndAction: StateAndAction)
 }
@@ -33,7 +32,7 @@ class BeforeAndAfterMiddlewareTest {
     }
   }
 
-  private fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = createStopLightStore(listOf(middleware))
+  private fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = createStopLightStore(middleware)
 
   @Test fun testProcessAction() = runTest {
     val store = stopLightStore()

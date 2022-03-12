@@ -16,10 +16,10 @@ class MockMiddlewareTest {
   private val dispatch2: Dispatch = mockk(relaxed = true)
 
   private fun CoroutineScope.wellBehavedStore(): StoreFlow<StopLightState> =
-    createStopLightStore(listOf(WellBehavedMiddleware(dispatch1), WellBehavedMiddleware(dispatch2)))
+    createStopLightStore(WellBehavedMiddleware(dispatch1), WellBehavedMiddleware(dispatch2))
 
   private fun CoroutineScope.badlyBehavedStore(): StoreFlow<StopLightState> =
-    createStopLightStore(listOf(BadlyBehavedMiddleware(dispatch1), BadlyBehavedMiddleware(dispatch2)))
+    createStopLightStore(BadlyBehavedMiddleware(dispatch1), BadlyBehavedMiddleware(dispatch2))
 
   @Test fun testWellBehaved() = runTest {
     val store = wellBehavedStore()
