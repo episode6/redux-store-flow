@@ -50,7 +50,7 @@ private class StoreFlowImpl<T : Any?>(
     }
   }
 
-  override val dispatch: Dispatch = {
-    scope.launch { actionChannel.send(it) }
+  override fun dispatch(action: Action) {
+    scope.launch { actionChannel.send(action) }
   }
 }

@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
  */
 interface StoreFlow<State : Any?> : StateFlow<State> {
   val initialValue: State
-  val dispatch: Dispatch
   val scope: CoroutineScope
+  fun dispatch(action: Action)
 }
 
 /**
