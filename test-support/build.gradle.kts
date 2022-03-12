@@ -10,6 +10,8 @@ kotlin {
       dependencies {
         api(libs.kotlinx.coroutines.core)
         api(libs.kotlinx.coroutines.test)
+        api(libs.assertk.core)
+        implementation(project(":core"))
       }
     }
     val commonTest by getting {

@@ -1,11 +1,11 @@
 package com.episode6.redux
 
 import assertk.assertThat
-import com.episode6.redux.stoplight.SetRedLightOn
-import com.episode6.redux.stoplight.StopLightState
-import com.episode6.redux.stoplight.createStopLightStore
-import com.episode6.redux.stoplight.hasLights
 import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.stoplight.SetRedLightOn
+import com.episode6.redux.testsupport.stoplight.StopLightState
+import com.episode6.redux.testsupport.stoplight.createStopLightStore
+import com.episode6.redux.testsupport.stoplight.hasLights
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import kotlinx.coroutines.CoroutineScope

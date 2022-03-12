@@ -3,8 +3,8 @@ package com.episode6.redux
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.episode6.redux.stoplight.*
 import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.stoplight.*
 import io.mockk.*
 import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test

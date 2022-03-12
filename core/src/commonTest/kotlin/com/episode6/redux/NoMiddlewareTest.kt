@@ -4,9 +4,9 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.index
-import com.episode6.redux.stoplight.*
 import com.episode6.redux.testsupport.runFlowTest
 import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
 

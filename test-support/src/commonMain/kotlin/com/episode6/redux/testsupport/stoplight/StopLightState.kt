@@ -1,4 +1,4 @@
-package com.episode6.redux.stoplight
+package com.episode6.redux.testsupport.stoplight
 
 import assertk.Assert
 import assertk.all
