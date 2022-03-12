@@ -9,7 +9,7 @@ fun runFlowTest(testBody: suspend FlowTestScope.() -> Unit) = runTest { FlowTest
 
 interface FlowTestScope : CoroutineScope {
   fun <T> Flow<T>.testCollector(): FlowValueCollector<T> = FlowValueCollectorImpl(this, this@FlowTestScope)
-  fun <T> Flow<T>.test(testBody: FlowValueCollector<T>.() -> Unit) = testCollector().testBody()
+  suspend fun <T> Flow<T>.test(testBody: suspend FlowValueCollector<T>.() -> Unit) = testCollector().testBody()
 }
 
 interface FlowValueCollector<T> {
