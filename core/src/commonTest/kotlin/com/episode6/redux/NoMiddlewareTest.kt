@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.index
 import com.episode6.redux.stoplight.*
+import com.episode6.redux.testsupport.runFlowTest
 import com.episode6.redux.testsupport.runTest
 import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
@@ -26,7 +27,7 @@ class NoMiddlewareTest {
     assertThat(store.value).hasLights(green = true)
   }
 
-  @Test fun testFlow_default() = runTest {
+  @Test fun testFlow_default() = runFlowTest {
     val store = stopLightStore()
 
     store.test {
@@ -37,7 +38,7 @@ class NoMiddlewareTest {
     }
   }
 
-  @Test fun testFlow_switchLight() = runTest {
+  @Test fun testFlow_switchLight() = runFlowTest {
     val store = stopLightStore()
 
     store.test {

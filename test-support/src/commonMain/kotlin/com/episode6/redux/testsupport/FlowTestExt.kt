@@ -13,7 +13,8 @@ interface FlowValueCollector<T> {
   val values: List<T>
 }
 
-fun CoroutineScope.flowTestScope(): FlowTestScope = FlowTestScopeImpl(this)
+fun runFlowTest(testBody: suspend FlowTestScope.() -> Unit) = runTest { FlowTestScopeImpl(this).testBody() }
+
 private class FlowTestScopeImpl(private val delegate: CoroutineScope) : FlowTestScope, CoroutineScope by delegate {
   override fun <T> Flow<T>.test(testBody: FlowValueCollector<T>.() -> Unit) {
     val collector = FlowValueCollectorImpl<T>()
