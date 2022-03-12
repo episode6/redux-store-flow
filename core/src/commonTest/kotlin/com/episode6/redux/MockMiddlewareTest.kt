@@ -1,8 +1,10 @@
 package com.episode6.redux
 
 import assertk.assertThat
-import com.episode6.redux.stoplight.*
-import com.episode6.redux.testsupport.runFlowTest
+import com.episode6.redux.stoplight.SetRedLightOn
+import com.episode6.redux.stoplight.StopLightState
+import com.episode6.redux.stoplight.createStopLightStore
+import com.episode6.redux.stoplight.hasLights
 import com.episode6.redux.testsupport.runTest
 import io.mockk.mockk
 import io.mockk.verifyOrder
