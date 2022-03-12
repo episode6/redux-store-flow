@@ -9,7 +9,10 @@ import kotlinx.coroutines.launch
 fun runFlowTest(testBody: suspend FlowTestScope.() -> Unit) = runTest { FlowTestScopeImpl(this).testBody() }
 
 interface FlowTestScope : CoroutineScope {
-  fun <T> Flow<T>.testCollector(start: Boolean = true): FlowValueCollector<T> = FlowValueCollectorImpl(this, this@FlowTestScope).apply { if (start) startCollecting() }
+  fun <T> Flow<T>.testCollector(start: Boolean = true): FlowValueCollector<T> =
+    FlowValueCollectorImpl(this, this@FlowTestScope)
+      .apply { if (start) startCollecting() }
+
   suspend fun <T> Flow<T>.test(testBody: suspend FlowValueCollector<T>.() -> Unit) = testCollector(start = true).apply {
     testBody()
     stopCollecting()
