@@ -3,8 +3,12 @@ package com.episode6.redux.testsupport
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEmpty
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onSubscription
 import kotlin.test.Test
 
 class FlowTestTest {
@@ -57,5 +61,28 @@ class FlowTestTest {
       flow.emit(3)
       assertThat(values).containsExactly(1, 2, 3)
     }
+  }
+
+  @Test fun testFlowCollectorStop() = runFlowTest {
+    val flow = MutableSharedFlow<Int>()
+    var hasSubscribed = false
+    var isComplete = false
+    val collector = flow
+      .onSubscription { hasSubscribed = true }
+      .onCompletion { isComplete = true }
+      .testCollector(start = false)
+
+    assertThat(hasSubscribed).isFalse()
+    assertThat(isComplete).isFalse()
+
+    collector.startCollecting()
+
+    assertThat(hasSubscribed).isTrue()
+    assertThat(isComplete).isFalse()
+
+    collector.stopCollecting()
+
+    assertThat(hasSubscribed).isTrue()
+    assertThat(isComplete).isTrue()
   }
 }
