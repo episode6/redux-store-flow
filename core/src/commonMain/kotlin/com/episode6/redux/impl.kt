@@ -29,15 +29,15 @@ private class StoreFlowImpl<T : Any?>(
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
   override val scope: CoroutineScope,
-  private val delegate: MutableStateFlow<T> = MutableStateFlow(initialValue)
-) : StoreFlow<T>, StateFlow<T> by delegate {
+  private val state: MutableStateFlow<T> = MutableStateFlow(initialValue)
+) : StoreFlow<T>, StateFlow<T> by state {
 
   private val actionChannel: Channel<Action> = Channel()
 
   init {
     scope.launch {
       val reduce: Dispatch = middlewares.foldRight(
-        initial = { action -> delegate.value = delegate.value.reducer(action) },
+        initial = { action -> state.value = state.value.reducer(action) },
         operation = { middleware, next -> with(middleware) { interfere(this@StoreFlowImpl, next) } }
       )
       try {
