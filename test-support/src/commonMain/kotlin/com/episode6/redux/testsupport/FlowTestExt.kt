@@ -33,7 +33,7 @@ private class FlowValueCollectorImpl<T>(
 
   override val values: List<T> get() = _values
   override fun startCollecting() {
-    stopCollecting()
+    if (job != null) throw AssertionError("Already started collecting from flow: $flow")
     job = scope.launch { flow.collect { _values.add(it) } }
   }
 

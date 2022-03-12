@@ -1,10 +1,8 @@
 package com.episode6.redux.testsupport
 
+import assertk.all
 import assertk.assertThat
-import assertk.assertions.containsExactly
-import assertk.assertions.isEmpty
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
+import assertk.assertions.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
@@ -84,5 +82,14 @@ class FlowTestTest {
 
     assertThat(hasSubscribed).isTrue()
     assertThat(isComplete).isTrue()
+  }
+
+  @Test fun testFlowCollectionFail() = runFlowTest {
+    val flow = MutableSharedFlow<Int>()
+
+    val collector = flow.testCollector(start = true)
+
+    assertThat { collector.startCollecting() }
+      .isFailure().hasClass(AssertionError::class)
   }
 }
