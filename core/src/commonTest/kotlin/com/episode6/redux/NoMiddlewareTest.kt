@@ -12,6 +12,8 @@ import kotlin.test.Test
 
 class NoMiddlewareTest {
 
+  private fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = createStopLightStore()
+
   @Test fun testValue_default() = runTest {
     val store = stopLightStore()
 
@@ -54,9 +56,3 @@ class NoMiddlewareTest {
     }
   }
 }
-
-fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = StoreFlow(
-  initialValue = StopLightState(),
-  reducer = StopLightState::reduce,
-  scope = this
-)
