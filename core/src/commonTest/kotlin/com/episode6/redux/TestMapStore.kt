@@ -8,9 +8,7 @@ import assertk.assertions.index
 import assertk.assertions.isTrue
 import com.episode6.redux.testsupport.runFlowTest
 import com.episode6.redux.testsupport.runTest
-import com.episode6.redux.testsupport.stoplight.SetRedLightOn
-import com.episode6.redux.testsupport.stoplight.StopLightState
-import com.episode6.redux.testsupport.stoplight.createStopLightStore
+import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
 
@@ -32,12 +30,34 @@ class TestMapStore {
   }
 
   @Test fun testDispatchValueChanged() = runFlowTest {
-    val store: StoreFlow<Boolean> = stopLightStore().mapStore { it.redLight }
+    val backingStore = stopLightStore()
+    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
       store.dispatch(SetRedLightOn(false))
+      store.dispatch(SetRedLightOn(false)) // dupes all ignored
+      backingStore.dispatch(SetRedLightOn(false))
 
       assertThat(values).containsExactly(true, false)
+    }
+  }
+
+  @Test fun testDispatchValueChanged_testCollector() = runFlowTest {
+    val backingStore = stopLightStore()
+    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
+    val backingStoreCollector = backingStore.testCollector()
+    val storeCollector = store.testCollector()
+
+    store.dispatch(SetRedLightOn(false))
+    store.dispatch(SetRedLightOn(false)) // dupes all ignored
+    backingStore.dispatch(SetRedLightOn(false))
+
+    // verify both stores have same values and same number of values
+    assertThat(storeCollector.values).containsExactly(true, false)
+    assertThat(backingStoreCollector.values).all {
+      hasSize(2)
+      index(0).hasDefaultLights()
+      index(1).hasLights()
     }
   }
 }
