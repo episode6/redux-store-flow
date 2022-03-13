@@ -32,10 +32,13 @@ class TestMapStore {
   }
 
   @Test fun testDispatchValueChanged() = runFlowTest {
-    val store: StoreFlow<Boolean> = stopLightStore().mapStore { it.redLight }
+    val backingStore = stopLightStore()
+    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
       store.dispatch(SetRedLightOn(false))
+      store.dispatch(SetRedLightOn(false)) // dupes all ignored
+      backingStore.dispatch(SetRedLightOn(false))
 
       assertThat(values).containsExactly(true, false)
     }
