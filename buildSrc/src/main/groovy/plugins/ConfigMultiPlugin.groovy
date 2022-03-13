@@ -15,6 +15,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
           compilations.all {
             kotlinOptions {
               jvmTarget = Config.Jvm.name
+              freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
             }
           }
           java {
