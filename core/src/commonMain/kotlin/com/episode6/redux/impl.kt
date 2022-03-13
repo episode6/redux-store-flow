@@ -1,34 +1,32 @@
 package com.episode6.redux
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 /**
  * Creates a new [StoreFlow], a redux store backed by a [StateFlow]
  */
 @Suppress("FunctionName") fun <State : Any?> StoreFlow(
+  scope: CoroutineScope,
   initialValue: State,
   reducer: Reducer<State>,
   middlewares: List<Middleware<State>> = emptyList(),
-  scope: CoroutineScope = MainScope() + Dispatchers.Default,
-): StoreFlow<State> = StoreFlowImpl(initialValue, reducer, middlewares, scope)
-
-/**
- * Creates a new [StoreFlow], a redux store backed by a [StateFlow]
- */
-@Suppress("FunctionName") fun <State : Any?> CoroutineScope.StoreFlow(
-  initialValue: State,
-  reducer: Reducer<State>,
-  vararg middlewares: Middleware<State>
-): StoreFlow<State> = StoreFlow(initialValue, reducer, middlewares.toList(), this)
+): StoreFlow<State> = StoreFlowImpl(
+  scope = scope,
+  initialValue = initialValue,
+  reducer = reducer,
+  middlewares = middlewares,
+)
 
 private class StoreFlowImpl<T : Any?>(
+  override val scope: CoroutineScope,
   override val initialValue: T,
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
-  override val scope: CoroutineScope,
+
   private val state: MutableStateFlow<T> = MutableStateFlow(initialValue)
 ) : StoreFlow<T>, StateFlow<T> by state {
 

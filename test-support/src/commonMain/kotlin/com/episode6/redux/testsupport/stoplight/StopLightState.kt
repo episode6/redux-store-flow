@@ -24,9 +24,10 @@ fun StopLightState.reduce(action: Action): StopLightState = (action as? ReduceSt
 
 fun CoroutineScope.createStopLightStore(vararg middlewares: Middleware<StopLightState>): StoreFlow<StopLightState> =
   StoreFlow(
+    scope = this,
     initialValue = StopLightState(),
     reducer = StopLightState::reduce,
-    middlewares = middlewares,
+    middlewares = middlewares.toList(),
   )
 
 fun Assert<StopLightState>.hasDefaultLights() = hasLights(red = true)
