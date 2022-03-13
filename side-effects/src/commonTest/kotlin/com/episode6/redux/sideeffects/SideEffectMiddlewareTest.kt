@@ -9,6 +9,7 @@ import assertk.assertions.index
 import com.episode6.redux.Action
 import com.episode6.redux.StoreFlow
 import com.episode6.redux.testsupport.TimingController
+import com.episode6.redux.testsupport.lastElement
 import com.episode6.redux.testsupport.runFlowTest
 import com.episode6.redux.testsupport.runTest
 import com.episode6.redux.testsupport.stoplight.*
@@ -57,7 +58,27 @@ class SideEffectMiddlewareTest {
 
       assertThat(values).all {
         hasSize(3)
-        index(2).hasLights(green = true)
+        lastElement().hasLights(green = true)
+      }
+    }
+  }
+
+  @Test fun testInitWithTime_flow() = runFlowTest {
+    val store = stopLightStore()
+
+    store.test {
+      store.dispatch(SwitchToGreen)
+      timing.advanceBy(GREEN_TO_YELLOW_DELAY)
+
+      assertThat(values).all {
+        hasSize(5)
+        lastElement().hasLights(yellow = true)
+      }
+
+      timing.advanceBy(YELLOW_TO_RED_DELAY)
+      assertThat(values).all {
+        hasSize(7)
+        lastElement().hasLights(red = true)
       }
     }
   }
