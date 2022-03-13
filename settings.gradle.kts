@@ -12,5 +12,6 @@ rootProject.name = "redux-store-flow"
 
 include(
   ":core",
+  ":side-effects",
   ":test-support",
 )
