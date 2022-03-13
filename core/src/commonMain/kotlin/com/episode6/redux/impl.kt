@@ -26,7 +26,6 @@ private class StoreFlowImpl<T : Any?>(
   override val initialValue: T,
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
-
   private val state: MutableStateFlow<T> = MutableStateFlow(initialValue)
 ) : StoreFlow<T>, StateFlow<T> by state {
 
