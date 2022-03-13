@@ -22,19 +22,15 @@
 
 ### Release
 
-1. Wait for green builds on release branch
-2. Fetch tags: `git fetch origin --tags`
-3. Create new release tag: `git tag -a v<VERSION>`
-4. Push tags: `git push --tags`
-5. Build tag on jenkins and deploy result on sonatype
+1. Create new release with new tag on github (pointing to release branch)
+2. Build new tag on jenkins (will deploy)
+3. Release/Close new repo on [sonatype](https://oss.sonatype.org/)
 
 ### Sync Docs PR
 
-1. **IMPORTANT** POINT GITHUB PAGES TO NEW BRANCH NOW
-    - pages will not re-publish until we push to the branch again
+1. Point github pages to the new release branch
 2. Run `./gradlew syncDocs`
-3. If there are no changes in docs, make a non-visible change to a README
-    - we need a commit to trigger github pages generation
+3. If there are no changes in docs, you can skip this
 4. Point PR to new release branch: `[DOCS] Sync v<version>`
 
 ### Hotfixes
