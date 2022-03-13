@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 )
 
 private class StoreFlowImpl<T : Any?>(
-  override val scope: CoroutineScope,
+  private val scope: CoroutineScope,
   override val initialValue: T,
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
