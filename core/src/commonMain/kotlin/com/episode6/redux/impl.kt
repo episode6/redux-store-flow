@@ -2,6 +2,7 @@ package com.episode6.redux
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -22,14 +23,14 @@ import kotlinx.coroutines.launch
 )
 
 private class StoreFlowImpl<T : Any?>(
-  private val scope: CoroutineScope,
+  scope: CoroutineScope,
   override val initialState: T,
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
   private val stateFlow: MutableStateFlow<T> = MutableStateFlow(initialState)
 ) : StoreFlow<T>, Flow<T> by stateFlow {
 
-  private val actionChannel: Channel<Action> = Channel()
+  private val actionChannel: Channel<Action> = Channel(capacity = UNLIMITED)
 
   init {
     scope.launch {
@@ -50,6 +51,6 @@ private class StoreFlowImpl<T : Any?>(
   override val state: T get() = stateFlow.value
 
   override fun dispatch(action: Action) {
-    scope.launch { actionChannel.send(action) }
+    actionChannel.trySend(action)
   }
 }
