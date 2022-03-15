@@ -1,13 +1,14 @@
 package com.episode6.redux
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Represents a redux store backed by a [StateFlow]
+ * Represents a redux store backed by a [kotlinx.coroutines.flow.StateFlow]
  */
-interface StoreFlow<State : Any?> : StateFlow<State> {
-  val initialValue: State
+interface StoreFlow<State : Any?> : Flow<State> {
+  val initialState: State
+  val state: State
   fun dispatch(action: Action)
 }
 

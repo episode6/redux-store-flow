@@ -2,12 +2,12 @@ package com.episode6.redux
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Creates a new [StoreFlow], a redux store backed by a [StateFlow]
+ * Creates a new [StoreFlow], a redux store backed by a [kotlinx.coroutines.flow.StateFlow]
  */
 @Suppress("FunctionName") fun <State : Any?> StoreFlow(
   scope: CoroutineScope,
@@ -16,25 +16,25 @@ import kotlinx.coroutines.launch
   middlewares: List<Middleware<State>> = emptyList(),
 ): StoreFlow<State> = StoreFlowImpl(
   scope = scope,
-  initialValue = initialValue,
+  initialState = initialValue,
   reducer = reducer,
   middlewares = middlewares,
 )
 
 private class StoreFlowImpl<T : Any?>(
   private val scope: CoroutineScope,
-  override val initialValue: T,
+  override val initialState: T,
   reducer: Reducer<T>,
   middlewares: List<Middleware<T>>,
-  private val state: MutableStateFlow<T> = MutableStateFlow(initialValue)
-) : StoreFlow<T>, StateFlow<T> by state {
+  private val stateFlow: MutableStateFlow<T> = MutableStateFlow(initialState)
+) : StoreFlow<T>, Flow<T> by stateFlow {
 
   private val actionChannel: Channel<Action> = Channel()
 
   init {
     scope.launch {
       val reduce: Dispatch = middlewares.foldRight(
-        initial = { action -> state.value = state.value.reducer(action) },
+        initial = { action -> stateFlow.value = stateFlow.value.reducer(action) },
         operation = { middleware, next -> with(middleware) { interfere(this@StoreFlowImpl, next) } }
       )
       try {
@@ -46,6 +46,8 @@ private class StoreFlowImpl<T : Any?>(
       }
     }
   }
+
+  override val state: T get() = stateFlow.value
 
   override fun dispatch(action: Action) {
     scope.launch { actionChannel.send(action) }

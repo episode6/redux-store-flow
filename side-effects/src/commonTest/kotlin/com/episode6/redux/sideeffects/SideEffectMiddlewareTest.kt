@@ -28,7 +28,7 @@ class SideEffectMiddlewareTest {
   @Test fun testInitialValue() = runTest {
     val store = stopLightStore()
 
-    assertThat(store.value).hasDefaultLights()
+    assertThat(store.state).hasDefaultLights()
   }
 
   @Test fun testInitialValue_flow() = runFlowTest {
@@ -47,7 +47,7 @@ class SideEffectMiddlewareTest {
 
     store.dispatch(SwitchToGreen)
 
-    assertThat(store.value).hasLights(green = true)
+    assertThat(store.state).hasLights(green = true)
   }
 
   @Test fun testInitWithoutTime_flow() = runFlowTest {

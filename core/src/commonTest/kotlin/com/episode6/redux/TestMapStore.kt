@@ -18,7 +18,7 @@ class TestMapStore {
   @Test fun testMapValueRead() = runTest {
     val store: StoreFlow<Boolean> = stopLightStore().mapStore { it.redLight }
 
-    assertThat(store.value).isTrue()
+    assertThat(store.state).isTrue()
   }
 
   @Test fun testMapValueRead_flow() = runFlowTest {

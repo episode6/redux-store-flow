@@ -86,9 +86,9 @@ private class TestMiddleware : Middleware<StopLightState> {
 
   override fun CoroutineScope.interfere(store: StoreFlow<StopLightState>, next: Dispatch): Dispatch {
     return {
-      before.captureState(StateAndAction(store.value, it))
+      before.captureState(StateAndAction(store.state, it))
       next(it)
-      after.captureState(StateAndAction(store.value, it))
+      after.captureState(StateAndAction(store.state, it))
     }
   }
 }
