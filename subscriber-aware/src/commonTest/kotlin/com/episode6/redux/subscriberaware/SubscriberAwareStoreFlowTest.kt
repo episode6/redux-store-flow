@@ -41,6 +41,7 @@ class SubscriberAwareStoreFlowTest {
 
     store.test {
       assertThat(actions).containsExactly(SubscriberStatusChanged(subscribersActive = true))
+      assertThat(values).isNotEmpty()
     }
   }
 
