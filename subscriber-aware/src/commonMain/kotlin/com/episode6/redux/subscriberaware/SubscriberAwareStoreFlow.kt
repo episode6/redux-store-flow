@@ -27,9 +27,9 @@ data class SubscriberStatusChanged(val subscribersActive: Boolean = false) : Act
   val store = StoreFlow(scope = scope, initialValue = initialValue, reducer = reducer, middlewares = middlewares)
 
   val flow = store
-    .drop(1) // since we have to emit onStart, drop the store's first emission
     .onStart { store.dispatch(SubscriberStatusChanged(true)) }
     .onCompletion { store.dispatch(SubscriberStatusChanged(false)) }
+    .drop(1) // since we have to emit onStart, drop the store's first emission
     .shareIn(scope, SharingStarted.WhileSubscribed(), replay = 0) // replay = stale emissions when SharingStarted.WhileSubscribed is used
     .onStart { emit(store.state) } // replacement for replay
 
