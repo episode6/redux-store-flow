@@ -66,6 +66,8 @@ class SubscriberAwareStoreFlowTest {
       hasSize(1)
       index(0).isEqualTo(SubscriberStatusChanged(subscribersActive = true))
     }
+    assertThat(collector1.values).isNotEmpty()
+    assertThat(collector2.values).isNotEmpty()
   }
 
   @Test fun testDanglingSubscriber() = runFlowTest {
@@ -79,6 +81,8 @@ class SubscriberAwareStoreFlowTest {
       hasSize(1)
       index(0).isEqualTo(SubscriberStatusChanged(subscribersActive = true))
     }
+    assertThat(collector1.values).isNotEmpty()
+    assertThat(collector2.values).isNotEmpty()
   }
 
   @Test fun testMultipleSubscribers_unsubscribe() = runFlowTest {
@@ -94,6 +98,8 @@ class SubscriberAwareStoreFlowTest {
       index(0).isEqualTo(SubscriberStatusChanged(subscribersActive = true))
       index(1).isEqualTo(SubscriberStatusChanged(subscribersActive = false))
     }
+    assertThat(collector1.values).isNotEmpty()
+    assertThat(collector2.values).isNotEmpty()
   }
 
   @Test fun testDoesNotEmitStaleState() = runFlowTest {
