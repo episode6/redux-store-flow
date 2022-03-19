@@ -14,6 +14,7 @@ class CommonDeployablePlugin implements Plugin<Project> {
       }
 
       task("deploy", dependsOn: tasks.publish)
+      task("install", dependsOn: tasks.publishToMavenLocal)
 
       task("javadocJar", type: Jar, dependsOn: tasks.dokkaHtml) {
         archiveClassifier.set('javadoc')
