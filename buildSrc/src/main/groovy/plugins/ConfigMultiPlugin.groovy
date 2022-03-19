@@ -15,7 +15,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
           compilations.all {
             kotlinOptions {
               jvmTarget = Config.Jvm.name
-              freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+              freeCompilerArgs += Config.Kotlin.compilerArgs
 
             }
           }
@@ -33,6 +33,19 @@ class ConfigMultiPlugin implements Plugin<Project> {
         js {
           browser()
           nodejs()
+          compilations.all {
+            kotlinOptions {
+              freeCompilerArgs += Config.Kotlin.compilerArgs
+
+            }
+          }
+        }
+        linuxX64 {
+          compilations.all {
+            kotlinOptions {
+              freeCompilerArgs += Config.Kotlin.compilerArgs
+            }
+          }
         }
 
         sourceSets {

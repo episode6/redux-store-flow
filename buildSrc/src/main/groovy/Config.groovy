@@ -9,6 +9,10 @@ class Config {
     static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
   }
 
+  class Kotlin {
+    static String compilerArgs = "-Xopt-in=kotlin.RequiresOptIn"
+  }
+
   class Maven {
     static void applyPomConfig(Project project, MavenPom pom) {
       pom.with {
