@@ -7,9 +7,17 @@ import com.episode6.redux.StoreFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 
+/**
+ * An [Action] that is dispatched to a [StoreFlow] that is created with [SubscriberAwareStoreFlow]
+ */
 data class SubscriberStatusChanged(val subscribersActive: Boolean = false) : Action
 
-fun <State: Any?> SubscriberAwareStoreFlow(
+/**
+ * Creates a [StoreFlow] that dispatches [SubscriberStatusChanged] when subscribers start or stop
+ * collecting from it. The actions will fire when the first subscriber starts and the last subscriber
+ * stops collecting.
+ */
+@Suppress("FunctionName") fun <State: Any?> SubscriberAwareStoreFlow(
   scope: CoroutineScope,
   initialValue: State,
   reducer: Reducer<State>,
@@ -18,7 +26,7 @@ fun <State: Any?> SubscriberAwareStoreFlow(
   val store = StoreFlow(scope = scope, initialValue = initialValue, reducer = reducer, middlewares = middlewares)
   val flow = store
     .onStart { store.dispatch(SubscriberStatusChanged(true)) }
-    .onCompletion { store.dispatch(SubscriberStatusChanged(false))  }
+    .onCompletion { store.dispatch(SubscriberStatusChanged(false))  } 
     .shareIn(scope, SharingStarted.WhileSubscribed(), replay = 1)
 
   return object : StoreFlow<State>, Flow<State> by flow {
