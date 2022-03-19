@@ -34,6 +34,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
           browser()
           nodejs()
         }
+        linuxX64()
 
         sourceSets {
           commonMain {}
