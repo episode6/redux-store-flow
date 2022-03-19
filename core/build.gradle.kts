@@ -14,8 +14,12 @@ kotlin {
     val commonTest by getting {
       dependencies {
         implementation(project(":test-support"))
-        implementation(libs.mockk.core)
         implementation(libs.assertk.core)
+      }
+    }
+    val jvmTest by getting {
+      dependencies {
+        implementation(libs.mockk.core)
       }
     }
   }

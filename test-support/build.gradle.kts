@@ -9,7 +9,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(libs.kotlinx.coroutines.core)
-        api(libs.kotlinx.coroutines.test)
         api(libs.assertk.core)
         implementation(project(":core"))
       }
@@ -17,6 +16,11 @@ kotlin {
     val commonTest by getting {
       dependencies {
         implementation(libs.assertk.core)
+      }
+    }
+    val jvmMain by getting {
+      dependencies {
+        implementation(libs.kotlinx.coroutines.test)
       }
     }
   }

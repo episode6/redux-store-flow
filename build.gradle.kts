@@ -7,10 +7,6 @@ allprojects {
   version = "1.0.0-SNAPSHOT"
 }
 
-tasks.register<Delete>("clean") {
-  delete(rootProject.buildDir)
-}
-
 tasks.wrapper {
   gradleVersion = libs.versions.gradle.core.get()
   distributionType = Wrapper.DistributionType.ALL

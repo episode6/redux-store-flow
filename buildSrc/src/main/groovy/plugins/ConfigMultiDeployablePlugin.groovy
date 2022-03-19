@@ -15,16 +15,24 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
 
       // mitigate gradle warning
       tasks.publishKotlinMultiplatformPublicationToMavenLocal {
-        dependsOn tasks.signJvmPublication
-      }
-      tasks.publishJvmPublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication
+        dependsOn tasks.signJvmPublication, tasks.signJsPublication
       }
       tasks.publishKotlinMultiplatformPublicationToMavenRepository {
-        dependsOn tasks.signJvmPublication
+        dependsOn tasks.signJvmPublication, tasks.signJsPublication
+      }
+
+      tasks.publishJvmPublicationToMavenLocal {
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication
       }
       tasks.publishJvmPublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication
+      }
+
+      tasks.publishJsPublicationToMavenLocal {
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication
+      }
+      tasks.publishJsPublicationToMavenRepository {
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication
       }
 
       publishing {
