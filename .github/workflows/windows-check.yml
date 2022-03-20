@@ -21,7 +21,7 @@ jobs:
     - name: Clean Project
       run: ./gradlew clean
     - name: Assemble Windows
-      run: ./gradlew assembleWindows -x :test-support:mingwX64MainKlibrary # assertK doesn't support windows yet
+      run: ./gradlew assembleWindows
     - name: Check Windows
       run: ./gradlew testWindows
     - name: Install Windows
