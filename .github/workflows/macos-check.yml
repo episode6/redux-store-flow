@@ -24,5 +24,3 @@ jobs:
       run: ./gradlew assemble
     - name: Check Project
       run: ./gradlew check
-    - name: Generate Docs
-      run: ./gradlew dokkaHtml
