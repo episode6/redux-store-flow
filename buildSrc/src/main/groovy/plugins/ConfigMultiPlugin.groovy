@@ -54,6 +54,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
+        mingwX64 {
+          compilations.all {
+            kotlinOptions {
+              freeCompilerArgs += Config.Kotlin.compilerArgs
+            }
+          }
+        }
 
         sourceSets {
           commonMain {}
