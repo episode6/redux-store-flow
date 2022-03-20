@@ -1,4 +1,4 @@
-name: Gradle Checks
+name: MacOS Checks
 on:
   push:
     branches:
