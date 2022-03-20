@@ -25,4 +25,4 @@ jobs:
     - name: Check Apple
       run: ./gradlew testApple
     - name: Install Apple
-      run: ./gradlew installAppleBuildDir -x signMacosX64Publication
+      run: ./gradlew installAppleBuildDir
