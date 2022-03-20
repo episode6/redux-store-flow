@@ -21,6 +21,6 @@ jobs:
     - name: Clean Project
       run: ./gradlew clean
     - name: Assemble Project
-      run: ./gradlew macosX64MainKlibrary
+      run: ./gradlew assembleApple
     - name: Check Project
-      run: ./gradlew macosX64Test
+      run: ./gradlew testApple

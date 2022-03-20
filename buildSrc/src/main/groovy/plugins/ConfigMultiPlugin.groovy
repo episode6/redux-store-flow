@@ -70,8 +70,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-
       }
+
+      task("assembleApple", dependsOn: tasks.macosX64MainKlibrary)
+      task("testApple", dependsOn: tasks.macosX64Test)
+      task("assembleWindows", dependsOn: tasks.mingwX64MainKlibrary)
+      task("testWindows") // assertK not supported on windows yet
     }
   }
 }
