@@ -1,4 +1,4 @@
-name: Gradle Checks
+name: Windows Checks
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
   pull_request:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -21,8 +21,6 @@ jobs:
     - name: Clean Project
       run: ./gradlew clean
     - name: Assemble Project
-      run: ./gradlew assemble
+      run: ./gradlew assembleWindows -x :test-support:mingwX64MainKlibrary # assertK doesn't support windows yet
     - name: Check Project
-      run: ./gradlew check
-    - name: Generate Docs
-      run: ./gradlew dokkaHtml
+      run: ./gradlew testWindows

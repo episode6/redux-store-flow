@@ -54,6 +54,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
+        mingwX64 {
+          compilations.all {
+            kotlinOptions {
+              freeCompilerArgs += Config.Kotlin.compilerArgs
+            }
+          }
+        }
 
         sourceSets {
           commonMain {}
@@ -63,8 +70,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-
       }
+
+      task("assembleApple", dependsOn: tasks.macosX64MainKlibrary)
+      task("testApple", dependsOn: tasks.macosX64Test)
+      task("assembleWindows", dependsOn: tasks.mingwX64MainKlibrary)
+      task("testWindows") // assertK not supported on windows yet
     }
   }
 }
