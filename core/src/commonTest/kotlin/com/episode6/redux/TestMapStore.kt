@@ -6,31 +6,32 @@ import assertk.assertions.containsExactly
 import assertk.assertions.hasSize
 import assertk.assertions.index
 import assertk.assertions.isTrue
-import com.episode6.redux.testsupport.runFlowTest
-import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.FlowTestScope
+import com.episode6.redux.testsupport.runUnconfinedStoreTest
 import com.episode6.redux.testsupport.stoplight.*
-import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
 
 class TestMapStore {
-  private fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = createStopLightStore()
+  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+    storeBuilder = { createStopLightStore() },
+    testBody = testBody
+  )
 
-  @Test fun testMapValueRead() = runTest {
-    val store: StoreFlow<Boolean> = stopLightStore().mapStore { it.redLight }
+  @Test fun testMapValueRead() = storeTest { backingStore ->
+    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     assertThat(store.state).isTrue()
   }
 
-  @Test fun testMapValueRead_flow() = runFlowTest {
-    val store: StoreFlow<Boolean> = stopLightStore().mapStore { it.redLight }
+  @Test fun testMapValueRead_flow() = storeTest { backingStore ->
+    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
       assertThat(values).containsExactly(true)
     }
   }
 
-  @Test fun testDispatchValueChanged() = runFlowTest {
-    val backingStore = stopLightStore()
+  @Test fun testDispatchValueChanged() = storeTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
@@ -42,8 +43,7 @@ class TestMapStore {
     }
   }
 
-  @Test fun testDispatchValueChanged_testCollector() = runFlowTest {
-    val backingStore = stopLightStore()
+  @Test fun testDispatchValueChanged_testCollector() = storeTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
     val backingStoreCollector = backingStore.testCollector()
     val storeCollector = store.testCollector()
@@ -59,5 +59,8 @@ class TestMapStore {
       index(0).hasDefaultLights()
       index(1).hasLights()
     }
+
+    storeCollector.stopCollecting()
+    backingStoreCollector.stopCollecting()
   }
 }

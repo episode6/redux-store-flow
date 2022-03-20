@@ -8,10 +8,10 @@ import assertk.assertions.hasSize
 import assertk.assertions.index
 import com.episode6.redux.Action
 import com.episode6.redux.StoreFlow
+import com.episode6.redux.testsupport.FlowTestScope
 import com.episode6.redux.testsupport.TimingController
 import com.episode6.redux.testsupport.lastElement
-import com.episode6.redux.testsupport.runFlowTest
-import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.runUnconfinedStoreTest
 import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,17 +23,16 @@ import kotlin.test.Test
 class SideEffectMiddlewareTest {
 
   private val timing = TimingController()
-  private fun CoroutineScope.stopLightStore() = stopLightStore(timing)
+  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+    storeBuilder = { stopLightStore(timing) },
+    testBody = testBody
+  )
 
-  @Test fun testInitialValue() = runTest {
-    val store = stopLightStore()
-
+  @Test fun testInitialValue() = storeTest { store ->
     assertThat(store.state).hasDefaultLights()
   }
 
-  @Test fun testInitialValue_flow() = runFlowTest {
-    val store = stopLightStore()
-
+  @Test fun testInitialValue_flow() = storeTest { store ->
     store.test {
       assertThat(values).all {
         hasSize(1)
@@ -42,42 +41,36 @@ class SideEffectMiddlewareTest {
     }
   }
 
-  @Test fun testInitWithoutTime() = runTest {
-    val store = stopLightStore()
-
+  @Test fun testInitWithoutTime() = storeTest { store ->
     store.dispatch(SwitchToGreen)
 
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testInitWithoutTime_flow() = runFlowTest {
-    val store = stopLightStore()
-
+  @Test fun testInitWithoutTime_flow() = storeTest { store ->
     store.test {
       store.dispatch(SwitchToGreen)
 
       assertThat(values).all {
-        hasSize(3)
+        hasSize(2)
         lastElement().hasLights(green = true)
       }
     }
   }
 
-  @Test fun testInitWithTime_flow() = runFlowTest {
-    val store = stopLightStore()
-
+  @Test fun testInitWithTime_flow() = storeTest { store ->
     store.test {
       store.dispatch(SwitchToGreen)
       timing.advanceBy(GREEN_TO_YELLOW_DELAY)
 
       assertThat(values).all {
-        hasSize(5)
+        hasSize(3)
         lastElement().hasLights(yellow = true)
       }
 
       timing.advanceBy(YELLOW_TO_RED_DELAY)
       assertThat(values).all {
-        hasSize(7)
+        hasSize(4)
         lastElement().hasLights(red = true)
       }
     }

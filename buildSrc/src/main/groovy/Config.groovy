@@ -10,7 +10,7 @@ class Config {
   }
 
   class Kotlin {
-    static String compilerArgs = "-Xopt-in=kotlin.RequiresOptIn"
+    static String compilerArgs = "-opt-in=kotlin.RequiresOptIn"
   }
 
   class Maven {
