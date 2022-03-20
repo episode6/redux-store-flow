@@ -70,9 +70,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
               dependsOn(noopMain)
             }
           }
-          jsMain {
-            dependsOn noopMain
-          }
         }
       }
 
