@@ -14,8 +14,8 @@ class ConfigMultiPlugin implements Plugin<Project> {
       def linuxTargets = ["linuxX64"]
       def appleTargets = ["macosX64"]
       def windowsTargets = ["mingwX64"]
-      def jsTargets = ["js"]
-      def noopTargets = linuxTargets + appleTargets + windowsTargets + jsTargets
+      def nativeTargets = linuxTargets + appleTargets + windowsTargets
+      def noopTargets = nativeTargets + ["js"]
 
       kotlin {
         jvm  {
@@ -46,26 +46,8 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-        linuxX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
-        }
-        macosX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
-        }
-        mingwX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
+        for (t in nativeTargets) {
+          targets.add(presets.getByName(t).createTarget(t))
         }
 
         sourceSets {
