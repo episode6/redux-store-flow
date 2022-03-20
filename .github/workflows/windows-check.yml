@@ -1,4 +1,4 @@
-name: MacOS Checks
+name: Windows Checks
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
   pull_request:
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -21,6 +21,6 @@ jobs:
     - name: Clean Project
       run: ./gradlew clean
     - name: Assemble Project
-      run: ./gradlew assembleMacosX64
+      run: ./gradlew assemble
     - name: Check Project
-      run: ./gradlew checkMacosX64
+      run: ./gradlew check

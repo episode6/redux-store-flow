@@ -1,4 +1,4 @@
-name: Gradle Checks
+name: Linux Checks
 on:
   push:
     branches:
