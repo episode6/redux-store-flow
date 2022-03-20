@@ -13,8 +13,13 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
         apply(CommonDeployablePlugin)
       }
 
-      task("installAppleBuildDir", dependsOn: tasks.publishMacosX64PublicationToBuildDirRepository)
-      task("installWindowsBuildDir", dependsOn: tasks.publishMingwX64PublicationToBuildDirRepository)
+      def hostOs = System.getProperty("os.name")
+
+      if (hostOs == "Mac OS X") {
+        task("installAppleBuildDir", dependsOn: tasks.publishMacosX64PublicationToBuildDirRepository)
+      } else if (hostOs.startsWith("Windows")) {
+        task("installWindowsBuildDir", dependsOn: tasks.publishMingwX64PublicationToBuildDirRepository)
+      }
 
       // mitigate gradle warning
       tasks.publishKotlinMultiplatformPublicationToMavenLocal {
