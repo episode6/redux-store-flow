@@ -1,5 +1,6 @@
 package plugins
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -40,17 +41,20 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-        linuxX64 {
+
+        def hostOs = System.getProperty("os.name")
+        def isMingwX64 = hostOs.startsWith("Windows")
+        def nativeTarget
+        if (hostOs == "Mac OS X") nativeTarget = macosX64('native')
+        else if (hostOs == "Linux") nativeTarget = linuxX64("native")
+        else if (isMingwX64) nativeTarget = mingwX64("native")
+        else throw new GradleException("Host OS is not supported in Kotlin/Native.")
+
+        configure(nativeTarget) {
           compilations.all {
             kotlinOptions {
               freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
-        }
-        macosX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
+
             }
           }
         }

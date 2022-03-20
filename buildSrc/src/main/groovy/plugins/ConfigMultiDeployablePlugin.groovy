@@ -15,30 +15,30 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
 
       // mitigate gradle warning
       tasks.publishKotlinMultiplatformPublicationToMavenLocal {
-        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signNativePublication
       }
       tasks.publishKotlinMultiplatformPublicationToMavenRepository {
-        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signNativePublication
       }
 
       tasks.publishJvmPublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signNativePublication
       }
       tasks.publishJvmPublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signNativePublication
       }
 
       tasks.publishJsPublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signNativePublication
       }
       tasks.publishJsPublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signLinuxX64Publication
+        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signNativePublication
       }
 
-      tasks.publishLinuxX64PublicationToMavenLocal {
+      tasks.publishNativePublicationToMavenLocal {
         dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signJsPublication
       }
-      tasks.publishLinuxX64PublicationToMavenRepository {
+      tasks.publishNativePublicationToMavenRepository {
         dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signJsPublication
       }
 
