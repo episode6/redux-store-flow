@@ -23,7 +23,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
             kotlinOptions {
               jvmTarget = Config.Jvm.name
               freeCompilerArgs += Config.Kotlin.compilerArgs
-
             }
           }
           java {
@@ -47,7 +46,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
           }
         }
         for (t in nativeTargets) {
-          targets.add(presets.getByName(t).createTarget(t))
+          targets.add(presets.getByName(t).createTarget(t)) {
+            compilations.all {
+              kotlinOptions {
+                freeCompilerArgs += Config.Kotlin.compilerArgs
+              }
+            }
+          }
         }
 
         sourceSets {
