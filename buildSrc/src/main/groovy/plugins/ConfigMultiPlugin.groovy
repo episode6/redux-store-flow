@@ -47,7 +47,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-        macOSX64 {
+        macosX64 {
           compilations.all {
             kotlinOptions {
               freeCompilerArgs += Config.Kotlin.compilerArgs
