@@ -10,6 +10,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
       plugins.with {
         apply("org.jetbrains.kotlin.multiplatform")
       }
+
+      def linuxTargets = ["linuxX64"]
+      def appleTargets = ["macosX64"]
+      def windowsTargets = ["mingwX64"]
+      def jsTargets = ["js"]
+      def noopTargets = linuxTargets + appleTargets + windowsTargets + jsTargets
+
       kotlin {
         jvm  {
           compilations.all {
@@ -36,7 +43,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
           compilations.all {
             kotlinOptions {
               freeCompilerArgs += Config.Kotlin.compilerArgs
-
             }
           }
         }
@@ -68,6 +74,17 @@ class ConfigMultiPlugin implements Plugin<Project> {
             dependencies {
               implementation(kotlin("test"))
             }
+          }
+          noopMain {
+            dependsOn commonMain
+          }
+          for (sourceSet in noopTargets) {
+            getByName("${sourceSet}Main") {
+              dependsOn(noopMain)
+            }
+          }
+          jsMain {
+            dependsOn noopMain
           }
         }
       }
