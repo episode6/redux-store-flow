@@ -13,6 +13,9 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
         apply(CommonDeployablePlugin)
       }
 
+      task("installAppleBuildDir", dependsOn: tasks.publishMacosX64PublicationToBuildDirRepository)
+      task("installWindowsBuildDir", dependsOn: tasks.publishMingwX64PublicationToBuildDirRepository)
+
       // mitigate gradle warning
       tasks.publishKotlinMultiplatformPublicationToMavenLocal {
         dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
