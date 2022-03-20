@@ -34,6 +34,10 @@ class CommonDeployablePlugin implements Plugin<Project> {
               password findProperty("deployable.nexus.password")
             }
           }
+          maven {
+            name = "buildDir"
+            url "file://${rootProject.buildDir}/m2"
+          }
         }
       }
     }
