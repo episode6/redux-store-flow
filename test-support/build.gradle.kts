@@ -27,6 +27,6 @@ kotlin {
 }
 
 // assertK doesn't support windows yet
-tasks.mingwX64MainKlibrary {
+tasks.compileKotlinMingwX64 {
   enabled = false
 }
