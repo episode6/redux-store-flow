@@ -10,13 +10,19 @@ class ConfigMultiPlugin implements Plugin<Project> {
       plugins.with {
         apply("org.jetbrains.kotlin.multiplatform")
       }
+
+      def linuxTargets = ["linuxX64"]
+      def appleTargets = ["macosX64"]
+      def windowsTargets = ["mingwX64"]
+      def nativeTargets = linuxTargets + appleTargets + windowsTargets
+      def noopTargets = nativeTargets + ["js"]
+
       kotlin {
         jvm  {
           compilations.all {
             kotlinOptions {
               jvmTarget = Config.Jvm.name
               freeCompilerArgs += Config.Kotlin.compilerArgs
-
             }
           }
           java {
@@ -36,28 +42,15 @@ class ConfigMultiPlugin implements Plugin<Project> {
           compilations.all {
             kotlinOptions {
               freeCompilerArgs += Config.Kotlin.compilerArgs
-
             }
           }
         }
-        linuxX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
-        }
-        macosX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
-            }
-          }
-        }
-        mingwX64 {
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
+        for (t in nativeTargets) {
+          targets.add(presets.getByName(t).createTarget(t)) {
+            compilations.all {
+              kotlinOptions {
+                freeCompilerArgs += Config.Kotlin.compilerArgs
+              }
             }
           }
         }
@@ -67,6 +60,14 @@ class ConfigMultiPlugin implements Plugin<Project> {
           commonTest {
             dependencies {
               implementation(kotlin("test"))
+            }
+          }
+          noopMain {
+            dependsOn commonMain
+          }
+          for (sourceSet in noopTargets) {
+            getByName("${sourceSet}Main") {
+              dependsOn(noopMain)
             }
           }
         }
