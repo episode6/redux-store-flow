@@ -25,4 +25,4 @@ jobs:
     - name: Check Windows
       run: ./gradlew testWindows
     - name: Install Windows
-      run: ./gradlew installWindowsBuildDir
+      run: ./gradlew installWindowsBuildDir -x signMingwX64Publication
