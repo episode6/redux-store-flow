@@ -17,18 +17,10 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
 
       if (hostOs == "Mac OS X") {
         task("installAppleBuildDir", dependsOn: tasks.publishMacosX64PublicationToBuildDirRepository)
-        gradle.taskGraph.whenReady { graph ->
-          if (graph.hasTask(tasks.installAppleBuildDir)) {
-            tasks.signMacosX64Publication.setEnabled(false)
-          }
-        }
+        tasks.signMacosX64Publication.setEnabled(false)
       } else if (hostOs.startsWith("Windows")) {
         task("installWindowsBuildDir", dependsOn: tasks.publishMingwX64PublicationToBuildDirRepository)
-        gradle.taskGraph.whenReady { graph ->
-          if (graph.hasTask(tasks.installWindowsBuildDir)) {
-            tasks.signMingwX64Publication.setEnabled(false)
-          }
-        }
+        tasks.signMingwX64Publication.setEnabled(false)
       }
 
       // mitigate gradle warning
