@@ -26,3 +26,7 @@ jobs:
       run: ./gradlew testWindows
     - name: Install Windows
       run: ./gradlew installWindowsBuildDir
+    - uses: actions/upload-artifact@v3
+      with:
+        name: win-artifacts
+        path: build/m2

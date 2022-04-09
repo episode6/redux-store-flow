@@ -26,3 +26,7 @@ jobs:
       run: ./gradlew testApple
     - name: Install Apple
       run: ./gradlew installAppleBuildDir
+    - uses: actions/upload-artifact@v3
+      with:
+        name: mac-artifacts
+        path: build/m2
