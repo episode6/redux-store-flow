@@ -20,7 +20,13 @@ jobs:
       run: chmod +x gradlew
     - name: Clean Project
       run: ./gradlew clean
-    - name: Assemble Project
-      run: ./gradlew assembleWindows -x :test-support:mingwX64MainKlibrary # assertK doesn't support windows yet
-    - name: Check Project
+    - name: Assemble Windows
+      run: ./gradlew assembleWindows
+    - name: Check Windows
       run: ./gradlew testWindows
+    - name: Install Windows
+      run: ./gradlew installWindowsBuildDir
+    - uses: actions/upload-artifact@v3
+      with:
+        name: win-artifacts
+        path: build/m2
