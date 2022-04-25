@@ -3,6 +3,8 @@ package plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.plugins.signing.Sign
 
 class ConfigMultiDeployablePlugin implements Plugin<Project> {
   @Override
@@ -13,33 +15,12 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
         apply(CommonDeployablePlugin)
       }
 
-      // mitigate gradle warning
-      tasks.publishKotlinMultiplatformPublicationToMavenLocal {
-        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
-      }
-      tasks.publishKotlinMultiplatformPublicationToMavenRepository {
-        dependsOn tasks.signJvmPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
-      }
-
-      tasks.publishJvmPublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
-      }
-      tasks.publishJvmPublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJsPublication, tasks.signLinuxX64Publication
-      }
-
-      tasks.publishJsPublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signLinuxX64Publication
-      }
-      tasks.publishJsPublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signLinuxX64Publication
-      }
-
-      tasks.publishLinuxX64PublicationToMavenLocal {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signJsPublication
-      }
-      tasks.publishLinuxX64PublicationToMavenRepository {
-        dependsOn tasks.signKotlinMultiplatformPublication, tasks.signJvmPublication, tasks.signJsPublication
+      // mitigate gradle warnings by ensuring all pub tasks depend on all sign tasks
+      def signTasks = tasks.withType(Sign)
+      tasks.withType(AbstractPublishToMaven).forEach { pubTask ->
+        signTasks.forEach {
+          pubTask.dependsOn(it)
+        }
       }
 
       publishing {
