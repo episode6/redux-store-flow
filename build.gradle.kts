@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
   group = "com.episode6.redux"
-  version = "1.0.0-SNAPSHOT"
+  version = "1.0.0-alpha01"
 }
 
 tasks.wrapper {
