@@ -1,0 +1,9 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:core
+com.episode6.redux
+module:side-effects
+com.episode6.redux.sideeffects
+module:subscriber-aware
+com.episode6.redux.subscriberaware
