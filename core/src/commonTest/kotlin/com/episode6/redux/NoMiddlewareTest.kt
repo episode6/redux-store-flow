@@ -4,24 +4,24 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.index
-import com.episode6.redux.testsupport.runFlowTest
-import com.episode6.redux.testsupport.runTest
+import com.episode6.redux.testsupport.FlowTestScope
+import com.episode6.redux.testsupport.runUnconfinedStoreTest
 import com.episode6.redux.testsupport.stoplight.*
-import kotlinx.coroutines.CoroutineScope
 import kotlin.test.Test
 
 class NoMiddlewareTest {
 
-  private fun CoroutineScope.stopLightStore(): StoreFlow<StopLightState> = createStopLightStore()
+  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+    storeBuilder = { createStopLightStore() },
+    testBody = testBody
+  )
 
-  @Test fun testValue_default() = runTest {
-    val store = stopLightStore()
+  @Test fun testValue_default() = storeTest { store ->
 
     assertThat(store.state).hasDefaultLights()
   }
 
-  @Test fun testValue_switchLight() = runTest {
-    val store = stopLightStore()
+  @Test fun testValue_switchLight() = storeTest { store ->
 
     store.dispatch(SetGreenLightOn(true))
     store.dispatch(SetRedLightOn(false))
@@ -29,8 +29,7 @@ class NoMiddlewareTest {
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testFlow_default() = runFlowTest {
-    val store = stopLightStore()
+  @Test fun testFlow_default() = storeTest { store ->
 
     store.test {
       assertThat(values).all {
@@ -40,8 +39,7 @@ class NoMiddlewareTest {
     }
   }
 
-  @Test fun testFlow_switchLight() = runFlowTest {
-    val store = stopLightStore()
+  @Test fun testFlow_switchLight() = storeTest { store ->
 
     store.test {
       store.dispatch(SetYellowLightOn(true))

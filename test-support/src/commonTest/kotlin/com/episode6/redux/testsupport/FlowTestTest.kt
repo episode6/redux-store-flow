@@ -1,6 +1,5 @@
 package com.episode6.redux.testsupport
 
-import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,15 +10,17 @@ import kotlin.test.Test
 
 class FlowTestTest {
 
-  @Test fun testFlowTestCollector_static() = runFlowTest {
+  @Test fun testFlowTestCollector_static() = runUnconfinedFlowTest {
     val flow = flowOf(1, 2, 3)
 
     val collector = flow.testCollector()
 
     assertThat(collector.values).containsExactly(1, 2, 3)
+
+    collector.stopCollecting()
   }
 
-  @Test fun testFlowTest_static() = runFlowTest {
+  @Test fun testFlowTest_static() = runUnconfinedFlowTest {
     val flow = flowOf(1, 2, 3)
 
     flow.test {
@@ -27,7 +28,7 @@ class FlowTestTest {
     }
   }
 
-  @Test fun testFlowTestCollector_live() = runFlowTest {
+  @Test fun testFlowTestCollector_live() = runUnconfinedFlowTest {
     val flow = MutableSharedFlow<Int>()
 
     val collector = flow.testCollector()
@@ -42,9 +43,11 @@ class FlowTestTest {
 
     flow.emit(3)
     assertThat(collector.values).containsExactly(1, 2, 3)
+
+    collector.stopCollecting()
   }
 
-  @Test fun testFlowTest_live() = runFlowTest {
+  @Test fun testFlowTest_live() = runUnconfinedFlowTest {
     val flow = MutableSharedFlow<Int>()
 
     flow.test {
@@ -61,7 +64,7 @@ class FlowTestTest {
     }
   }
 
-  @Test fun testFlowCollectorStop() = runFlowTest {
+  @Test fun testFlowCollectorStop() = runUnconfinedFlowTest {
     val flow = MutableSharedFlow<Int>()
     var hasSubscribed = false
     var isComplete = false
@@ -84,12 +87,14 @@ class FlowTestTest {
     assertThat(isComplete).isTrue()
   }
 
-  @Test fun testFlowCollectionFail() = runFlowTest {
+  @Test fun testFlowCollectionFail() = runUnconfinedFlowTest {
     val flow = MutableSharedFlow<Int>()
 
     val collector = flow.testCollector(start = true)
 
     assertThat { collector.startCollecting() }
       .isFailure().hasClass(AssertionError::class)
+
+    collector.stopCollecting()
   }
 }

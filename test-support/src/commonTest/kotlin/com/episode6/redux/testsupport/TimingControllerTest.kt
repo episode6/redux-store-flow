@@ -15,32 +15,38 @@ class TimingControllerTest {
     assertThat(timing.time).isEqualTo(0L)
   }
 
-  @Test fun testAwaitTme_noTimePassed() = runTest {
-    launch {
+  @Test fun testAwaitTme_noTimePassed() = runUnconfinedTest {
+    val job = launch {
       timing.await(25)
       isDone = true
     }
 
     assertThat(isDone).isFalse()
+
+    job.cancel()
   }
 
-  @Test fun testAwaitTme_notEnoughTimePassed() = runTest {
-    launch {
+  @Test fun testAwaitTme_notEnoughTimePassed() = runUnconfinedTest {
+    val job = launch {
       timing.await(25)
       isDone = true
     }
 
     timing.advanceBy(20)
     assertThat(isDone).isFalse()
+
+    job.cancel()
   }
 
-  @Test fun testAwaitTme_done() = runTest {
-    launch {
+  @Test fun testAwaitTme_done() = runUnconfinedTest {
+    val job = launch {
       timing.await(25)
       isDone = true
     }
 
     timing.advanceBy(25)
     assertThat(isDone).isTrue()
+
+    job.cancel()
   }
 }
