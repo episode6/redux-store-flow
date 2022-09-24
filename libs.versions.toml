@@ -1,5 +1,5 @@
 [versions]
-gradle-core = "7.3.3"
+gradle-core = "7.5.1"
 kotlin-core = "1.7.10"
 kotlinx-coroutines = "1.6.4"
 dokka-core = "1.7.10"
