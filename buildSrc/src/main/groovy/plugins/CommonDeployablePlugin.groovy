@@ -22,6 +22,11 @@ class CommonDeployablePlugin implements Plugin<Project> {
       }
 
       signing {
+        def signingKey = findProperty("signingKey")
+        def signingPassword = findProperty("signingPassword")
+        if (signingKey != null && signingPassword != null) {
+          useInMemoryPgpKeys(signingKey, signingPassword)
+        }
         sign publishing.publications
       }
 
@@ -30,8 +35,8 @@ class CommonDeployablePlugin implements Plugin<Project> {
           maven {
             url Config.Maven.getRepoUrl(target)
             credentials {
-              username findProperty("deployable.nexus.username")
-              password findProperty("deployable.nexus.password")
+              username findProperty("nexusUsername")
+              password findProperty("nexusPassword")
             }
           }
         }

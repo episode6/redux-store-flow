@@ -15,14 +15,6 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
         apply(CommonDeployablePlugin)
       }
 
-      // mitigate gradle warnings by ensuring all pub tasks depend on all sign tasks
-      def signTasks = tasks.withType(Sign)
-      tasks.withType(AbstractPublishToMaven).forEach { pubTask ->
-        signTasks.forEach {
-          pubTask.dependsOn(it)
-        }
-      }
-
       publishing {
         publications.withType(MavenPublication) {
           Config.Maven.applyPomConfig(target, pom)

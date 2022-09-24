@@ -32,5 +32,6 @@ node {
     gradleRunner.runGradle("docgen", "dokkaHtml", false)
   }
 
-  gradleRunner.deploy()
+// now deployed from github
+//   gradleRunner.deploy()
 }
