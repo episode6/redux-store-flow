@@ -5,6 +5,8 @@ on:
       - main
       - 'release/**'
   pull_request:
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   build-and-check:
     runs-on: macos-11
