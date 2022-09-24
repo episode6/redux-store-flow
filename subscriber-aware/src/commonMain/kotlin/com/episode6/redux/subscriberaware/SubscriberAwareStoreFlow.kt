@@ -29,9 +29,9 @@ data class SubscriberStatusChanged(val subscribersActive: Boolean = false) : Act
   val flow = store
     .onStart { store.dispatch(SubscriberStatusChanged(true)) }
     .onCompletion { store.dispatch(SubscriberStatusChanged(false)) }
-    .drop(1) // since we have to emit onStart, drop the store's first emission
     .shareIn(scope, SharingStarted.WhileSubscribed(), replay = 0) // replay = stale emissions when SharingStarted.WhileSubscribed is used
     .onStart { emit(store.state) } // replacement for replay
+    .distinctUntilChanged()
 
   return object : StoreFlow<State>, Flow<State> by flow {
     override val initialState: State get() = store.initialState
