@@ -1,4 +1,4 @@
-name: MacOS Checks
+name: Build and Check
 on:
   push:
     branches:
@@ -6,21 +6,21 @@ on:
       - 'release/**'
   pull_request:
 jobs:
-  build:
-    runs-on: macos-latest
+  build-and-check:
+    runs-on: macos-11
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
     - name: Clean Project
       run: ./gradlew clean
     - name: Assemble Project
-      run: ./gradlew assembleApple
+      run: ./gradlew assemble
     - name: Check Project
-      run: ./gradlew testApple
+      run: ./gradlew check
+    - name: Generate Docs
+      run: ./gradlew dokkaHtml

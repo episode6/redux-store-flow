@@ -11,14 +11,8 @@ class ConfigMultiPlugin implements Plugin<Project> {
         apply("org.jetbrains.kotlin.multiplatform")
       }
 
-      def linuxTargets = ["linuxX64"]
-      def appleTargets = ["macosX64"]
-      def windowsTargets = ["mingwX64"]
-      def nativeTargets = linuxTargets + appleTargets + windowsTargets
-      def noopTargets = nativeTargets + ["js"]
-
       kotlin {
-        jvm  {
+        jvm {
           compilations.all {
             kotlinOptions {
               jvmTarget = Config.Jvm.name
@@ -45,7 +39,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-        for (t in nativeTargets) {
+        for (t in Config.KMPTargets.natives) {
           targets.add(presets.getByName(t).createTarget(t)) {
             compilations.all {
               kotlinOptions {
@@ -62,21 +56,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
               implementation(kotlin("test"))
             }
           }
-          noopMain {
-            dependsOn commonMain
-          }
-          for (sourceSet in noopTargets) {
+          for (sourceSet in Config.KMPTargets.all) {
             getByName("${sourceSet}Main") {
-              dependsOn(noopMain)
+              dependsOn(commonMain)
             }
           }
         }
       }
-
-      task("assembleApple", dependsOn: tasks.macosX64MainKlibrary)
-      task("testApple", dependsOn: tasks.macosX64Test)
-      task("assembleWindows", dependsOn: tasks.mingwX64MainKlibrary)
-      task("testWindows") // assertK not supported on windows yet
     }
   }
 }

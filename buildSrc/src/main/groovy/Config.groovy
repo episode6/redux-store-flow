@@ -13,6 +13,20 @@ class Config {
     static String compilerArgs = "-opt-in=kotlin.RequiresOptIn"
   }
 
+  public class KMPTargets {
+    public static String[] linux = [
+        "linuxX64",
+    ]
+    public static String[] apple = [
+        "macosX64",
+    ]
+    public static String[] windows = [
+        "mingwX64",
+    ]
+    public static String[] natives = linux + apple + windows
+    public static String[] all = natives + ["jvm", "js"]
+  }
+
   class Maven {
     static void applyPomConfig(Project project, MavenPom pom) {
       pom.with {
