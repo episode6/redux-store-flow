@@ -1,12 +1,12 @@
 [versions]
-gradle-core = "7.1"
-kotlin-core = "1.5.32"
-kotlinx-coroutines = "1.5.2"
-dokka-core = "1.5.31"
+gradle-core = "7.5.1"
+kotlin-core = "1.7.10"
+kotlinx-coroutines = "1.6.4"
+dokka-core = "1.7.10"
 
 # test utils
 assertk-core = "0.25"
-mockk-core = "1.12.1"
+mockk-core = "1.13.1"
 
 [libraries]
 gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }

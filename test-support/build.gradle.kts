@@ -4,6 +4,9 @@ plugins {
   id("config-multi")
 }
 
+// assertK doesn't support windows builds yet, simply disabling the task results doesn't solve the issue
+rootProject.gradle.startParameter.excludedTaskNames.add(":test-support:compileKotlinMingwX64")
+
 kotlin {
   sourceSets {
     val commonMain by getting {
