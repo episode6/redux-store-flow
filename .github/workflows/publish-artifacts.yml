@@ -5,6 +5,8 @@ on:
       - main
     tags:
       - '**'
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   publish-job:
     runs-on: macos-latest
@@ -16,6 +18,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
+      - name: Clean Project
+        run: ./gradlew clean
+      - name: Generate Docs
+        run: ./gradlew dokkaHtml
       - name: Publish
         run: ./gradlew publish
         env:

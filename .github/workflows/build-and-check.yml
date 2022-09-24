@@ -5,6 +5,8 @@ on:
       - main
       - 'release/**'
   pull_request:
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   build-and-check:
     runs-on: macos-11
@@ -16,8 +18,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-    - name: Clean Project
-      run: ./gradlew clean
     - name: Assemble Project
       run: ./gradlew assemble
     - name: Check Project
