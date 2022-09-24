@@ -35,16 +35,8 @@ class CommonDeployablePlugin implements Plugin<Project> {
           maven {
             url Config.Maven.getRepoUrl(target)
             credentials {
-              username findProperty("deployable.nexus.username")
-              password findProperty("deployable.nexus.password")
-            }
-          }
-          maven {
-            name = "GitHub"
-            url "https://maven.pkg.github.com/episode6/redux-store-flow"
-            credentials {
-              username System.getenv("GITHUB_ACTOR")
-              password System.getenv("GITHUB_TOKEN")
+              username findProperty("nexusUsername")
+              password findProperty("nexusPassword")
             }
           }
         }
