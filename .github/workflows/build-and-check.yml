@@ -18,8 +18,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-    - name: Clean Project
-      run: ./gradlew clean
     - name: Assemble Project
       run: ./gradlew assemble
     - name: Check Project

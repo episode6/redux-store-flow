@@ -18,6 +18,8 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
+      - name: Clean Project
+        run: ./gradlew clean
       - name: Generate Docs
         run: ./gradlew dokkaHtml
       - name: Publish
