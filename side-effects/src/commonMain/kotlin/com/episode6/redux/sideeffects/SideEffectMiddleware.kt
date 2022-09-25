@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @Suppress("FunctionName")
-fun <State : Any?> SideEffectMiddleware(vararg sideEffects: SideEffect<State>): Middleware<State> =
+public fun <State : Any?> SideEffectMiddleware(vararg sideEffects: SideEffect<State>): Middleware<State> =
   SideEffectMiddleware(sideEffects.toList())
 
 @Suppress("FunctionName")
-fun <State : Any?> SideEffectMiddleware(sideEffects: Collection<SideEffect<State>>): Middleware<State> =
+public fun <State : Any?> SideEffectMiddleware(sideEffects: Collection<SideEffect<State>>): Middleware<State> =
   Middleware { store, next ->
     val sideEffectCount = sideEffects.size
     val actionRelay = MutableSharedFlow<Action>()

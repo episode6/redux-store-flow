@@ -3,11 +3,11 @@ package com.episode6.redux.sideeffects
 import com.episode6.redux.Action
 import kotlinx.coroutines.flow.Flow
 
-fun interface SideEffect<State : Any?> {
-  fun SideEffectContext<State>.act(): Flow<Action>
+public fun interface SideEffect<State : Any?> {
+  public fun SideEffectContext<State>.act(): Flow<Action>
 }
 
-interface SideEffectContext<State: Any?> {
-  val actions: Flow<Action>
-  suspend fun currentState(): State
+public interface SideEffectContext<State: Any?> {
+  public val actions: Flow<Action>
+  public suspend fun currentState(): State
 }

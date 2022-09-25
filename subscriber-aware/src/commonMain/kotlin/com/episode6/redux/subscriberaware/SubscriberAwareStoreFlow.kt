@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.*
 /**
  * An [Action] that is dispatched to a [StoreFlow] that is created with [SubscriberAwareStoreFlow]
  */
-data class SubscriberStatusChanged(val subscribersActive: Boolean = false) : Action
+public data class SubscriberStatusChanged(val subscribersActive: Boolean = false) : Action
 
 /**
  * Creates a [StoreFlow] that dispatches [SubscriberStatusChanged] when subscribers start or stop
  * collecting from it. The actions will fire when the first subscriber starts and the last subscriber
  * stops collecting.
  */
-@Suppress("FunctionName") fun <State : Any?> SubscriberAwareStoreFlow(
+@Suppress("FunctionName") public fun <State : Any?> SubscriberAwareStoreFlow(
   scope: CoroutineScope,
   initialValue: State,
   reducer: Reducer<State>,

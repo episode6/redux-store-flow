@@ -9,26 +9,27 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.CoroutineContext
 
-fun <T> runStoreTest(storeBuilder: CoroutineScope.() -> T, testBody: suspend TestScope.(T) -> Unit) =
+public fun <T> runStoreTest(storeBuilder: CoroutineScope.() -> T, testBody: suspend TestScope.(T) -> Unit): TestResult =
   runTest {
     val manager = storeManager(storeBuilder = storeBuilder)
     testBody(manager.store())
     manager.shutdown()
   }
 
-fun <T> TestScope.storeManager(
+public fun <T> TestScope.storeManager(
   context: CoroutineContext = UnconfinedTestDispatcher(),
   storeBuilder: CoroutineScope.() -> T
 ): StoreManager<T> = StoreManagerImpl(this + context, storeBuilder)
 
-interface StoreManager<T> {
-  suspend fun store(): T
-  fun shutdown()
+public interface StoreManager<T> {
+  public suspend fun store(): T
+  public fun shutdown()
 }
 
 private class StoreManagerImpl<T>(scope: CoroutineScope, builder: CoroutineScope.() -> T) : StoreManager<T> {
