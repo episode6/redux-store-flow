@@ -10,6 +10,10 @@ kotlin {
       dependencies {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
+      }
+    }
+    val commonTest by getting {
+      dependencies {
         implementation(project(":core"))
       }
     }
