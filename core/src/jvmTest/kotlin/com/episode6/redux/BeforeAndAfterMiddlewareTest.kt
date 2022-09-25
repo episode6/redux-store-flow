@@ -1,26 +1,27 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.redux
 
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.episode6.redux.testsupport.FlowTestScope
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
+import com.episode6.redux.testsupport.runStoreTest
 import com.episode6.redux.testsupport.stoplight.*
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
-
 
 class BeforeAndAfterMiddlewareTest {
 
   private fun storeTest(
     middlewares: List<Middleware<StopLightState>>,
     testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit
-  ) = runUnconfinedStoreTest(
+  ) = runStoreTest(
     storeBuilder = { createStopLightStore(*middlewares.toTypedArray()) },
     testBody = testBody
   )

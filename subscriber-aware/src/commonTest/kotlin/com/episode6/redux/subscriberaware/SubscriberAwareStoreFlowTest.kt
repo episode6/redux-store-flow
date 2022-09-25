@@ -12,11 +12,8 @@ import com.episode6.redux.Middleware
 import com.episode6.redux.StoreFlow
 import com.episode6.redux.testsupport.*
 import com.episode6.redux.testsupport.stoplight.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlin.test.Test
 
 class SubscriberAwareStoreFlowTest {
@@ -29,7 +26,7 @@ class SubscriberAwareStoreFlowTest {
     }
   }
 
-  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
     storeBuilder = {
       SubscriberAwareStoreFlow(
         scope = this,

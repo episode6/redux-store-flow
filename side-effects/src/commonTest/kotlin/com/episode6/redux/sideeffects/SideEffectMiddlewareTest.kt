@@ -5,8 +5,6 @@ package com.episode6.redux.sideeffects
 import app.cash.turbine.test
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.hasSize
-import assertk.assertions.index
 import com.episode6.redux.Action
 import com.episode6.redux.StoreFlow
 import com.episode6.redux.testsupport.*
@@ -21,7 +19,7 @@ import kotlin.test.Test
 class SideEffectMiddlewareTest {
 
   private val timing = TimingController()
-  private fun storeTest(testBody: suspend CoroutineScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+  private fun storeTest(testBody: suspend CoroutineScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
     storeBuilder = { stopLightStore(timing) },
     testBody = testBody
   )

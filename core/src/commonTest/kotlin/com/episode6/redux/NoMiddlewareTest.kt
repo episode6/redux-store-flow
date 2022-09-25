@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.redux
 
 import app.cash.turbine.test
@@ -5,15 +7,15 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.index
 import com.episode6.redux.testsupport.awaitItems
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
+import com.episode6.redux.testsupport.runStoreTest
 import com.episode6.redux.testsupport.stoplight.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 class NoMiddlewareTest {
 
-  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
+  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
     storeBuilder = { createStopLightStore() },
     testBody = testBody
   )

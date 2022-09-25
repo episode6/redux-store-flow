@@ -1,10 +1,15 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.redux.testsupport
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class TimingControllerTest {
@@ -15,8 +20,8 @@ class TimingControllerTest {
     assertThat(timing.time).isEqualTo(0L)
   }
 
-  @Test fun testAwaitTme_noTimePassed() = runUnconfinedTest {
-    val job = launch {
+  @Test fun testAwaitTme_noTimePassed() = runTest {
+    val job = launch(UnconfinedTestDispatcher()) {
       timing.await(25)
       isDone = true
     }
@@ -26,8 +31,8 @@ class TimingControllerTest {
     job.cancel()
   }
 
-  @Test fun testAwaitTme_notEnoughTimePassed() = runUnconfinedTest {
-    val job = launch {
+  @Test fun testAwaitTme_notEnoughTimePassed() = runTest {
+    val job = launch(UnconfinedTestDispatcher()) {
       timing.await(25)
       isDone = true
     }
@@ -38,8 +43,8 @@ class TimingControllerTest {
     job.cancel()
   }
 
-  @Test fun testAwaitTme_done() = runUnconfinedTest {
-    val job = launch {
+  @Test fun testAwaitTme_done() = runTest {
+    val job = launch(UnconfinedTestDispatcher()) {
       timing.await(25)
       isDone = true
     }
