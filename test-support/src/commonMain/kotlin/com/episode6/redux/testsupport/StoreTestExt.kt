@@ -8,18 +8,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlin.coroutines.CoroutineContext
 
 fun <T> runStoreTest(storeBuilder: CoroutineScope.() -> T, testBody: suspend TestScope.(T) -> Unit) =
   runTest {
-    val manager = storeManager(storeBuilder)
+    val manager = storeManager(storeBuilder = storeBuilder)
     testBody(manager.store())
     manager.shutdown()
   }
 
-fun <T> TestScope.storeManager(builder: CoroutineScope.() -> T): StoreManager<T> = StoreManagerImpl(this, builder)
+fun <T> TestScope.storeManager(
+  context: CoroutineContext = UnconfinedTestDispatcher(),
+  storeBuilder: CoroutineScope.() -> T
+): StoreManager<T> = StoreManagerImpl(this + context, storeBuilder)
 
 interface StoreManager<T> {
   suspend fun store(): T
@@ -28,7 +33,7 @@ interface StoreManager<T> {
 
 private class StoreManagerImpl<T>(scope: CoroutineScope, builder: CoroutineScope.() -> T) : StoreManager<T> {
   private val state = MutableStateFlow<T?>(null)
-  private val job = scope.launch(UnconfinedTestDispatcher()) { state.value = builder() }
+  private val job = scope.launch { state.value = builder() }
 
   override suspend fun store() = state.filterNotNull().first()
   override fun shutdown() = job.cancel()
