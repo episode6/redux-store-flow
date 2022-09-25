@@ -19,29 +19,27 @@ import kotlin.test.Test
 class SideEffectMiddlewareTest {
 
   private val timing = TimingController()
-  private fun storeTest(testBody: suspend CoroutineScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
-    storeBuilder = { stopLightStore(timing) },
-    testBody = testBody
-  )
 
-  @Test fun testInitialValue() = storeTest { store ->
+  private fun timedStore(scope: CoroutineScope) = scope.stopLightStore(timing)
+
+  @Test fun testInitialValue() = runStoreTest(::timedStore) { store ->
     assertThat(store.state).hasDefaultLights()
   }
 
-  @Test fun testInitialValue_flow() = storeTest { store ->
+  @Test fun testInitialValue_flow() = runStoreTest(::timedStore) { store ->
     store.test {
       assertThat(awaitItem()).hasDefaultLights()
       ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testInitWithoutTime() = storeTest { store ->
+  @Test fun testInitWithoutTime() = runStoreTest(::timedStore) { store ->
     store.dispatch(SwitchToGreen)
 
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testInitWithoutTime_flow() = storeTest { store ->
+  @Test fun testInitWithoutTime_flow() = runStoreTest(::timedStore) { store ->
     store.test {
       store.dispatch(SwitchToGreen)
 
@@ -52,7 +50,7 @@ class SideEffectMiddlewareTest {
     }
   }
 
-  @Test fun testInitWithTime_flow() = storeTest { store ->
+  @Test fun testInitWithTime_flow() = runStoreTest(::timedStore) { store ->
     store.test {
       store.dispatch(SwitchToGreen)
       timing.advanceBy(GREEN_TO_YELLOW_DELAY)

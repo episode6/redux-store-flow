@@ -10,40 +10,37 @@ import assertk.assertions.*
 import com.episode6.redux.Action
 import com.episode6.redux.Middleware
 import com.episode6.redux.StoreFlow
-import com.episode6.redux.testsupport.*
+import com.episode6.redux.testsupport.awaitItems
+import com.episode6.redux.testsupport.runStoreTest
 import com.episode6.redux.testsupport.stoplight.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 class SubscriberAwareStoreFlowTest {
 
-  val actions = mutableListOf<Action>()
-  val middleware = Middleware<StopLightState> { _, next ->
+  private val actions = mutableListOf<Action>()
+  private val middleware = Middleware<StopLightState> { _, next ->
     {
       actions += it
       next(it)
     }
   }
 
-  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
-    storeBuilder = {
-      SubscriberAwareStoreFlow(
-        scope = this,
-        initialValue = StopLightState(),
-        reducer = StopLightState::reduce,
-        middlewares = listOf(middleware)
-      )
-    },
-    testBody = testBody
+  private fun subscriberAwareStore(scope: CoroutineScope) = SubscriberAwareStoreFlow(
+    scope = scope,
+    initialValue = StopLightState(),
+    reducer = StopLightState::reduce,
+    middlewares = listOf(middleware)
   )
 
   @Suppress("UNUSED_VARIABLE")
-  @Test fun testNoInitialAction() = storeTest {
+  @Test fun testNoInitialAction() = runStoreTest(::subscriberAwareStore) {
     assertThat(actions).isEmpty()
   }
 
-  @Test fun testSubscribe() = storeTest { store ->
+  @Test fun testSubscribe() = runStoreTest(::subscriberAwareStore) { store ->
 
     store.test {
       assertThat(actions).containsExactly(SubscriberStatusChanged(subscribersActive = true))
@@ -53,7 +50,7 @@ class SubscriberAwareStoreFlowTest {
     }
   }
 
-  @Test fun testUnSubscribe() = storeTest { store ->
+  @Test fun testUnSubscribe() = runStoreTest(::subscriberAwareStore) { store ->
 
     store.testIn(this).cancelAndIgnoreRemainingEvents()
 
@@ -64,7 +61,7 @@ class SubscriberAwareStoreFlowTest {
     }
   }
 
-  @Test fun testMultipleSubscribers() = storeTest { store ->
+  @Test fun testMultipleSubscribers() = runStoreTest(::subscriberAwareStore) { store ->
 
     val collector1 = store.testIn(this)
     val collector2 = store.testIn(this)
@@ -80,7 +77,7 @@ class SubscriberAwareStoreFlowTest {
     collector2.cancel()
   }
 
-  @Test fun testDanglingSubscriber() = storeTest { store ->
+  @Test fun testDanglingSubscriber() = runStoreTest(::subscriberAwareStore) { store ->
 
     val collector1 = store.testIn(this)
     val collector2 = store.testIn(this)
@@ -98,7 +95,7 @@ class SubscriberAwareStoreFlowTest {
     collector2.cancel()
   }
 
-  @Test fun testMultipleSubscribers_unsubscribe() = storeTest { store ->
+  @Test fun testMultipleSubscribers_unsubscribe() = runStoreTest(::subscriberAwareStore) { store ->
 
     val collector1 = store.testIn(this)
     val collector2 = store.testIn(this)
@@ -114,7 +111,7 @@ class SubscriberAwareStoreFlowTest {
     assertThat(events2).isNotEmpty()
   }
 
-  @Test fun testValue_switchLight() = storeTest { store ->
+  @Test fun testValue_switchLight() = runStoreTest(::subscriberAwareStore) { store ->
 
     store.dispatch(SetRedLightOn(false))
     store.dispatch(SetGreenLightOn(true))
@@ -122,7 +119,7 @@ class SubscriberAwareStoreFlowTest {
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testDoesNotEmitStaleState() = storeTest { store ->
+  @Test fun testDoesNotEmitStaleState() = runStoreTest(::subscriberAwareStore) { store ->
 
     val collector = store.testIn(this)
     store.dispatch(SetRedLightOn(false))

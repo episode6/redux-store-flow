@@ -10,25 +10,22 @@ import assertk.assertions.containsExactly
 import assertk.assertions.index
 import assertk.assertions.isTrue
 import com.episode6.redux.testsupport.awaitItems
-import com.episode6.redux.testsupport.runStoreTest
-import com.episode6.redux.testsupport.stoplight.*
+import com.episode6.redux.testsupport.stoplight.SetRedLightOn
+import com.episode6.redux.testsupport.stoplight.hasDefaultLights
+import com.episode6.redux.testsupport.stoplight.hasLights
+import com.episode6.redux.testsupport.stoplight.stopLightStoreTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 class TestMapStore {
-  private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
-    storeBuilder = { createStopLightStore() },
-    testBody = testBody
-  )
 
-  @Test fun testMapValueRead() = storeTest { backingStore ->
+  @Test fun testMapValueRead() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     assertThat(store.state).isTrue()
   }
 
-  @Test fun testMapValueRead_flow() = storeTest { backingStore ->
+  @Test fun testMapValueRead_flow() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
@@ -37,7 +34,7 @@ class TestMapStore {
     }
   }
 
-  @Test fun testDispatchValueChanged() = storeTest { backingStore ->
+  @Test fun testDispatchValueChanged() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
@@ -50,7 +47,7 @@ class TestMapStore {
     }
   }
 
-  @Test fun testDispatchValueChanged_testCollector() = storeTest { backingStore ->
+  @Test fun testDispatchValueChanged_testCollector() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
     val backingStoreCollector = backingStore.testIn(this)
     val storeCollector = store.testIn(this)

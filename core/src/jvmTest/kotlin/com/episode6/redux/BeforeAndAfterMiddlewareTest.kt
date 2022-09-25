@@ -5,7 +5,6 @@ package com.episode6.redux
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.episode6.redux.testsupport.runStoreTest
 import com.episode6.redux.testsupport.stoplight.*
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -13,22 +12,13 @@ import io.mockk.mockk
 import io.mockk.verifyOrder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 class BeforeAndAfterMiddlewareTest {
 
-  private fun storeTest(
-    middlewares: List<Middleware<StopLightState>>,
-    testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit
-  ) = runStoreTest(
-    storeBuilder = { createStopLightStore(*middlewares.toTypedArray()) },
-    testBody = testBody
-  )
-
   @Test fun testProcessAction() {
     val middleware = TestMiddleware()
-    storeTest(listOf(middleware)) { store ->
+    stopLightStoreTest(listOf(middleware)) { store ->
       val action = SetRedLightOn(false)
 
       store.dispatch(action)
@@ -51,7 +41,7 @@ class BeforeAndAfterMiddlewareTest {
 
   @Test fun testProcessAction_twoMiddlewares() {
     val middlewares = listOf(TestMiddleware(), TestMiddleware())
-    storeTest(middlewares) { store ->
+    stopLightStoreTest(middlewares) { store ->
       val action = SetRedLightOn(false)
 
       store.dispatch(action)
