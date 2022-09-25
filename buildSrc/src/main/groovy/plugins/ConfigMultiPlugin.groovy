@@ -32,8 +32,8 @@ class ConfigMultiPlugin implements Plugin<Project> {
         }
         js(IR) {
           nodejs()
-          binaries.library()
           browser()
+          binaries.library()
           compilations.all {
             kotlinOptions {
               freeCompilerArgs += Config.Kotlin.compilerArgs
