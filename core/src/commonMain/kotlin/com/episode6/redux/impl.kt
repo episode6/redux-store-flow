@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 /**
  * Creates a new [StoreFlow], a redux store backed by a [kotlinx.coroutines.flow.StateFlow]
  */
-@Suppress("FunctionName") fun <State : Any?> StoreFlow(
+@Suppress("FunctionName") public fun <State : Any?> StoreFlow(
   scope: CoroutineScope,
   initialValue: State,
   reducer: Reducer<State>,

@@ -13,6 +13,10 @@ class CommonDeployablePlugin implements Plugin<Project> {
         apply("signing")
       }
 
+      kotlin {
+        explicitApi()
+      }
+
       task("deploy", dependsOn: tasks.publish)
       task("install", dependsOn: tasks.publishToMavenLocal)
 
