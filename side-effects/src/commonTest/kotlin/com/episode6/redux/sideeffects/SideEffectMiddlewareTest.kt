@@ -31,7 +31,7 @@ class SideEffectMiddlewareTest {
   @Test fun testInitialValue_flow() = storeTest { store ->
     store.test {
       assertThat(awaitItem()).hasDefaultLights()
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 
@@ -48,7 +48,7 @@ class SideEffectMiddlewareTest {
       assertThat(awaitItems(2)).all {
         lastElement().hasLights(green = true)
       }
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 
@@ -64,7 +64,7 @@ class SideEffectMiddlewareTest {
       timing.advanceBy(YELLOW_TO_RED_DELAY)
       assertThat(awaitItem()).hasLights(red = true)
 
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 }

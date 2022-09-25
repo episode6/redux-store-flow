@@ -9,6 +9,7 @@ import assertk.assertions.index
 import com.episode6.redux.testsupport.awaitItems
 import com.episode6.redux.testsupport.runStoreTest
 import com.episode6.redux.testsupport.stoplight.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
@@ -16,12 +17,11 @@ import kotlin.test.Test
 class NoMiddlewareTest {
 
   private fun storeTest(testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit) = runStoreTest(
-    storeBuilder = { createStopLightStore() },
+    storeBuilder = CoroutineScope::createStopLightStore,
     testBody = testBody
   )
 
   @Test fun testValue_default() = storeTest { store ->
-
     assertThat(store.state).hasDefaultLights()
   }
 
@@ -37,7 +37,7 @@ class NoMiddlewareTest {
 
     store.test {
       assertThat(awaitItem()).hasDefaultLights()
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 
@@ -52,7 +52,7 @@ class NoMiddlewareTest {
         index(1).hasLights(red = true, yellow = true)
         index(2).hasLights(yellow = true)
       }
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 }

@@ -33,7 +33,7 @@ class TestMapStore {
 
     store.test {
       assertThat(awaitItem()).isTrue()
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 
@@ -46,7 +46,7 @@ class TestMapStore {
       backingStore.dispatch(SetRedLightOn(false))
 
       assertThat(awaitItems(2)).containsExactly(true, false)
-      expectNoEvents()
+      ensureAllEventsConsumed()
     }
   }
 
@@ -65,8 +65,8 @@ class TestMapStore {
       index(0).hasDefaultLights()
       index(1).hasLights()
     }
-    storeCollector.expectNoEvents()
-    backingStoreCollector.expectNoEvents()
+    storeCollector.ensureAllEventsConsumed()
+    backingStoreCollector.ensureAllEventsConsumed()
 
     storeCollector.cancel()
     backingStoreCollector.cancel()
