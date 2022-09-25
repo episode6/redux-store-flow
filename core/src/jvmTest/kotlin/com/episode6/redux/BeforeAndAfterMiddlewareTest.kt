@@ -5,7 +5,7 @@ package com.episode6.redux
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.episode6.redux.testsupport.stoplight.*
+import com.episode6.redux.testsupport.internal.stoplight.*
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk

@@ -14,5 +14,7 @@ include(
   ":core",
   ":side-effects",
   ":subscriber-aware",
+
   ":test-support",
+  ":test-support:internal",
 )

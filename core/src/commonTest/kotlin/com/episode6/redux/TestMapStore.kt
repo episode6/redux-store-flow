@@ -9,11 +9,11 @@ import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.index
 import assertk.assertions.isTrue
-import com.episode6.redux.testsupport.awaitItems
-import com.episode6.redux.testsupport.stoplight.SetRedLightOn
-import com.episode6.redux.testsupport.stoplight.hasDefaultLights
-import com.episode6.redux.testsupport.stoplight.hasLights
-import com.episode6.redux.testsupport.stoplight.stopLightStoreTest
+import com.episode6.redux.testsupport.internal.awaitItems
+import com.episode6.redux.testsupport.internal.stoplight.SetRedLightOn
+import com.episode6.redux.testsupport.internal.stoplight.hasDefaultLights
+import com.episode6.redux.testsupport.internal.stoplight.hasLights
+import com.episode6.redux.testsupport.internal.stoplight.stopLightStoreTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 

@@ -1,4 +1,4 @@
-package com.episode6.redux.testsupport
+package com.episode6.redux.testsupport.internal
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter

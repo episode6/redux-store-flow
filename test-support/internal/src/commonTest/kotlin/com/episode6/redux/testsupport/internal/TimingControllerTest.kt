@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.episode6.redux.testsupport
+package com.episode6.redux.testsupport.internal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
