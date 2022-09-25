@@ -2,12 +2,19 @@
 
 package com.episode6.redux.testsupport
 
+import app.cash.turbine.ReceiveTurbine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+
+suspend fun <T> ReceiveTurbine<T>.awaitItems(count: Int): List<T> {
+  val list = mutableListOf<T>()
+  repeat(count) { list += awaitItem() }
+  return list
+}
 
 suspend fun CoroutineScope.flowTestScope(body: suspend FlowTestScope.() -> Unit) = FlowTestScopeImpl(this).body()
 fun runUnconfinedFlowTest(testBody: suspend FlowTestScope.() -> Unit) = runUnconfinedTest { flowTestScope(testBody) }

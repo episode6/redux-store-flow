@@ -11,6 +11,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyOrder
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 
@@ -18,7 +19,7 @@ class BeforeAndAfterMiddlewareTest {
 
   private fun storeTest(
     middlewares: List<Middleware<StopLightState>>,
-    testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit
+    testBody: suspend TestScope.(StoreFlow<StopLightState>) -> Unit
   ) = runUnconfinedStoreTest(
     storeBuilder = { createStopLightStore(*middlewares.toTypedArray()) },
     testBody = testBody
