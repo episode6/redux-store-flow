@@ -1,37 +1,40 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.redux
 
+import app.cash.turbine.test
+import app.cash.turbine.testIn
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.containsExactly
-import assertk.assertions.hasSize
 import assertk.assertions.index
 import assertk.assertions.isTrue
-import com.episode6.redux.testsupport.FlowTestScope
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
-import com.episode6.redux.testsupport.stoplight.*
+import com.episode6.redux.testsupport.awaitItems
+import com.episode6.redux.testsupport.stoplight.SetRedLightOn
+import com.episode6.redux.testsupport.stoplight.hasDefaultLights
+import com.episode6.redux.testsupport.stoplight.hasLights
+import com.episode6.redux.testsupport.stoplight.stopLightStoreTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 
 class TestMapStore {
-  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
-    storeBuilder = { createStopLightStore() },
-    testBody = testBody
-  )
 
-  @Test fun testMapValueRead() = storeTest { backingStore ->
+  @Test fun testMapValueRead() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     assertThat(store.state).isTrue()
   }
 
-  @Test fun testMapValueRead_flow() = storeTest { backingStore ->
+  @Test fun testMapValueRead_flow() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
-      assertThat(values).containsExactly(true)
+      assertThat(awaitItem()).isTrue()
+      ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testDispatchValueChanged() = storeTest { backingStore ->
+  @Test fun testDispatchValueChanged() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
 
     store.test {
@@ -39,28 +42,30 @@ class TestMapStore {
       store.dispatch(SetRedLightOn(false)) // dupes all ignored
       backingStore.dispatch(SetRedLightOn(false))
 
-      assertThat(values).containsExactly(true, false)
+      assertThat(awaitItems(2)).containsExactly(true, false)
+      ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testDispatchValueChanged_testCollector() = storeTest { backingStore ->
+  @Test fun testDispatchValueChanged_testCollector() = stopLightStoreTest { backingStore ->
     val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
-    val backingStoreCollector = backingStore.testCollector()
-    val storeCollector = store.testCollector()
+    val backingStoreCollector = backingStore.testIn(this)
+    val storeCollector = store.testIn(this)
 
     store.dispatch(SetRedLightOn(false))
     store.dispatch(SetRedLightOn(false)) // dupes all ignored
     backingStore.dispatch(SetRedLightOn(false))
 
     // verify both stores have same values and same number of values
-    assertThat(storeCollector.values).containsExactly(true, false)
-    assertThat(backingStoreCollector.values).all {
-      hasSize(2)
+    assertThat(storeCollector.awaitItems(2)).containsExactly(true, false)
+    assertThat(backingStoreCollector.awaitItems(2)).all {
       index(0).hasDefaultLights()
       index(1).hasLights()
     }
+    storeCollector.ensureAllEventsConsumed()
+    backingStoreCollector.ensureAllEventsConsumed()
 
-    storeCollector.stopCollecting()
-    backingStoreCollector.stopCollecting()
+    storeCollector.cancel()
+    backingStoreCollector.cancel()
   }
 }

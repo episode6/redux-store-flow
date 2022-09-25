@@ -1,27 +1,23 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.redux
 
+import app.cash.turbine.test
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.hasSize
 import assertk.assertions.index
-import com.episode6.redux.testsupport.FlowTestScope
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
+import com.episode6.redux.testsupport.awaitItems
 import com.episode6.redux.testsupport.stoplight.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 
 class NoMiddlewareTest {
 
-  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
-    storeBuilder = { createStopLightStore() },
-    testBody = testBody
-  )
-
-  @Test fun testValue_default() = storeTest { store ->
-
+  @Test fun testValue_default() = stopLightStoreTest { store ->
     assertThat(store.state).hasDefaultLights()
   }
 
-  @Test fun testValue_switchLight() = storeTest { store ->
+  @Test fun testValue_switchLight() = stopLightStoreTest { store ->
 
     store.dispatch(SetGreenLightOn(true))
     store.dispatch(SetRedLightOn(false))
@@ -29,28 +25,26 @@ class NoMiddlewareTest {
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testFlow_default() = storeTest { store ->
+  @Test fun testFlow_default() = stopLightStoreTest { store ->
 
     store.test {
-      assertThat(values).all {
-        hasSize(1)
-        index(0).hasDefaultLights()
-      }
+      assertThat(awaitItem()).hasDefaultLights()
+      ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testFlow_switchLight() = storeTest { store ->
+  @Test fun testFlow_switchLight() = stopLightStoreTest { store ->
 
     store.test {
       store.dispatch(SetYellowLightOn(true))
       store.dispatch(SetRedLightOn(false))
 
-      assertThat(values).all {
-        hasSize(3)
+      assertThat(awaitItems(3)).all {
         index(0).hasDefaultLights()
         index(1).hasLights(red = true, yellow = true)
         index(2).hasLights(yellow = true)
       }
+      ensureAllEventsConsumed()
     }
   }
 }

@@ -2,16 +2,12 @@
 
 package com.episode6.redux.sideeffects
 
+import app.cash.turbine.test
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.hasSize
-import assertk.assertions.index
 import com.episode6.redux.Action
 import com.episode6.redux.StoreFlow
-import com.episode6.redux.testsupport.FlowTestScope
-import com.episode6.redux.testsupport.TimingController
-import com.episode6.redux.testsupport.lastElement
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
+import com.episode6.redux.testsupport.*
 import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,56 +19,50 @@ import kotlin.test.Test
 class SideEffectMiddlewareTest {
 
   private val timing = TimingController()
-  private fun storeTest(testBody: suspend FlowTestScope.(StoreFlow<StopLightState>) -> Unit) = runUnconfinedStoreTest(
-    storeBuilder = { stopLightStore(timing) },
-    testBody = testBody
-  )
 
-  @Test fun testInitialValue() = storeTest { store ->
+  private fun timedStore(scope: CoroutineScope) = scope.stopLightStore(timing)
+
+  @Test fun testInitialValue() = runStoreTest(::timedStore) { store ->
     assertThat(store.state).hasDefaultLights()
   }
 
-  @Test fun testInitialValue_flow() = storeTest { store ->
+  @Test fun testInitialValue_flow() = runStoreTest(::timedStore) { store ->
     store.test {
-      assertThat(values).all {
-        hasSize(1)
-        index(0).hasDefaultLights()
-      }
+      assertThat(awaitItem()).hasDefaultLights()
+      ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testInitWithoutTime() = storeTest { store ->
+  @Test fun testInitWithoutTime() = runStoreTest(::timedStore) { store ->
     store.dispatch(SwitchToGreen)
 
     assertThat(store.state).hasLights(green = true)
   }
 
-  @Test fun testInitWithoutTime_flow() = storeTest { store ->
+  @Test fun testInitWithoutTime_flow() = runStoreTest(::timedStore) { store ->
     store.test {
       store.dispatch(SwitchToGreen)
 
-      assertThat(values).all {
-        hasSize(2)
+      assertThat(awaitItems(2)).all {
         lastElement().hasLights(green = true)
       }
+      ensureAllEventsConsumed()
     }
   }
 
-  @Test fun testInitWithTime_flow() = storeTest { store ->
+  @Test fun testInitWithTime_flow() = runStoreTest(::timedStore) { store ->
     store.test {
       store.dispatch(SwitchToGreen)
       timing.advanceBy(GREEN_TO_YELLOW_DELAY)
 
-      assertThat(values).all {
-        hasSize(3)
+      assertThat(awaitItems(3)).all {
         lastElement().hasLights(yellow = true)
       }
 
       timing.advanceBy(YELLOW_TO_RED_DELAY)
-      assertThat(values).all {
-        hasSize(4)
-        lastElement().hasLights(red = true)
-      }
+      assertThat(awaitItem()).hasLights(red = true)
+
+      ensureAllEventsConsumed()
     }
   }
 }
