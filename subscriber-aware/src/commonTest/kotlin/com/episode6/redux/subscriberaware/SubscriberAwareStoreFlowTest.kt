@@ -10,10 +10,7 @@ import assertk.assertions.*
 import com.episode6.redux.Action
 import com.episode6.redux.Middleware
 import com.episode6.redux.StoreFlow
-import com.episode6.redux.testsupport.FlowTestScope
-import com.episode6.redux.testsupport.awaitItems
-import com.episode6.redux.testsupport.lastElement
-import com.episode6.redux.testsupport.runUnconfinedStoreTest
+import com.episode6.redux.testsupport.*
 import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -130,23 +127,24 @@ class SubscriberAwareStoreFlowTest {
 
   @Test fun testDoesNotEmitStaleState() = storeTest { store ->
 
-    var collector = store.testIn(this)
+    val collector = store.testIn(this)
     store.dispatch(SetRedLightOn(false))
     assertThat(collector.awaitItems(2)).all {
       index(0).hasDefaultLights()
       index(1).hasLights()
     }
-    collector.expectNoEvents()
-
+    collector.ensureAllEventsConsumed()
     collector.cancel()
+
     store.dispatch(SetGreenLightOn(true))
-//    store.test { assertThat(awaitItems(2)).lastElement().hasLights(green = true) }
+
     assertThat(store.state).hasLights(green = true)
 
-    collector = store.testIn(this)
-    assertThat(collector.awaitItem()).hasLights(green = true)
-    collector.expectNoEvents()
+    val collector2 = store.testIn(this)
 
-    collector.cancel()
+    assertThat(collector2.awaitItem()).hasLights(green = true)
+
+    collector2.ensureAllEventsConsumed()
+    collector2.cancel()
   }
 }

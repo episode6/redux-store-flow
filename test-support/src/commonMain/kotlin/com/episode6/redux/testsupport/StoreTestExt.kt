@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 fun <T> runUnconfinedStoreTest(storeBuilder: CoroutineScope.() -> T, testBody: suspend TestScope.(T) -> Unit) =
-  runUnconfinedTest {
+  runTest {
     val manager = storeManager(storeBuilder)
     testBody(manager.store())
     manager.shutdown()

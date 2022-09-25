@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 suspend fun <T> ReceiveTurbine<T>.awaitItems(count: Int): List<T> {
   val list = mutableListOf<T>()
@@ -18,6 +19,9 @@ suspend fun <T> ReceiveTurbine<T>.awaitItems(count: Int): List<T> {
 
 suspend fun CoroutineScope.flowTestScope(body: suspend FlowTestScope.() -> Unit) = FlowTestScopeImpl(this).body()
 fun runUnconfinedFlowTest(testBody: suspend FlowTestScope.() -> Unit) = runUnconfinedTest { flowTestScope(testBody) }
+
+fun <T> Flow<T>.testCollector(scope: CoroutineScope, start: Boolean = true): FlowValueCollector<T> =
+  FlowValueCollectorImpl(this@testCollector, scope).apply { if (start) startCollecting() }
 
 interface FlowTestScope : CoroutineScope {
   fun <T> Flow<T>.testCollector(start: Boolean = true): FlowValueCollector<T>
@@ -53,7 +57,7 @@ private class FlowValueCollectorImpl<T>(
   override val values: List<T> get() = _values
   override fun startCollecting() {
     if (job != null) throw AssertionError("Already started collecting from flow: $flow")
-    job = scope.launch { flow.toList(_values) }
+    job = scope.launch(UnconfinedTestDispatcher()) { flow.toList(_values) }
   }
 
   override fun stopCollecting() {
