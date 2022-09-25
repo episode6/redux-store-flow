@@ -1,4 +1,4 @@
-description = "Core implementation of Redux StoreFlow"
+description = "Internal test support utilities for Redux StoreFlow"
 
 plugins {
   id("config-multi")

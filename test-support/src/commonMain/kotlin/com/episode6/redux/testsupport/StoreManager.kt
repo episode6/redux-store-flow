@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package com.episode6.redux.testsupport
 
 import kotlinx.coroutines.CoroutineScope
@@ -9,19 +7,11 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.CoroutineContext
 
-public fun <T> runStoreTest(storeBuilder: CoroutineScope.() -> T, testBody: suspend TestScope.(T) -> Unit): TestResult =
-  runTest {
-    val manager = storeManager(storeBuilder = storeBuilder)
-    testBody(manager.store())
-    manager.shutdown()
-  }
-
+@ExperimentalCoroutinesApi
 public fun <T> TestScope.storeManager(
   context: CoroutineContext = UnconfinedTestDispatcher(),
   storeBuilder: CoroutineScope.() -> T
@@ -32,7 +22,10 @@ public interface StoreManager<T> {
   public fun shutdown()
 }
 
-private class StoreManagerImpl<T>(scope: CoroutineScope, builder: CoroutineScope.() -> T) : StoreManager<T> {
+private class StoreManagerImpl<T>(
+  scope: CoroutineScope,
+  builder: CoroutineScope.() -> T
+) : StoreManager<T> {
   private val state = MutableStateFlow<T?>(null)
   private val job = scope.launch { state.value = builder() }
 

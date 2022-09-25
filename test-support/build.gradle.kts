@@ -1,7 +1,7 @@
-description = "Core implementation of Redux StoreFlow"
+description = "Test support utilities for Redux StoreFlow"
 
 plugins {
-  id("config-multi")
+  id("config-multi-deploy")
 }
 
 kotlin {
