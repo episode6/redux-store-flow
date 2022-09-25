@@ -14,6 +14,7 @@ kotlin {
         api(libs.kotlinx.coroutines.core)
         api(libs.kotlinx.coroutines.test)
         api(libs.assertk.core)
+        api(libs.turbine)
         implementation(project(":core"))
       }
     }
