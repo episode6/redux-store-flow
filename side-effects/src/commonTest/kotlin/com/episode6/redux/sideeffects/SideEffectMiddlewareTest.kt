@@ -7,8 +7,11 @@ import assertk.all
 import assertk.assertThat
 import com.episode6.redux.Action
 import com.episode6.redux.StoreFlow
-import com.episode6.redux.testsupport.*
-import com.episode6.redux.testsupport.stoplight.*
+import com.episode6.redux.testsupport.internal.TimingController
+import com.episode6.redux.testsupport.internal.awaitItems
+import com.episode6.redux.testsupport.internal.lastElement
+import com.episode6.redux.testsupport.internal.stoplight.*
+import com.episode6.redux.testsupport.runStoreTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector

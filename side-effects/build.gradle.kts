@@ -13,7 +13,7 @@ kotlin {
     }
     val commonTest by getting {
       dependencies {
-        implementation(project(":test-support"))
+        implementation(project(":test-support:internal"))
       }
     }
   }

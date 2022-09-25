@@ -6,8 +6,8 @@ import app.cash.turbine.test
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.index
-import com.episode6.redux.testsupport.awaitItems
-import com.episode6.redux.testsupport.stoplight.*
+import com.episode6.redux.testsupport.internal.awaitItems
+import com.episode6.redux.testsupport.internal.stoplight.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 

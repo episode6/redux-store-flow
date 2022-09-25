@@ -9,13 +9,11 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.redux.Action
 import com.episode6.redux.Middleware
-import com.episode6.redux.StoreFlow
-import com.episode6.redux.testsupport.awaitItems
+import com.episode6.redux.testsupport.internal.awaitItems
+import com.episode6.redux.testsupport.internal.stoplight.*
 import com.episode6.redux.testsupport.runStoreTest
-import com.episode6.redux.testsupport.stoplight.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import kotlin.test.Test
 
 class SubscriberAwareStoreFlowTest {

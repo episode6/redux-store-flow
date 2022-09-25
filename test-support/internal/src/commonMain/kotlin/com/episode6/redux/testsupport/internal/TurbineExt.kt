@@ -1,4 +1,4 @@
-package com.episode6.redux.testsupport
+package com.episode6.redux.testsupport.internal
 
 import app.cash.turbine.ReceiveTurbine
 
