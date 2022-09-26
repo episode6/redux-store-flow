@@ -1,7 +1,7 @@
-description = "Core implementation of Redux StoreFlow"
+description = "Test support utilities for Redux StoreFlow"
 
 plugins {
-  id("config-multi")
+  id("config-multi-deploy")
 }
 
 kotlin {
@@ -10,11 +10,12 @@ kotlin {
       dependencies {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
+        implementation(project(":core"))
       }
     }
     val commonTest by getting {
       dependencies {
-        implementation(project(":core"))
+        implementation(project(":test-support:internal"))
       }
     }
   }
