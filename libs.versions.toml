@@ -4,7 +4,6 @@ kotlin-core = "1.7.10"
 kotlinx-coroutines = "1.6.4"
 dokka-core = "1.7.10"
 compose-core = "1.2.0-beta01"
-android-plugin = "7.2.2"
 
 # test utils
 assertk-core = "0.25"
