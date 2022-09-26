@@ -11,6 +11,7 @@ kotlin {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
         implementation(project(":core"))
+        implementation(project(":side-effects"))
       }
     }
     val commonTest by getting {
