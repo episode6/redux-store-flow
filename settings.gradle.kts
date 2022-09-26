@@ -1,7 +1,16 @@
 enableFeaturePreview("VERSION_CATALOGS")
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
+  }
+}
 dependencyResolutionManagement {
   repositories {
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
   }
   versionCatalogs {
     create("libs") { from(files("libs.versions.toml")) }
@@ -14,6 +23,7 @@ include(
   ":core",
   ":side-effects",
   ":subscriber-aware",
+  ":compose",
 
   ":test-support",
   ":test-support:internal",

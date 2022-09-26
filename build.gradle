@@ -2,11 +2,16 @@ buildscript {
   ext {
     kotlin_version = libs.versions.kotlin.core.get()
     dokka_version = libs.versions.dokka.core.get()
+    compose_version = libs.versions.compose.core.get()
+    android_plugin_version = libs.versions.android.plugin.get()
   }
 }
 plugins {
   id 'org.jetbrains.kotlin.multiplatform' version "$kotlin_version" apply false
   id 'org.jetbrains.dokka' version "$dokka_version" apply true
+  id 'org.jetbrains.compose' version "$compose_version" apply false
+  id 'com.android.library' version "$android_plugin_version" apply false
+  id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }
 
 allprojects {
