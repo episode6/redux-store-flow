@@ -2,19 +2,18 @@ description = "Jetpack Compose support for Redux StoreFlow"
 
 plugins {
   id("com.android.library")
-  kotlin("multiplatform")
+  id("config-multi-deploy")
   id("org.jetbrains.compose")
 }
 
 kotlin {
   android()
-  jvm("desktop")
 
   sourceSets {
     val commonMain by getting {
       dependencies {
         api(libs.kotlinx.coroutines.core)
-//        api(project(":core"))
+        api(project(":core"))
         api(compose.runtime)
       }
     }
@@ -25,15 +24,15 @@ kotlin {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-  kotlinOptions.jvmTarget = "11"
+  kotlinOptions.jvmTarget = Config.Jvm.name
 }
 
 android {
-  compileSdkVersion(31)
+  compileSdk = 31
 
   defaultConfig {
-    minSdkVersion(21)
-    targetSdkVersion(31)
+    minSdk = 21
+    targetSdk = 31
   }
 
   compileOptions {
@@ -44,6 +43,13 @@ android {
   sourceSets {
     named("main") {
       manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    }
+  }
+
+  publishing {
+    singleVariant("release") {
+      withSourcesJar()
+      withJavadocJar()
     }
   }
 }
