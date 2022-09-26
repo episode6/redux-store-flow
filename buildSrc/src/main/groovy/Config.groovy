@@ -4,9 +4,9 @@ import org.gradle.api.publish.maven.MavenPom
 
 class Config {
   class Jvm {
-    public static String name = "1.8"
-    public static JavaVersion targetCompat = JavaVersion.VERSION_1_8
-    public static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
+    static String name = "1.8"
+    static JavaVersion targetCompat = JavaVersion.VERSION_1_8
+    static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
   }
 
   class Kotlin {
