@@ -18,6 +18,7 @@ class Config {
         "linuxX64",
     ]
     public static String[] apple = [
+        "iosArm32",
         "iosArm64",
         "iosX64",
         "iosSimulatorArm64",
@@ -37,6 +38,17 @@ class Config {
     ]
     public static String[] natives = linux + apple + windows
     public static String[] all = natives + ["jvm", "js"]
+    public static Map<String, String[]> ignore = [
+        "mingwX64": [":test-support:internal"],
+        "iosArm32": [":compose"]
+    ]
+
+    public static String[] filterTargetsFor(String[] targets, String projectPath) {
+       return targets.findAll {
+         def ignoreList = ignore[it]
+         ignoreList == null || !ignoreList.contains(projectPath)
+       }
+    }
   }
 
   class Maven {
