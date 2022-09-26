@@ -33,6 +33,17 @@ class SideEffectTestTest {
     }
   }
 
+  @Test fun testSampleSideEffect_noOpWhenActionIsOff() = runTest {
+    val output: Flow<Action> = sampleSideEffect().testOutput(context)
+
+    output.test {
+      context.activeState = StopLightState(redLight = true, yellowLight = true)
+      context.actionsFlow.emit(SetGreenLightOn(false))
+      
+      ensureAllEventsConsumed() // no events
+    }
+  }
+
   @Test fun testSampleSideEffect_turnOffRedLight() = runTest {
     val output: Flow<Action> = sampleSideEffect().testOutput(context)
 
