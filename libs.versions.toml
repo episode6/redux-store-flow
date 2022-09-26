@@ -3,6 +3,7 @@ gradle-core = "7.5.1"
 kotlin-core = "1.7.10"
 kotlinx-coroutines = "1.6.4"
 dokka-core = "1.7.10"
+compose-core = "1.2.0-beta01"
 
 # test utils
 assertk-core = "0.25"

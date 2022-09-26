@@ -18,7 +18,6 @@ class Config {
         "linuxX64",
     ]
     public static String[] apple = [
-        "iosArm32",
         "iosArm64",
         "iosX64",
         "iosSimulatorArm64",
