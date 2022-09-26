@@ -16,8 +16,8 @@ import kotlin.coroutines.CoroutineContext
  * executes the [testBody], shutting down the [StoreFlow] when finished.
  */
 public fun <T> runStoreTest(
-  context: CoroutineContext = UnconfinedTestDispatcher(),
   storeBuilder: CoroutineScope.() -> StoreFlow<T>,
+  context: CoroutineContext = UnconfinedTestDispatcher(),
   testBody: suspend TestScope.(StoreFlow<T>) -> Unit,
 ): TestResult =
   runTest {
