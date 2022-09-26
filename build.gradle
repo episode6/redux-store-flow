@@ -1,5 +1,12 @@
+buildscript {
+  ext {
+    kotlin_version = libs.versions.kotlin.core.get()
+    dokka_version = libs.versions.dokka.core.get()
+  }
+}
 plugins {
-  id("org.jetbrains.dokka")
+  id 'org.jetbrains.kotlin.multiplatform' version "$kotlin_version" apply false
+  id 'org.jetbrains.dokka' version "$dokka_version" apply true
 }
 
 allprojects {
@@ -12,9 +19,8 @@ tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
 
-val dokkaDir = "docs/dokka"
-
-tasks.create<Delete>("clearDocsDir") {
+def dokkaDir = "docs/dokka"
+task clearDocsDir(type: Delete) {
   delete(dokkaDir)
   doLast { file("$rootDir/$dokkaDir").mkdirs() }
 }
@@ -24,6 +30,6 @@ tasks.dokkaHtmlMultiModule {
   outputDirectory.set(file("$rootDir/$dokkaDir"))
 }
 
-tasks.create("syncDocs") {
+task syncDocs {
   dependsOn("dokkaHtmlMultiModule")
 }
