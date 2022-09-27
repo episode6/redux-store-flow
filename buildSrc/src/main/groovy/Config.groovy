@@ -14,10 +14,10 @@ class Config {
   }
 
   public class KMPTargets {
-    public static String[] linux = [
+    private static String[] linux = [
         "linuxX64",
     ]
-    public static String[] apple = [
+    private static String[] apple = [
         "iosArm32",
         "iosArm64",
         "iosX64",
@@ -33,12 +33,12 @@ class Config {
         "watchosX64",
         "watchosSimulatorArm64",
     ]
-    public static String[] windows = [
+    private static String[] windows = [
         "mingwX64",
     ]
-    public static String[] natives = linux + apple + windows
-    public static String[] all = natives + ["jvm", "js"]
-    public static Map<String, String[]> ignore = [
+    private static String[] natives = linux + apple + windows
+    private static String[] all = natives + ["jvm", "js"]
+    private static Map<String, String[]> ignore = [
         "mingwX64": [":test-support:internal"], // assertK doesn't support mingwX64 yet
         "iosArm32": [":compose"] // compose multiplatform doesn't include support for iosArm32
     ]
