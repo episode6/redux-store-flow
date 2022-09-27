@@ -49,6 +49,9 @@ class Config {
     public static String[] filterAllFor(String projectPath) {
       return filterTargetsFor(all, projectPath)
     }
+    public static String[] filterHasTestSupportFor(String projectPath) {
+      return filterTargetsFor(all, projectPath) - "mingwX64"
+    }
     private static String[] filterTargetsFor(String[] targets, String projectPath) {
        return targets.findAll {
          def ignoreList = ignore[it]

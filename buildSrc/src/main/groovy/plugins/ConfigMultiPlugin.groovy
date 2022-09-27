@@ -65,6 +65,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
               dependsOn(commonMain)
             }
           }
+
+          for (sourceSet in Config.KMPTargets.filterHasTestSupportFor(path)) {
+            getByName("${sourceSet}Test") {
+              dependsOn(commonTest)
+            }
+          }
         }
       }
     }
