@@ -43,7 +43,13 @@ class Config {
         "iosArm32": [":compose"]
     ]
 
-    public static String[] filterTargetsFor(String[] targets, String projectPath) {
+    public static String[] filterNativesFor(String projectPath) {
+      return filterTargetsFor(natives, projectPath)
+    }
+    public static String[] filterAllFor(String projectPath) {
+      return filterTargetsFor(all, projectPath)
+    }
+    private static String[] filterTargetsFor(String[] targets, String projectPath) {
        return targets.findAll {
          def ignoreList = ignore[it]
          ignoreList == null || !ignoreList.contains(projectPath)
