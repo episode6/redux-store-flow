@@ -40,7 +40,9 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
-        for (t in Config.KMPTargets.natives) {
+
+
+        for (t in Config.KMPTargets.filterNatives(path)) {
           targets.add(presets.getByName(t).createTarget(t)) {
             compilations.all {
               kotlinOptions {
@@ -57,9 +59,16 @@ class ConfigMultiPlugin implements Plugin<Project> {
               implementation(kotlin("test"))
             }
           }
-          for (sourceSet in Config.KMPTargets.all) {
+          
+          for (sourceSet in Config.KMPTargets.filterAll(path)) {
             getByName("${sourceSet}Main") {
               dependsOn(commonMain)
+            }
+          }
+
+          for (sourceSet in Config.KMPTargets.filterHasTestSupport(path)) {
+            getByName("${sourceSet}Test") {
+              dependsOn(commonTest)
             }
           }
         }
