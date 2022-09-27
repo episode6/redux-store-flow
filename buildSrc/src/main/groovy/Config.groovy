@@ -39,8 +39,8 @@ class Config {
     public static String[] natives = linux + apple + windows
     public static String[] all = natives + ["jvm", "js"]
     public static Map<String, String[]> ignore = [
-        "mingwX64": [":test-support:internal"],
-        "iosArm32": [":compose"]
+        "mingwX64": [":test-support:internal"], // assertK doesn't support mingwX64 yet
+        "iosArm32": [":compose"] // compose multiplatform doesn't include support for iosArm32
     ]
 
     public static String[] filterNatives(String projectPath) {
