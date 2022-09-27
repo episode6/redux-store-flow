@@ -43,16 +43,16 @@ class Config {
         "iosArm32": [":compose"]
     ]
 
-    public static String[] filterNativesFor(String projectPath) {
-      return filterTargetsFor(natives, projectPath)
+    public static String[] filterNatives(String projectPath) {
+      return filterTargetsForProjectPath(natives, projectPath)
     }
-    public static String[] filterAllFor(String projectPath) {
-      return filterTargetsFor(all, projectPath)
+    public static String[] filterAll(String projectPath) {
+      return filterTargetsForProjectPath(all, projectPath)
     }
-    public static String[] filterHasTestSupportFor(String projectPath) {
-      return filterTargetsFor(all, projectPath) - "mingwX64"
+    public static String[] filterHasTestSupport(String projectPath) {
+      return filterTargetsForProjectPath(all, projectPath) - "mingwX64"
     }
-    private static String[] filterTargetsFor(String[] targets, String projectPath) {
+    private static String[] filterTargetsForProjectPath(String[] targets, String projectPath) {
        return targets.findAll {
          def ignoreList = ignore[it]
          ignoreList == null || !ignoreList.contains(projectPath)
