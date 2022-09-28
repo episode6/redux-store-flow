@@ -3,7 +3,7 @@ $dokka.linkExtension:html
 
 module:compose
 com.episode6.redux.compose
-module:core
+module:store-flow
 com.episode6.redux
 module:side-effects
 com.episode6.redux.sideeffects

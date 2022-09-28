@@ -11,7 +11,7 @@ kotlin {
       dependencies {
         api(libs.kotlinx.coroutines.core)
         api(compose.runtime)
-        api(project(":core"))
+        api(project(":store-flow"))
       }
     }
   }
