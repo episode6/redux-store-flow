@@ -30,4 +30,13 @@ jobs:
           ORG_GRADLE_PROJECT_nexusPassword: ${{ secrets.NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
+      - name: Deploy dokka to website
+        if: ${{ github.ref == 'refs/heads/main' && github.repository == 'episode6/redux-store-flow' }}
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: site
+          FOLDER: build/dokka/html
+          TARGET_FOLDER: /docs/snapshot/
+          CLEAN: true
 

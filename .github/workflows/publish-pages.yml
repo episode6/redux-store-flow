@@ -18,11 +18,19 @@ jobs:
         run: ./gradlew clean
       - name: Sync Docs
         run: ./gradlew syncDocs
-      - name: Deploy docs to website
+      - name: Deploy root docs to website
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
           FOLDER: docs
           TARGET_FOLDER: /
+          CLEAN: true
+      - name: Deploy dokka to website
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: site
+          FOLDER: build/dokka/html
+          TARGET_FOLDER: /docs/1.x/
           CLEAN: true
