@@ -8,10 +8,10 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "redux-store-flow"
+rootProject.name = "redux"
 
 include(
-  ":core",
+  ":store-flow",
   ":side-effects",
   ":subscriber-aware",
   ":compose",

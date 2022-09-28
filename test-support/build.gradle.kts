@@ -10,7 +10,7 @@ kotlin {
       dependencies {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
-        implementation(project(":core"))
+        implementation(project(":store-flow"))
         implementation(project(":side-effects"))
       }
     }

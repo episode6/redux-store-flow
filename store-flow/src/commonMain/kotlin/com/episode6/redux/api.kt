@@ -18,11 +18,6 @@ public interface StoreFlow<State : Any?> : Flow<State> {
 public interface Action
 
 /**
- * Function that dispatches an action to a [StoreFlow]
- */
-public typealias Dispatch = (Action) -> Unit
-
-/**
  * Reduces a state + action to a new state
  */
 public typealias Reducer<State> = State.(Action) -> State
@@ -33,3 +28,8 @@ public typealias Reducer<State> = State.(Action) -> State
 public fun interface Middleware<State : Any?> {
   public fun CoroutineScope.interfere(store: StoreFlow<State>, next: Dispatch): Dispatch
 }
+
+/**
+ * Function that handles an incoming [Action]
+ */
+public typealias Dispatch = (Action) -> Unit

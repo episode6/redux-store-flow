@@ -13,7 +13,7 @@ kotlin {
         api(libs.assertk.core)
         api(libs.turbine)
         api(project(":test-support"))
-        implementation(project(":core"))
+        implementation(project(":store-flow"))
       }
     }
   }
