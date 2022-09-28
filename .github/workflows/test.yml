@@ -29,13 +29,4 @@ jobs:
           FOLDER: docs
           TARGET_FOLDER: /
           CLEAN: true
-      - name: Deploy dokka to website
-        if: ${{ github.repository == 'episode6/redux-store-flow' }}
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: build/dokka/html
-          TARGET_FOLDER: /docs/${{ github.ref }}/
-          CLEAN: true
 
