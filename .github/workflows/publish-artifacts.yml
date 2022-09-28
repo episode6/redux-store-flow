@@ -48,7 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
           FOLDER: build/dokka/html
-          TARGET_FOLDER: '/docs/${{ github.ref_name }}/'
+          TARGET_FOLDER: /docs/${{ github.ref_name }}/
           CLEAN: true
       - name: Deploy snapshot dokka to website
         if: ${{ github.ref == 'refs/heads/main' && github.repository == 'episode6/redux-store-flow' }}
