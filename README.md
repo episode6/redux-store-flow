@@ -1,1 +1,2 @@
-[KDocs](dokka/)
+
+[Snapshot KDocs](docs/main/)
