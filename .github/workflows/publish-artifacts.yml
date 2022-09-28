@@ -9,7 +9,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   publish-job:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
@@ -30,3 +30,24 @@ jobs:
           ORG_GRADLE_PROJECT_nexusPassword: ${{ secrets.NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
+      - name: Sync Docs
+        run: ./gradlew syncDocs
+      - name: Deploy root docs to website
+        if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
+        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: site
+          FOLDER: docs
+          TARGET_FOLDER: /
+          CLEAN: false
+      - name: Deploy dokka to website
+        if: ${{ github.repository == 'episode6/redux-store-flow' }}
+        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: site
+          FOLDER: build/dokka/html
+          TARGET_FOLDER: /docs/${{ github.ref_name }}/
+          CLEAN: true
+

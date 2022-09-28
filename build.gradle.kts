@@ -14,7 +14,7 @@ tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
 
-val dokkaDir = "docs/dokka"
+val dokkaDir = "build/dokka/html"
 
 tasks.create<Delete>("clearDocsDir") {
   delete(dokkaDir)
