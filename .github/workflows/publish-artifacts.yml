@@ -40,7 +40,7 @@ jobs:
           BRANCH: site
           FOLDER: docs
           TARGET_FOLDER: /
-          CLEAN: false
+          CLEAN: true
       - name: Deploy release dokka to website
         if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
         uses: JamesIves/github-pages-deploy-action@releases/v3
