@@ -18,11 +18,6 @@ jobs:
         run: ./gradlew clean
       - name: Sync Docs
         run: ./gradlew syncDocs
-      - name: Build docs with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./docs
-          destination: ./docs/_site
       - name: Deploy docs to website
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
