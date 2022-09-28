@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew syncDocs
       - name: Deploy root docs to website
         if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
@@ -43,7 +43,7 @@ jobs:
           CLEAN: true
       - name: Deploy release dokka to website
         if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
@@ -52,7 +52,7 @@ jobs:
           CLEAN: true
       - name: Deploy snapshot dokka to website
         if: ${{ github.ref == 'refs/heads/main' && github.repository == 'episode6/redux-store-flow' }}
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
