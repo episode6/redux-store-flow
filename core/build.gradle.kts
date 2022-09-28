@@ -1,4 +1,4 @@
-description = "Core implementation of Redux StoreFlow"
+description = "Core implementation of Redux StoreFlow, a kotlin implementation of Redux backed by StateFlows and Coroutines"
 
 plugins {
   id("config-multi-deploy")
