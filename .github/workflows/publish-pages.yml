@@ -5,7 +5,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   publish-job:
-    runs-on: macos-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11

@@ -9,7 +9,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
   publish-job:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
@@ -30,18 +30,4 @@ jobs:
           ORG_GRADLE_PROJECT_nexusPassword: ${{ secrets.NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
-      - name: Sync Docs
-        run: ./gradlew syncDocs
-      - name: Build docs with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./docs
-          destination: ./docs/_site
-      - name: Deploy docs to website
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: docs
-          TARGET_FOLDER: /
-          CLEAN: true
+
