@@ -11,38 +11,44 @@ class ConfigMultiPlugin implements Plugin<Project> {
         apply("org.jetbrains.kotlin.multiplatform")
       }
 
+      def skipTargets = findProperty("skipTargets")?.split(",") ?: []
+
       kotlin {
-        jvm {
-          compilations.all {
-            kotlinOptions {
-              jvmTarget = Config.Jvm.name
-              freeCompilerArgs += Config.Kotlin.compilerArgs
+        if (!skipTargets.contains("jvm")) {
+          jvm {
+            compilations.all {
+              kotlinOptions {
+                jvmTarget = Config.Jvm.name
+                freeCompilerArgs += Config.Kotlin.compilerArgs
+              }
             }
-          }
-          java {
-            sourceCompatibility = Config.Jvm.sourceCompat
-            targetCompatibility = Config.Jvm.targetCompat
-          }
-          jvmTest {
-            useJUnitPlatform()
-            testLogging {
-              events "passed", "skipped", "failed"
+            java {
+              sourceCompatibility = Config.Jvm.sourceCompat
+              targetCompatibility = Config.Jvm.targetCompat
+            }
+            jvmTest {
+              useJUnitPlatform()
+              testLogging {
+                events "passed", "skipped", "failed"
+              }
             }
           }
         }
-        js(IR) {
-          nodejs()
-          browser()
-          binaries.library()
-          compilations.all {
-            kotlinOptions {
-              freeCompilerArgs += Config.Kotlin.compilerArgs
+        if (!skipTargets.contains("js")) {
+          js(IR) {
+            nodejs()
+            browser()
+            binaries.library()
+            compilations.all {
+              kotlinOptions {
+                freeCompilerArgs += Config.Kotlin.compilerArgs
+              }
             }
           }
         }
 
 
-        for (t in Config.KMPTargets.filterNatives(path)) {
+        for (t in Config.KMPTargets.natives - skipTargets) {
           targets.add(presets.getByName(t).createTarget(t)) {
             compilations.all {
               kotlinOptions {
@@ -60,7 +66,7 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
           
-          for (sourceSet in Config.KMPTargets.filterAll(path)) {
+          for (sourceSet in Config.KMPTargets.all - skipTargets) {
             getByName("${sourceSet}Main") {
               dependsOn(commonMain)
             }

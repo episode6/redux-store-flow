@@ -14,10 +14,10 @@ class Config {
   }
 
   public class KMPTargets {
-    private static String[] linux = [
+    static String[] linux = [
         "linuxX64",
     ]
-    private static String[] apple = [
+    static String[] apple = [
         "iosArm32",
         "iosArm64",
         "iosX64",
@@ -33,31 +33,11 @@ class Config {
         "watchosX64",
         "watchosSimulatorArm64",
     ]
-    private static String[] windows = [
+    static String[] windows = [
         "mingwX64",
     ]
-    private static String[] natives = linux + apple + windows
-    private static String[] all = natives + ["jvm", "js"]
-    private static Map<String, String[]> ignore = [
-        "mingwX64": [":test-support:internal"], // assertK doesn't support mingwX64 yet
-        "iosArm32": [":compose"] // compose multiplatform doesn't include support for iosArm32
-    ]
-
-    public static String[] filterNatives(String projectPath) {
-      return filterTargetsForProjectPath(natives, projectPath)
-    }
-    public static String[] filterAll(String projectPath) {
-      return filterTargetsForProjectPath(all, projectPath)
-    }
-    public static String[] filterHasTestSupport(String projectPath) {
-      return filterTargetsForProjectPath(all, projectPath) - "mingwX64"
-    }
-    private static String[] filterTargetsForProjectPath(String[] targets, String projectPath) {
-       return targets.findAll {
-         def ignoreList = ignore[it]
-         ignoreList == null || !ignoreList.contains(projectPath)
-       }
-    }
+    public static String[] natives = linux + apple + windows
+    public static String[] all = natives + ["jvm", "js"]
   }
 
   class Maven {
