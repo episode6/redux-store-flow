@@ -1,10 +1,6 @@
 name: Publish Artifacts
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - '**'
+  pull_request:
 env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
