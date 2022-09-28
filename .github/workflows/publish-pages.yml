@@ -1,4 +1,4 @@
-name: Publish Artifacts
+name: Publish Pages
 on:
   pull_request:
 env:
