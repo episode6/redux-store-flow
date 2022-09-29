@@ -9,7 +9,7 @@ dependencies {
   implementation "com.episode6.redux:store-flow:$reduxVersion"
   // Support for Side Effects / SideEffectMiddleware
   implementation "com.episode6.redux:side-effects:$reduxVersion"
-  // A StoreFlow that dispatches a SubscriberStatusChanged
+  // A StoreFlow that dispatches a SubscriberStatusChanged Action
   implementation "com.episode6.redux:subscriber-aware:$reduxVersion"
   // Jetpack Compose Multiplatform support
   implementation "com.episode6.redux:compose:$reduxVersion"
