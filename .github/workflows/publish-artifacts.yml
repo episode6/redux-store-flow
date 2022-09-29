@@ -33,7 +33,8 @@ jobs:
       - name: Sync Docs
         run: ./gradlew syncDocs
       - name: Deploy root docs to website
-        if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
+        if: ${{ github.repository == 'episode6/redux-store-flow' }}
+#        if: ${{ github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
