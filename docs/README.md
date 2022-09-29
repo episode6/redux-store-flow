@@ -3,7 +3,7 @@ StoreFlow is a kotlin multiplatform "port" of [Redux for Javascript](https://red
 ### Installation
 Redux StoreFlow artifacts are published to Maven Central with gradle metadata. We currently ship the following modules...
 ```groovy
-def reduxVersion = "1.0.0-alpha02"
+def reduxVersion = "1.0.0-alpha03"
 dependencies {
   // core api & implementation
   implementation "com.episode6.redux:store-flow:$reduxVersion"
