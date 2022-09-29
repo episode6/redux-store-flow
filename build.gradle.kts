@@ -1,7 +1,7 @@
 plugins {
-  id("org.jetbrains.kotlin.multiplatform") version(libs.versions.kotlin.core.get()) apply(false)
-  id("org.jetbrains.dokka") version(libs.versions.dokka.core.get())
-  id("org.jetbrains.compose") version(libs.versions.compose.core.get()) apply(false)
+  id("org.jetbrains.kotlin.multiplatform") version (libs.versions.kotlin.core.get()) apply (false)
+  id("org.jetbrains.dokka") version (libs.versions.dokka.core.get())
+  id("org.jetbrains.compose") version (libs.versions.compose.core.get()) apply (false)
 }
 
 allprojects {
@@ -26,6 +26,20 @@ tasks.dokkaHtmlMultiModule {
   outputDirectory.set(file("$rootDir/$dokkaDir"))
 }
 
+tasks.create("configDocs") {
+  doLast {
+    file("$rootDir/docs/_config.yml").writeText(
+      """
+        theme: jekyll-theme-cayman
+        title: Redux StoreFlow
+        description: A kotlin implementation of Redux, backed by StateFlows and Coroutines
+        version: $version
+        docsDir: docs/${ if (Config.Maven.isReleaseBuild(project)) version else "main" }
+      """.trimIndent()
+    )
+  }
+}
+
 tasks.create("syncDocs") {
-  dependsOn("dokkaHtmlMultiModule")
+  dependsOn("dokkaHtmlMultiModule", "configDocs")
 }
