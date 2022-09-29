@@ -69,7 +69,7 @@ class Config {
       }
     }
 
-    static boolean isReleaseBuild(Project project) {
+    public static boolean isReleaseBuild(Project project) {
       return project.version.contains("SNAPSHOT") == false
     }
 
