@@ -1,3 +1,7 @@
+<p align="center">
+    <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.episode6.redux%22"><img src="https://img.shields.io/maven-central/v/com.episode6.redux/store-flow.svg?style=flat-square"></a>
+</p>
+
 StoreFlow is a kotlin multiplatform "port" of [Redux for Javascript](https://redux.js.org/) / [ReduxKotlin](https://reduxkotlin.org/) that is backed by kotlin's coroutines and Flows. While we use much of the same terminology as the aforementioned projects, the api and implementation differ significantly.
 
 ### Installation
