@@ -34,7 +34,7 @@ tasks.create("configDocs") {
         title: Redux StoreFlow
         description: A kotlin implementation of Redux, backed by StateFlows and Coroutines
         version: $version
-        docsDir: docs/${ if (Config.Maven.isReleaseBuild(project)) version else "main" }
+        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) version else "main" }
       """.trimIndent()
     )
   }
