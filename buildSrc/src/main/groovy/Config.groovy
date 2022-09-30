@@ -65,7 +65,7 @@ class Config {
         }
       }
       project.afterEvaluate {
-        pom.description = project.description ?: "A kotlin implementation of Redux based on StateFlow"
+        pom.description = project.description ?: project.rootProject.description
       }
     }
 
