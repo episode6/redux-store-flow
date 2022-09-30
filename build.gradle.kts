@@ -35,7 +35,7 @@ tasks.create("configDocs") {
         title: Redux StoreFlow
         description: $description
         version: $version
-        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) version else "main" }
+        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
       """.trimIndent()
     )
   }
