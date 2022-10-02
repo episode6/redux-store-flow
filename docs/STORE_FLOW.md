@@ -11,6 +11,8 @@ interface StoreFlow<State : Any?> : Flow<State> {
   val state: State // the current state
   fun dispatch(action: Action) // dispatches an action to the Store to be reduced / processed by middleware
 }
+
+interface Action
 ```
 
 In addition to an initialState and Reducer, a `CoroutineScope` is required to create a StoreFlow
