@@ -15,15 +15,14 @@ public fun <State : Any?> SideEffectMiddleware(sideEffects: Collection<SideEffec
     val sideEffectCount = sideEffects.size
     val actionRelay = MutableSharedFlow<Action>()
     val context = SideEffectContextImpl(actionRelay.asSharedFlow(), store)
-    sideEffects.map { it.actWith(context) }
-      .forEach {
-        launch { it.collect(store::dispatch) }
-      }
+    sideEffects.forEach {
+      launch { it.actWith(context).collect(store::dispatch) }
+    }
 
     return@Middleware { action ->
       next(action)
       launch {
-        actionRelay.subscriptionCount.filter { it == sideEffectCount }.first() // wait for all subscribers
+        actionRelay.awaitSubscriptionCount(sideEffectCount)
         actionRelay.emit(action)
       }
     }
@@ -37,3 +36,6 @@ private class SideEffectContextImpl<State>(
 }
 
 private fun <State> SideEffect<State>.actWith(context: SideEffectContext<State>): Flow<Action> = with(context) { act() }
+private suspend fun MutableSharedFlow<*>.awaitSubscriptionCount(count: Int) {
+  subscriptionCount.filter { it == count }.first()
+}
