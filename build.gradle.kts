@@ -8,7 +8,7 @@ allprojects {
   group = "com.episode6.redux"
   version = "1.0.0-SNAPSHOT"
 }
-description = "A kotlin implementation of Redux, backed by StateFlows and Coroutines"
+description = "Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines"
 
 tasks.wrapper {
   gradleVersion = libs.versions.gradle.core.get()
