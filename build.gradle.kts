@@ -36,6 +36,8 @@ tasks.create("configDocs") {
         description: $description
         version: $version
         docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
+        kotlinVersion: ${libs.versions.kotlin.core.get()}
+        coroutineVersion: ${libs.versions.kotlinx.coroutines.get()}
       """.trimIndent()
     )
   }

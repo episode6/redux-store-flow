@@ -2,7 +2,7 @@
     <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.episode6.redux%22"><img src="https://img.shields.io/maven-central/v/com.episode6.redux/store-flow.svg?style=flat-square"></a>
 </p>
 
-StoreFlow is a kotlin multiplatform "port" of [Redux for Javascript](https://redux.js.org/) / [ReduxKotlin](https://reduxkotlin.org/) that is backed by kotlin's coroutines and Flows. While we use much of the same terminology as the aforementioned projects, the api and implementation differ significantly.
+StoreFlow is yet another kotlin multiplatform "port" of [Redux for Javascript](https://redux.js.org/) / [ReduxKotlin](https://reduxkotlin.org/). What sets it apart is that instead of trying to faithfully re-create the Redux api, we leverage kotlin's coroutines and Flows to handle the heavy lifting. StoreFlow uses much of the same terminology as the aforementioned projects but our creation and usage patterns differ. We will not attempt to explain the core concepts, theory or motivation of Redux here; the [ReduxKotlin intro docs](https://reduxkotlin.org/introduction/core-concepts) are recommended reading if unfamiliar with the Redux pattern.
 
 ### Installation
 Redux StoreFlow artifacts are published to Maven Central with gradle metadata. We currently ship the following modules...
@@ -21,5 +21,17 @@ dependencies {
   testImplementation "com.episode6.redux:test-support:$reduxVersion"
 }
 ```
+StoreFlow is compiled against Kotlin v{{ site.kotlinVersion }} and Coroutines v{{ site.coroutineVersion }}
 
-[Snapshot KDocs](docs/main/)
+[Snapshots](docs/main/) are available in the sonatype snapshot repo at `https://oss.sonatype.org/content/repositories/snapshots/`
+
+### Api
+
+The StoreFlow Api is relatively simple...
+```kotlin
+interface StoreFlow<State : Any?> : Flow<State> {
+  val initialState: State
+  val state: State
+  fun dispatch(action: Action)
+}
+```
