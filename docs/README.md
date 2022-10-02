@@ -10,12 +10,14 @@ the core concepts, theory or motivation of Redux here;
 the [ReduxKotlin intro docs](https://reduxkotlin.org/introduction/core-concepts) are recommended reading if unfamiliar
 with the Redux pattern.
 
+{% include readme_index.html %}
+
 ### Installation
 
 Redux StoreFlow artifacts are published to Maven Central with gradle metadata. We currently ship the following
 modules...
 
-<sub>StoreFlow is compiled against Kotlin v{{ site.kotlinVersion }} and Coroutines v{{ site.coroutineVersion }}</sub>
+<sub>StoreFlow v{{ site.version }} is compiled against Kotlin v{{ site.kotlinVersion }} and Coroutines v{{ site.coroutineVersion }}</sub>
 
 ```groovy
 def reduxVersion = "{{ site.version }}"
@@ -35,8 +37,3 @@ dependencies {
 
 <sup>[Snapshots](docs/main/) are available in the sonatype snapshot repo
 at https://oss.sonatype.org/content/repositories/snapshots/</sup>
-
-### Readme Index
-
-- [StoreFlow Core Api](STORE_FLOW.md)
-- [SideEffects](SIDE_EFFECTS.md)

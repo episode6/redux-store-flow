@@ -1,4 +1,7 @@
-### SideEffects [`com.episode6.redux:side-effects`]({{ site.docsDir }}/side-effects/com.episode6.redux.sideeffects/index.html)
+{% include readme_index.html %}
+
+### SideEffects 
+<sup>Module: [`com.episode6.redux:side-effects:{{ site.version }}`]({{ site.docsDir }}/side-effects/com.episode6.redux.sideeffects/index.html)</sup>
 
 SideEffects offer a way to include managed async operations in a StoreFlow. A `SideEffect` is a functional interface
 that runs with a receiver of `SideEffectContext`. The primary input is `actions: Flow<Action>` which represents every
