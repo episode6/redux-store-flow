@@ -8,7 +8,7 @@ allprojects {
   group = "com.episode6.redux"
   version = "1.0.0-SNAPSHOT"
 }
-description = "A kotlin implementation of Redux, backed by StateFlows and Coroutines"
+description = "Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines"
 
 tasks.wrapper {
   gradleVersion = libs.versions.gradle.core.get()
@@ -36,6 +36,8 @@ tasks.create("configDocs") {
         description: $description
         version: $version
         docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
+        kotlinVersion: ${libs.versions.kotlin.core.get()}
+        coroutineVersion: ${libs.versions.kotlinx.coroutines.get()}
       """.trimIndent()
     )
   }
