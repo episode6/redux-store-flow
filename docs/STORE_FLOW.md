@@ -50,7 +50,7 @@ data class SetGreenLight(val value: Boolean) : Action
 data class SetYellowLight(val value: Boolean) : Action
 data class SetRedLight(val value: Boolean) : Action
 
-// See below for a trick to eliminate this additional verbosity
+// See the ProTip below for a trick to eliminate this additional verbosity
 private fun TrafficLightState.reduce(action: Action): TrafficLightState = when (action) {
   is SetGreenLight  -> copy(green = action.value)
   is SetYellowLight -> copy(yellow = action.value)
@@ -106,4 +106,26 @@ fun loggingMiddleware() = Middleware { store, next ->
 Since a Middleware is executed with a `CoroutineScope`, it can safely launch async work in response to actions, however it's bad practice to defer execution of the `next` dispatch function.  
 
 Currently, the only Middleware we ship `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
+
+### ProTip: Reduce Actions
+
+A common complaint about the Redux pattern is it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
+```kotlin
+// Only actions that extend our ReduceAction will make changes to the state. 
+// Because we're using a sealed class, we still have complete control of 
+// reducer as changes can only be introduced to this file.
+sealed class ReduceAction(reduce: TrafficLightState.()->TrafficLightState) : Action
+
+// we update our actions so they can reduce themselves
+data class SetGreenLight(val value: Boolean) : ReduceAction({ copy(green = value) })
+data class SetYellowLight(val value: Boolean) : ReduceAction({ copy(yellow = value) })
+data class SetRedLight(val value: Boolean) : ReduceAction({ copy(red = value) })
+
+// instead of writing a manual reducer function, we replace it with a simple lambda
+fun trafficLightStore(scope: CoroutineScope) = StoreFlow(
+  scope = scope,
+  initialState = TrafficLightState(),
+  reducer = { (it as? ReduceAction).reduce?.invoke(this) ?: this },
+)
+```
 
