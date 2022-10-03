@@ -2,8 +2,7 @@
 
 ### Subscriber Aware StoreFlow
 
-<sup>Module: [`com.episode6.redux:subscriber-aware:{{ site.version }}`]({{ site.docsDir
-}}/subscriber-aware/com.episode6.redux.subscriberaware/-subscriber-aware-store-flow.html)</sup>
+<sup>Module: [`com.episode6.redux:subscriber-aware:{{ site.version }}`]({{ site.docsDir }}/subscriber-aware/com.episode6.redux.subscriberaware/-subscriber-aware-store-flow.html)</sup>
 
 A `SubscriberAwareStoreFlow` acts just like a normal `StoreFlow` except that it dispatches a special
 action (`data class SubscriberStatusChanged(val subscribersActive: Boolean) : Action`) whenever the first subscriber
