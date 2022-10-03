@@ -50,7 +50,7 @@ data class SetGreenLight(val value: Boolean) : Action
 data class SetYellowLight(val value: Boolean) : Action
 data class SetRedLight(val value: Boolean) : Action
 
-// See the ProTip below for a trick to eliminate this additional verbosity
+// See the ReduceAction pattern below for a trick to eliminate this additional verbosity
 private fun TrafficLightState.reduce(action: Action): TrafficLightState = when (action) {
   is SetGreenLight  -> copy(green = action.value)
   is SetYellowLight -> copy(yellow = action.value)
@@ -107,7 +107,7 @@ Since a Middleware is executed with a `CoroutineScope`, it can safely launch asy
 
 Currently, the only Middleware we ship `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
 
-### ProTip: Reduce Actions
+### ReduceAction Pattern
 
 A common complaint about the Redux pattern is it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
 ```kotlin
