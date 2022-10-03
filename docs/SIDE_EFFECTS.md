@@ -94,7 +94,7 @@ modules).
   // etc
 }
 
-// We then define a factory for our StoreFlow
+// We then define a factory for our StoreFlow and inject the Set<SideEffect>
 class StoreFactory @Inject constructor(
   val sideEffects: Set<@JvmSuppressWildcards SideEffect<TrafficLightState>>,
 ) {
