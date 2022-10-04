@@ -37,7 +37,7 @@ typealias Reducer<State> = State.(Action) -> State
 
 ### Sample StoreFlow
 
-Here we demo a sample StoreFlow that manages the state of a traffic light...
+Before we look at Middleware, lets demo a simple StoreFlow that manages the state of a traffic light...
 
 ```kotlin
 data class TrafficLightState(
@@ -50,7 +50,8 @@ data class SetGreenLight(val value: Boolean) : Action
 data class SetYellowLight(val value: Boolean) : Action
 data class SetRedLight(val value: Boolean) : Action
 
-// See the ReduceAction pattern below for a trick to eliminate this additional verbosity
+// The reducer function will only be called from a single coroutine in a single thread.
+// (see the ReduceAction pattern below for a trick to eliminate this additional verbosity)
 private fun TrafficLightState.reduce(action: Action): TrafficLightState = when (action) {
   is SetGreenLight  -> copy(green = action.value)
   is SetYellowLight -> copy(yellow = action.value)
@@ -109,7 +110,7 @@ Currently, the only Middleware we ship is `SideEffectMiddleware`, which you can 
 
 ### ReduceAction Pattern
 
-A common complaint about the Redux pattern is it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
+A common complaint about the Redux pattern is that it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
 ```kotlin
 // Only actions that extend our ReduceAction will make changes to the state. 
 // Because we're using a sealed class, we still have complete control of 
