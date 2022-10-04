@@ -5,10 +5,19 @@ import com.episode6.redux.Middleware
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+/**
+ * Returns a [Middleware] that passes actions to the supplied [sideEffects], then dispatches
+ * their returned [Action]s back into the [StoreFlow]
+ */
 @Suppress("FunctionName")
 public fun <State : Any?> SideEffectMiddleware(vararg sideEffects: SideEffect<State>): Middleware<State> =
   SideEffectMiddleware(sideEffects.toList())
 
+
+/**
+ * Returns a [Middleware] that passes actions to the supplied [sideEffects], then dispatches
+ * their returned [Action]s back into the [StoreFlow]
+ */
 @Suppress("FunctionName")
 public fun <State : Any?> SideEffectMiddleware(sideEffects: Collection<SideEffect<State>>): Middleware<State> =
   Middleware { store, next ->

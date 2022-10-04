@@ -36,7 +36,7 @@ fun trafficServerListenSideEffect(server: TrafficServer) = SideEffect<TrafficLig
 }
 
 // then we update our creator function to use SubscriberAwareStoreFlow 
-// and apply out new side-effect (which is the only one we'll need)
+// and apply our new SideEffect (which is the only one we'll need)
 fun trafficLightStore(scope: CoroutineScope, server: TrafficServer) = SubscriberAwareStoreFlow(
   scope = scope,
   initialState = TrafficLightState(),
