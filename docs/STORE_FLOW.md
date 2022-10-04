@@ -81,7 +81,7 @@ fun main() {
 
 ### Middleware
 
-A Middleware is a functional interface that has the opportunity to interfere with the processing of an action. It accepts a dispatch function `next`, which allows the action to continue being processed, and returns its own dispatch function in which `next` should be called.
+A Middleware is a functional interface that has the opportunity to interfere with the processing of an action. It accepts a dispatch function `next`, which allows the action to continue being processed. The middleware then returns its own dispatch function in which `next` should be called.
 
 ```kotlin
 fun interface Middleware<State : Any?> {
@@ -125,7 +125,7 @@ data class SetRedLight(val value: Boolean) : ReduceAction({ copy(red = value) })
 fun trafficLightStore(scope: CoroutineScope) = StoreFlow(
   scope = scope,
   initialState = TrafficLightState(),
-  reducer = { (it as? ReduceAction).reduce?.invoke(this) ?: this },
+  reducer = { (it as? ReduceAction)?.reduce?.invoke(this) ?: this },
 )
 ```
 
