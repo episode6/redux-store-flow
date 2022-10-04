@@ -105,7 +105,7 @@ fun loggingMiddleware() = Middleware { store, next ->
 
 Since a Middleware is executed with a `CoroutineScope`, it can safely launch async work in response to actions, however it's bad practice to defer execution of the `next` dispatch function.  
 
-Currently, the only Middleware we ship `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
+Currently, the only Middleware we ship is `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
 
 ### ReduceAction Pattern
 
