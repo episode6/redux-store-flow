@@ -37,7 +37,7 @@ typealias Reducer<State> = State.(Action) -> State
 
 ### Sample StoreFlow
 
-Here we demo a sample StoreFlow that manages the state of a traffic light...
+Before we look at Middleware, lets demo a simple StoreFlow that manages the state of a traffic light...
 
 ```kotlin
 data class TrafficLightState(
@@ -50,7 +50,8 @@ data class SetGreenLight(val value: Boolean) : Action
 data class SetYellowLight(val value: Boolean) : Action
 data class SetRedLight(val value: Boolean) : Action
 
-// See the ReduceAction pattern below for a trick to eliminate this additional verbosity
+// The reducer function will only be called from a single coroutine in a single thread.
+// (see the ReduceAction pattern below for a trick to eliminate this additional verbosity)
 private fun TrafficLightState.reduce(action: Action): TrafficLightState = when (action) {
   is SetGreenLight  -> copy(green = action.value)
   is SetYellowLight -> copy(yellow = action.value)
@@ -81,7 +82,7 @@ fun main() {
 
 ### Middleware
 
-A Middleware is a functional interface that has the opportunity to interfere with the processing of an action. It accepts a dispatch function `next`, which allows the action to continue being processed, and returns its own dispatch function in which `next` should be called.
+A Middleware is a functional interface that has the opportunity to interfere with the processing of an action. It accepts a dispatch function `next`, which allows the action to continue being processed. The middleware then returns its own dispatch function in which `next` should be called.
 
 ```kotlin
 fun interface Middleware<State : Any?> {
@@ -105,11 +106,11 @@ fun loggingMiddleware() = Middleware { store, next ->
 
 Since a Middleware is executed with a `CoroutineScope`, it can safely launch async work in response to actions, however it's bad practice to defer execution of the `next` dispatch function.  
 
-Currently, the only Middleware we ship `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
+Currently, the only Middleware we ship is `SideEffectMiddleware`, which you can read more about in the [SideEffect Readme](SIDE_EFFECTS.md#sideeffects). If you're new to redux, this should be the only Middleware you need to worry about (besides simple logging).
 
 ### ReduceAction Pattern
 
-A common complaint about the Redux pattern is it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
+A common complaint about the Redux pattern is that it adds redundant boilerplate due to the addition of Actions and the Reducer. Once way we can limit this verbosity is with the "ReduceAction" pattern...
 ```kotlin
 // Only actions that extend our ReduceAction will make changes to the state. 
 // Because we're using a sealed class, we still have complete control of 
@@ -125,7 +126,7 @@ data class SetRedLight(val value: Boolean) : ReduceAction({ copy(red = value) })
 fun trafficLightStore(scope: CoroutineScope) = StoreFlow(
   scope = scope,
   initialState = TrafficLightState(),
-  reducer = { (it as? ReduceAction).reduce?.invoke(this) ?: this },
+  reducer = { (it as? ReduceAction)?.reduce?.invoke(this) ?: this },
 )
 ```
 

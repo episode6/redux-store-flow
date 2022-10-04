@@ -3,7 +3,7 @@
 ### Unit Test Support
 <sup>Module: [`com.episode6.redux:test-support:{{ site.version }}`]({{ site.docsDir }}/test-support/com.episode6.redux.testsupport/index.html)</sup>
 
-Because StoreFlow launches a coroutine on init, unit-testing one with kotlin's new-ish `runTest` method is not entirely straightforward (creating a StoreFlow with a TestScope results in a UncompletedCoroutinesError since StoreFlow will intentionally never complete its Job until its CoroutineScope is explicitly cancelled). 
+Because StoreFlow launches a coroutine on init, unit-testing with kotlin's new-ish `runTest` method is not entirely straightforward (creating a StoreFlow with a TestScope results in a UncompletedCoroutinesError since StoreFlow will intentionally never complete its Job until its CoroutineScope is explicitly cancelled). 
 
 To deal with this, we supply a `StoreManager` in the `:test-support` module. The StoreManager is used to create and shutdown the StoreFlow that is being tested. 
 
