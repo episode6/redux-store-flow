@@ -18,7 +18,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 /**
  * Map this [StoreFlow] before collecting values from it.
  */
-@Composable public fun <IN, OUT> StoreFlow<IN>.collectStoreAsState(
+@Composable public fun <IN, OUT> StoreFlow<IN>.collectAsState(
   context: CoroutineContext = EmptyCoroutineContext,
   mapper: (IN) -> OUT
 ): State<OUT> = mapStore(mapper).collectAsState(context = context)
