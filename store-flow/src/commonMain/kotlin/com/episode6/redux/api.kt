@@ -23,7 +23,7 @@ public interface Action
 public typealias Reducer<State> = State.(Action) -> State
 
 /**
- * Gets the chance to interfere with a [StoreFlow]'s dispatch of actions
+ * Gets the chance to interfere with a [StoreFlow]'s dispatch/processing of actions
  */
 public fun interface Middleware<State : Any?> {
   public fun CoroutineScope.interfere(store: StoreFlow<State>, next: Dispatch): Dispatch
