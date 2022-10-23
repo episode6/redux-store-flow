@@ -33,7 +33,7 @@ tasks.create("configDocs") {
       """
         theme: jekyll-theme-cayman
         title: Redux StoreFlow
-        description: $description
+        description: ${rootProject.description}
         version: $version
         docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
         kotlinVersion: ${libs.versions.kotlin.core.get()}
