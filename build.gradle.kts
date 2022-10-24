@@ -15,21 +15,28 @@ tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
 
-val dokkaDir = "build/dokka/html"
+val dokkaDir = "${rootProject.buildDir}/dokka/html"
+val siteDir = "${rootProject.buildDir}/site"
 
 tasks.create<Delete>("clearDokkaDir") {
   delete(dokkaDir)
-  doLast { file("$rootDir/$dokkaDir").mkdirs() }
+  doLast { file(dokkaDir).mkdirs() }
 }
 
 tasks.dokkaHtmlMultiModule {
   dependsOn("clearDokkaDir")
-  outputDirectory.set(file("$rootDir/$dokkaDir"))
+  outputDirectory.set(file(dokkaDir))
+}
+
+tasks.create<Copy>("copyReadmes") {
+  from(file("docs/"))
+  destinationDir = file(siteDir)
 }
 
 tasks.create("configDocs") {
+  dependsOn("copyReadmes")
   doLast {
-    file("$rootDir/docs/_config.yml").writeText(
+    file("$siteDir/_config.yml").writeText(
       """
         theme: jekyll-theme-cayman
         title: Redux StoreFlow
