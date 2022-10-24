@@ -17,13 +17,13 @@ tasks.wrapper {
 
 val dokkaDir = "build/dokka/html"
 
-tasks.create<Delete>("clearDocsDir") {
+tasks.create<Delete>("clearDokkaDir") {
   delete(dokkaDir)
   doLast { file("$rootDir/$dokkaDir").mkdirs() }
 }
 
 tasks.dokkaHtmlMultiModule {
-  dependsOn("clearDocsDir")
+  dependsOn("clearDokkaDir")
   outputDirectory.set(file("$rootDir/$dokkaDir"))
 }
 
