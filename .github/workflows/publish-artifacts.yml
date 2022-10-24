@@ -38,7 +38,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: docs
+          FOLDER: build/site
           TARGET_FOLDER: /
           CLEAN: false
       - name: Deploy dokka to website
