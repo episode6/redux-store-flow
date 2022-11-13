@@ -15,6 +15,7 @@
     - `[VERSION] Release v<version>` points at new release branch
     - Update version in files:
         - `build.gradle.kts`
+        - `docs/CHANGELOG.md`
 
 ### Harden Release Branch
 
