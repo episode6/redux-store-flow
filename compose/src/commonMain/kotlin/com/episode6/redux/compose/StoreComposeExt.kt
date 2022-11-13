@@ -3,6 +3,7 @@ package com.episode6.redux.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import com.episode6.redux.StoreFlow
 import com.episode6.redux.mapStore
 import kotlin.coroutines.CoroutineContext
@@ -21,4 +22,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 @Composable public fun <IN, OUT> StoreFlow<IN>.collectAsState(
   context: CoroutineContext = EmptyCoroutineContext,
   mapper: (IN) -> OUT
-): State<OUT> = mapStore(mapper).collectAsState(context = context)
+): State<OUT> {
+  val store = remember { mapStore(mapper) }
+  return store.collectAsState(context = context)
+}
