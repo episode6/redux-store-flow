@@ -40,6 +40,20 @@ class Config {
     public static String[] all = natives + ["jvm", "js"]
   }
 
+  class Site {
+    static String generateJekyllConfig(Project project) {
+      return """
+        theme: jekyll-theme-cayman
+        title: Redux StoreFlow
+        description: ${project.rootProject.description}
+        version: ${project.version}
+        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
+        kotlinVersion: ${project.libs.versions.kotlin.core.get()}
+        coroutineVersion: ${project.libs.versions.kotlinx.coroutines.get()}
+""".stripIndent()
+    }
+  }
+
   class Maven {
     static void applyPomConfig(Project project, MavenPom pom) {
       pom.with {

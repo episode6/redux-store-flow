@@ -3,7 +3,9 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd $SCRIPT_DIR
-./gradlew configDocs
+./gradlew configSite
 
-cd $SCRIPT_DIR/build/site
+cp build/site/_config.yml docs/
+
+cd $SCRIPT_DIR/docs
 bundle exec jekyll serve
