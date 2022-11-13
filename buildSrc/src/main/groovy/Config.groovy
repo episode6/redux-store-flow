@@ -47,7 +47,7 @@ class Config {
         title: Redux StoreFlow
         description: ${project.rootProject.description}
         version: ${project.version}
-        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
+        docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v${project.version}" else "main" }
         kotlinVersion: ${project.libs.versions.kotlin.core.get()}
         coroutineVersion: ${project.libs.versions.kotlinx.coroutines.get()}
 """.stripIndent()
