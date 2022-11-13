@@ -46,7 +46,7 @@ class Config {
         theme: jekyll-theme-cayman
         title: Redux StoreFlow
         description: ${project.rootProject.description}
-        version: $version
+        version: ${project.version}
         docsDir: https://episode6.github.io/redux-store-flow/docs/${ if (Config.Maven.isReleaseBuild(project)) "v$version" else "main" }
         kotlinVersion: ${project.libs.versions.kotlin.core.get()}
         coroutineVersion: ${project.libs.versions.kotlinx.coroutines.get()}
