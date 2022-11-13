@@ -1,7 +1,8 @@
+
 theme: jekyll-theme-cayman
 title: Redux StoreFlow
-description: null
-version: 1.0.0
-docsDir: https://episode6.github.io/redux-store-flow/docs/v1.0.0
+description: Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines
+version: 1.0.1
+docsDir: https://episode6.github.io/redux-store-flow/docs/v1.0.1
 kotlinVersion: 1.7.10
 coroutineVersion: 1.6.4
