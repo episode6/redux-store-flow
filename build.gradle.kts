@@ -15,4 +15,3 @@ tasks.wrapper {
   gradleVersion = libs.versions.gradle.core.get()
   distributionType = Wrapper.DistributionType.ALL
 }
-// do nothing
