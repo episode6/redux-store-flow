@@ -1,0 +1,17 @@
+name: Verify docs updated
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  verify-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run docs verification
+        run: bash scripts/verify-docs-updated.sh "${{ github.event.pull_request.base.ref }}"
