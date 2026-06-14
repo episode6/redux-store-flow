@@ -8,6 +8,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        api(libs.turbine)
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
         implementation(project(":store-flow"))
