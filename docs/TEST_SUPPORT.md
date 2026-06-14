@@ -33,6 +33,25 @@ We also offer a convenience method `runStoreTest` (that replaces `runTest`) that
 }
 ```
 
+#### Testing with Turbine
+The `runStoreTest` method is compatible with [Turbine](https://github.com/cashapp/turbine) for testing flows. Since v1.1.0, `runStoreTest` internally wraps the test body in a `turbineScope`. 
+
+If you need to use Turbine features that require a `TurbineContext` (like `testIn(this)`), you may need to wrap your test code in an additional `turbineScope`:
+
+```kotlin
+@Test fun testMultipleSubscribers() = runStoreTest(::createStoreFlow) { store ->
+  turbineScope {
+    val collector1 = store.testIn(this)
+    val collector2 = store.testIn(this)
+    
+    // ... test logic
+    
+    collector1.cancel()
+    collector2.cancel()
+  }
+}
+```
+
 #### Testing individual SideEffects
 While integration tests of a fully-formed StoreFlow offer the most value, you may want to test SideEffects individually to validate their output. To assist with this, we offer the `SideEffectTestContext` class and `SideEffect.testOutput(SideEffectTestContext): Flow<Action>` method. The SideEffectTestContext lets you emit `Action`s and control the `currentState()` that is available to the SideEffect. We can then test the emissions of the resulting Flow using [Turbine](https://github.com/cashapp/turbine) (or by manually collecting from it).
 
