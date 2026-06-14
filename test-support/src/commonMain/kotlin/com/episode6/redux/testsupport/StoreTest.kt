@@ -2,6 +2,7 @@
 
 package com.episode6.redux.testsupport
 
+import app.cash.turbine.turbineScope
 import com.episode6.redux.StoreFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,8 +22,9 @@ public fun <T> runStoreTest(
   testBody: suspend TestScope.(StoreFlow<T>) -> Unit,
 ): TestResult =
   runTest {
-    val manager = StoreManager(context = context, storeBuilder = storeBuilder)
-    testBody(manager.store())
-    manager.shutdown()
+    turbineScope {
+      val manager = StoreManager(context = context, storeBuilder = storeBuilder)
+      testBody(this@runTest, manager.store())
+      manager.shutdown()
+    }
   }
-

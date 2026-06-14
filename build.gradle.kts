@@ -1,5 +1,6 @@
 plugins {
   id("org.jetbrains.kotlin.multiplatform") version (libs.versions.kotlin.core.get()) apply (false)
+  id("org.jetbrains.kotlin.plugin.compose") version (libs.versions.kotlin.core.get()) apply (false)
   id("org.jetbrains.dokka") version (libs.versions.dokka.core.get())
   id("org.jetbrains.compose") version (libs.versions.compose.core.get()) apply (false)
   id("config-site")
@@ -7,7 +8,7 @@ plugins {
 
 allprojects {
   group = "com.episode6.redux"
-  version = "1.0.2-SNAPSHOT"
+  version = "1.1.0-SNAPSHOT"
 }
 description = "Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines"
 

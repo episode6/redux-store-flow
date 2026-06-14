@@ -26,7 +26,7 @@ class ConfigSitePlugin implements Plugin<Project> {
         doLast { file(siteDir).mkdirs() }
       }
 
-      tasks.dokkaHtmlMultiModule {
+      tasks.named("dokkaGeneratePublicationHtml") {
         outputDirectory.set(file(dokkaDir))
       }
 
@@ -44,7 +44,7 @@ class ConfigSitePlugin implements Plugin<Project> {
       }
 
       tasks.create("syncDocs") {
-        dependsOn("dokkaHtmlMultiModule", "configSite")
+        dependsOn("dokkaGenerateHtml", "configSite")
       }
     }
   }

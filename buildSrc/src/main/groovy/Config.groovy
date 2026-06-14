@@ -4,9 +4,9 @@ import org.gradle.api.publish.maven.MavenPom
 
 class Config {
   class Jvm {
-    static String name = "1.8"
-    static JavaVersion targetCompat = JavaVersion.VERSION_1_8
-    static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
+    static String name = "17"
+    static JavaVersion targetCompat = JavaVersion.VERSION_17
+    static JavaVersion sourceCompat = JavaVersion.VERSION_17
   }
 
   class Kotlin {
@@ -16,28 +16,41 @@ class Config {
   public class KMPTargets {
     static String[] linux = [
         "linuxX64",
+        "linuxArm64",
     ]
-    static String[] apple = [
-        "iosArm32",
+    static String[] appleArm = [
         "iosArm64",
-        "iosX64",
         "iosSimulatorArm64",
-        "macosX64",
         "macosArm64",
         "tvosArm64",
-        "tvosX64",
         "tvosSimulatorArm64",
-        "watchosArm32",
         "watchosArm64",
-        "watchosX86",
-        "watchosX64",
         "watchosSimulatorArm64",
     ]
+    static String[] apple = appleArm
     static String[] windows = [
         "mingwX64",
     ]
+    static String[] wasm = [
+        "wasmJs",
+        "wasmWasi",
+    ]
     public static String[] natives = linux + apple + windows
-    public static String[] all = natives + ["jvm", "js"]
+    public static String[] all = natives + wasm + ["jvm", "js"]
+
+    public static List<String> getLinuxX64() {
+      return ["linuxX64"]
+    }
+
+    public static List<String> getWindowsX64() {
+      return ["mingwX64"]
+    }
+
+    public static List<String> getMacos() {
+      def linux = getLinuxX64()
+      def windows = getWindowsX64()
+      return all.findAll { !linux.contains(it) && !windows.contains(it) }
+    }
   }
 
   class Site {

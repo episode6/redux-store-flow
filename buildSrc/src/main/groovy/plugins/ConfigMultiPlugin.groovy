@@ -7,11 +7,18 @@ class ConfigMultiPlugin implements Plugin<Project> {
   @Override
   void apply(Project target) {
     target.with {
-      plugins.with {
-        apply("org.jetbrains.kotlin.multiplatform")
-      }
+      plugins.apply("org.jetbrains.kotlin.multiplatform")
 
-      def skipTargets = findProperty("skipTargets")?.split(",") ?: []
+      def skipTargets = (findProperty("skipTargets")?.split(",") ?: []) as List
+      def filter = findProperty("filter")
+      if (filter == "linuxX64") {
+        skipTargets.addAll(Config.KMPTargets.all.findAll { it != "linuxX64" })
+      } else if (filter == "windowsX64") {
+        skipTargets.addAll(Config.KMPTargets.all.findAll { it != "mingwX64" })
+      } else if (filter == "macos") {
+        skipTargets.addAll(Config.KMPTargets.getLinuxX64())
+        skipTargets.addAll(Config.KMPTargets.getWindowsX64())
+      }
 
       kotlin {
         if (!skipTargets.contains("jvm")) {
@@ -46,16 +53,29 @@ class ConfigMultiPlugin implements Plugin<Project> {
             }
           }
         }
+        if (!skipTargets.contains("wasmJs")) {
+          wasmJs {
+            nodejs()
+            browser()
+            binaries.library()
+          }
+        }
+        if (!skipTargets.contains("wasmWasi")) {
+          wasmWasi {
+            nodejs()
+            binaries.library()
+          }
+        }
 
 
         for (t in Config.KMPTargets.natives - skipTargets) {
-          targets.add(presets.getByName(t).createTarget(t)) {
+          invokeMethod(t, {
             compilations.all {
               kotlinOptions {
                 freeCompilerArgs += Config.Kotlin.compilerArgs
               }
             }
-          }
+          })
         }
 
         sourceSets {
@@ -63,12 +83,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
           commonTest {
             dependencies {
               implementation(kotlin("test"))
-            }
-          }
-          
-          for (sourceSet in Config.KMPTargets.all - skipTargets) {
-            getByName("${sourceSet}Main") {
-              dependsOn(commonMain)
             }
           }
         }

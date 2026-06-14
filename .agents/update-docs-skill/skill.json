@@ -1,0 +1,12 @@
+{
+  "id": "update-docs-skill",
+  "name": "Enforce Docs & Changelog Updates",
+  "version": "1.0.0",
+  "description": "Policy and automation to require changelog/docs updates when code changes are made.",
+  "author": "ghackett",
+  "entry": "SKILL.md",
+  "created_at": "2026-06-14T16:07:00-04:00",
+  "tags": ["policy","changelog","docs","ci"],
+  "required_actions": ["run scripts/verify-docs-updated.sh before PRs"],
+  "enforcement": ".github/workflows/verify-docs.yml"
+}

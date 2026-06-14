@@ -16,7 +16,7 @@ kotlin {
         implementation(project(":test-support:internal"))
       }
     }
-    val jvmTest by getting {
+    findByName("jvmTest")?.apply {
       dependencies {
         implementation(libs.mockk.core)
       }

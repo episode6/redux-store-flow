@@ -3,7 +3,7 @@
 package com.episode6.redux
 
 import app.cash.turbine.test
-import app.cash.turbine.testIn
+import app.cash.turbine.turbineScope
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.containsExactly
@@ -48,24 +48,26 @@ class TestMapStore {
   }
 
   @Test fun testDispatchValueChanged_testCollector() = stopLightStoreTest { backingStore ->
-    val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
-    val backingStoreCollector = backingStore.testIn(this)
-    val storeCollector = store.testIn(this)
+    turbineScope {
+      val store: StoreFlow<Boolean> = backingStore.mapStore { it.redLight }
+      val backingStoreCollector = backingStore.testIn(this)
+      val storeCollector = store.testIn(this)
 
-    store.dispatch(SetRedLightOn(false))
-    store.dispatch(SetRedLightOn(false)) // dupes all ignored
-    backingStore.dispatch(SetRedLightOn(false))
+      store.dispatch(SetRedLightOn(false))
+      store.dispatch(SetRedLightOn(false)) // dupes all ignored
+      backingStore.dispatch(SetRedLightOn(false))
 
-    // verify both stores have same values and same number of values
-    assertThat(storeCollector.awaitItems(2)).containsExactly(true, false)
-    assertThat(backingStoreCollector.awaitItems(2)).all {
-      index(0).hasDefaultLights()
-      index(1).hasLights()
+      // verify both stores have same values and same number of values
+      assertThat(storeCollector.awaitItems(2)).containsExactly(true, false)
+      assertThat(backingStoreCollector.awaitItems(2)).all {
+        index(0).hasDefaultLights()
+        index(1).hasLights()
+      }
+      storeCollector.ensureAllEventsConsumed()
+      backingStoreCollector.ensureAllEventsConsumed()
+
+      storeCollector.cancel()
+      backingStoreCollector.cancel()
     }
-    storeCollector.ensureAllEventsConsumed()
-    backingStoreCollector.ensureAllEventsConsumed()
-
-    storeCollector.cancel()
-    backingStoreCollector.cancel()
   }
 }
