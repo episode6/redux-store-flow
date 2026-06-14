@@ -16,6 +16,7 @@ class Config {
   public class KMPTargets {
     static String[] linux = [
         "linuxX64",
+        "linuxArm64",
     ]
     static String[] appleArm = [
         "iosArm64",
@@ -36,8 +37,12 @@ class Config {
     static String[] windows = [
         "mingwX64",
     ]
+    static String[] wasm = [
+        "wasmJs",
+        "wasmWasi",
+    ]
     public static String[] natives = linux + apple + windows
-    public static String[] all = natives + ["jvm", "js"]
+    public static String[] all = natives + wasm + ["jvm", "js"]
   }
 
   class Site {

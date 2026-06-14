@@ -10,9 +10,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
       plugins.apply("org.jetbrains.kotlin.multiplatform")
 
       def skipTargets = (findProperty("skipTargets")?.split(",") ?: []) as List
-      if (findProperty("skipAppleIntel") == "true") {
-        skipTargets.addAll(Config.KMPTargets.appleIntel)
-      }
 
       kotlin {
         if (!skipTargets.contains("jvm")) {
@@ -45,6 +42,19 @@ class ConfigMultiPlugin implements Plugin<Project> {
                 freeCompilerArgs += Config.Kotlin.compilerArgs
               }
             }
+          }
+        }
+        if (!skipTargets.contains("wasmJs")) {
+          wasmJs {
+            nodejs()
+            browser()
+            binaries.library()
+          }
+        }
+        if (!skipTargets.contains("wasmWasi")) {
+          wasmWasi {
+            nodejs()
+            binaries.library()
           }
         }
 
