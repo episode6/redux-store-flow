@@ -16,6 +16,7 @@
     - Update version in files:
         - `build.gradle.kts`
         - `docs/CHANGELOG.md`
+    - Run `./gradlew syncDocs` and include changes in the commit.
 
 ### Harden Release Branch
 
