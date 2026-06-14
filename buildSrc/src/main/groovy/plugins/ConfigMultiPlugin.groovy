@@ -49,13 +49,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
 
 
         for (t in Config.KMPTargets.natives - skipTargets) {
-          targets.add(presets.getByName(t).createTarget(t)) {
+          invokeMethod(t, {
             compilations.all {
               kotlinOptions {
                 freeCompilerArgs += Config.Kotlin.compilerArgs
               }
             }
-          }
+          })
         }
 
         sourceSets {
