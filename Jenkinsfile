@@ -29,7 +29,7 @@ node {
   }
 
   stage('docgen') {
-    gradleRunner.runGradle("docgen", "dokkaHtml", false)
+    gradleRunner.runGradle("docgen", "dokkaGenerateHtml", false)
   }
 
 // now deployed from github

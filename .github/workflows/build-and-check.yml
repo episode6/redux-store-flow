@@ -40,4 +40,4 @@ jobs:
       run: ./gradlew check -Pfilter=${{ matrix.filter }}
     - name: Generate Docs
       if: matrix.filter == 'macos'
-      run: ./gradlew dokkaHtml
+      run: ./gradlew dokkaGenerateHtml

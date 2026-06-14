@@ -38,7 +38,7 @@ jobs:
         run: ./gradlew clean
       - name: Generate Docs
         if: matrix.filter == 'macos'
-        run: ./gradlew dokkaHtml
+        run: ./gradlew dokkaGenerateHtml
       - name: Publish
         run: ./gradlew publish -Pfilter=${{ matrix.filter }}
         env:

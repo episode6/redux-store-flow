@@ -20,9 +20,9 @@ class CommonDeployablePlugin implements Plugin<Project> {
       task("deploy", dependsOn: tasks.publish)
       task("install", dependsOn: tasks.publishToMavenLocal)
 
-      task("javadocJar", type: Jar, dependsOn: tasks.dokkaHtml) {
+      task("javadocJar", type: Jar, dependsOn: "dokkaGeneratePublicationHtml") {
         archiveClassifier.set('javadoc')
-        from tasks.dokkaHtml
+        from tasks.named("dokkaGeneratePublicationHtml")
       }
 
       signing {
