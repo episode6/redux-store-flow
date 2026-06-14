@@ -39,7 +39,7 @@ class Config {
     public static String[] all = natives + wasm + ["jvm", "js"]
 
     public static List<String> getX64() {
-      return ["linuxX64", "js", "wasmJs", "wasmWasi", "mingwX64"]
+      return ["linuxX64", "mingwX64"]
     }
 
     public static List<String> getNonX64() {
