@@ -6,7 +6,7 @@ dokka-core = "1.9.20"
 compose-core = "1.6.11"
 
 # test utils
-assertk-core = "0.25"
+assertk-core = "0.28.1"
 mockk-core = "1.13.1"
 
 [libraries]
