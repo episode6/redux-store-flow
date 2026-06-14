@@ -66,12 +66,6 @@ class ConfigMultiPlugin implements Plugin<Project> {
               implementation(kotlin("test"))
             }
           }
-          
-          for (sourceSet in Config.KMPTargets.all - skipTargets) {
-            getByName("${sourceSet}Main") {
-              dependsOn(commonMain)
-            }
-          }
         }
       }
     }
