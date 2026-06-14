@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - fix/sonatype-publishing-405
     tags:
       - '**'
 env:
