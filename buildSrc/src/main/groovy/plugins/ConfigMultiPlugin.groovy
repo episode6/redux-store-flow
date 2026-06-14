@@ -10,6 +10,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
       plugins.apply("org.jetbrains.kotlin.multiplatform")
 
       def skipTargets = (findProperty("skipTargets")?.split(",") ?: []) as List
+      def filter = findProperty("filter")
+      if (filter == "x64") {
+        skipTargets.addAll(Config.KMPTargets.getNonX64())
+      } else if (filter == "nonX64") {
+        skipTargets.addAll(Config.KMPTargets.getX64())
+      }
 
       kotlin {
         if (!skipTargets.contains("jvm")) {

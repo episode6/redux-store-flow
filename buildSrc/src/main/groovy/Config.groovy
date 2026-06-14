@@ -37,6 +37,15 @@ class Config {
     ]
     public static String[] natives = linux + apple + windows
     public static String[] all = natives + wasm + ["jvm", "js"]
+
+    public static List<String> getX64() {
+      return ["linuxX64", "jvm", "js", "wasmJs", "wasmWasi", "mingwX64"]
+    }
+
+    public static List<String> getNonX64() {
+      def x64 = getX64()
+      return all.findAll { !x64.contains(it) }
+    }
   }
 
   class Site {
