@@ -2,7 +2,7 @@
 
 ## v1.1.0-SNAPSHOT - Unreleased
 
-- CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (temurin); enable basic Gradle caching in GitHub workflows
+- CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (Azul Zulu); enable basic Gradle caching in GitHub workflows
 - Upgraded Kotlin to 2.4.0
 - Upgraded Gradle to 9.5.1
 - Upgraded Coroutines to 1.11.0
