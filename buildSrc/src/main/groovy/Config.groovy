@@ -27,13 +27,7 @@ class Config {
         "watchosArm64",
         "watchosSimulatorArm64",
     ]
-    static String[] appleIntel = [
-        "iosX64",
-        "macosX64",
-        "tvosX64",
-        "watchosX64",
-    ]
-    static String[] apple = appleArm + appleIntel
+    static String[] apple = appleArm
     static String[] windows = [
         "mingwX64",
     ]

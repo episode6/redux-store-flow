@@ -10,6 +10,7 @@
 - Upgraded Turbine to 1.2.1 and fixed tests related to `turbineScope` requirement
 - Upgraded JVM target and source compatibility to Java 17
 - Added support for new Kotlin Multiplatform targets: `linuxArm64` and `wasmJs`
+- Removed support for Apple Intel (x64) targets: `iosX64`, `macosX64`, `tvosX64`, and `watchosX64`
 - Fixed "Default Kotlin Hierarchy Template Not Applied Correctly" build warnings
 
 ## v1.0.1 - Released 11/13/2022
