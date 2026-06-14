@@ -97,14 +97,14 @@ class Config {
     }
 
     public static boolean isReleaseBuild(Project project) {
-      return project.version.contains("SNAPSHOT") == false
+      return !project.version.toString().endsWith("-SNAPSHOT")
     }
 
     static String getRepoUrl(Project project) {
       if (isReleaseBuild(project)) {
-        return "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        return "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
       } else {
-        return "https://oss.sonatype.org/content/repositories/snapshots/"
+        return "https://s01.oss.sonatype.org/content/repositories/snapshots"
       }
     }
   }
