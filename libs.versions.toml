@@ -1,13 +1,13 @@
 [versions]
-gradle-core = "8.10.2"
-kotlin-core = "2.0.21"
-kotlinx-coroutines = "1.9.0"
-dokka-core = "1.9.20"
-compose-core = "1.6.11"
+gradle-core = "9.5.1"
+kotlin-core = "2.4.0"
+kotlinx-coroutines = "1.11.0"
+dokka-core = "2.2.0"
+compose-core = "1.11.1"
 
 # test utils
 assertk-core = "0.28.1"
-mockk-core = "1.13.1"
+mockk-core = "1.14.11"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -17,4 +17,4 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk-core" }
 assertk-jvm = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk-core" }
 mockk-core = { module = "io.mockk:mockk", version.ref = "mockk-core" }
-turbine = { module = "app.cash.turbine:turbine", version = "0.11.0" }
+turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }

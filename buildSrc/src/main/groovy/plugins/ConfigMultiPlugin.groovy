@@ -7,11 +7,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
   @Override
   void apply(Project target) {
     target.with {
-      plugins.with {
-        apply("org.jetbrains.kotlin.multiplatform")
-      }
+      plugins.apply("org.jetbrains.kotlin.multiplatform")
 
-      def skipTargets = findProperty("skipTargets")?.split(",") ?: []
+      def skipTargets = (findProperty("skipTargets")?.split(",") ?: []) as List
+      if (findProperty("skipAppleIntel") == "true") {
+        skipTargets.addAll(Config.KMPTargets.appleIntel)
+      }
 
       kotlin {
         if (!skipTargets.contains("jvm")) {

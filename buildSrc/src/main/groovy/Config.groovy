@@ -4,9 +4,9 @@ import org.gradle.api.publish.maven.MavenPom
 
 class Config {
   class Jvm {
-    static String name = "1.8"
-    static JavaVersion targetCompat = JavaVersion.VERSION_1_8
-    static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
+    static String name = "17"
+    static JavaVersion targetCompat = JavaVersion.VERSION_17
+    static JavaVersion sourceCompat = JavaVersion.VERSION_17
   }
 
   class Kotlin {
@@ -17,19 +17,22 @@ class Config {
     static String[] linux = [
         "linuxX64",
     ]
-    static String[] apple = [
+    static String[] appleArm = [
         "iosArm64",
-        "iosX64",
         "iosSimulatorArm64",
-        "macosX64",
         "macosArm64",
         "tvosArm64",
-        "tvosX64",
         "tvosSimulatorArm64",
         "watchosArm64",
-        "watchosX64",
         "watchosSimulatorArm64",
     ]
+    static String[] appleIntel = [
+        "iosX64",
+        "macosX64",
+        "tvosX64",
+        "watchosX64",
+    ]
+    static String[] apple = appleArm + appleIntel
     static String[] windows = [
         "mingwX64",
     ]
