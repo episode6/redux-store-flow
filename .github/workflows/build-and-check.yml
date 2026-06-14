@@ -13,9 +13,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            filter: x64
+            filter: linuxX64
+          - os: windows-latest
+            filter: windowsX64
           - os: macos-latest
-            filter: nonX64
+            filter: macos
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
@@ -41,5 +43,5 @@ jobs:
     - name: Check Project
       run: ./gradlew check -Pfilter=${{ matrix.filter }}
     - name: Generate Docs
-      if: matrix.filter == 'nonX64'
+      if: matrix.filter == 'macos'
       run: ./gradlew dokkaHtml

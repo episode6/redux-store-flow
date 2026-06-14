@@ -13,9 +13,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            filter: x64
+            filter: linuxX64
+          - os: windows-latest
+            filter: windowsX64
           - os: macos-latest
-            filter: nonX64
+            filter: macos
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +41,7 @@ jobs:
       - name: Clean Project
         run: ./gradlew clean
       - name: Generate Docs
-        if: matrix.filter == 'nonX64'
+        if: matrix.filter == 'macos'
         run: ./gradlew dokkaHtml
       - name: Publish
         run: ./gradlew publish -Pfilter=${{ matrix.filter }}
@@ -50,10 +52,10 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
       - name: Sync Docs
-        if: matrix.filter == 'nonX64'
+        if: matrix.filter == 'macos'
         run: ./gradlew syncDocs
       - name: Deploy root docs to website
-        if: ${{ matrix.filter == 'nonX64' && github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
+        if: ${{ matrix.filter == 'macos' && github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +64,7 @@ jobs:
           TARGET_FOLDER: /
           CLEAN: false
       - name: Deploy dokka to website
-        if: ${{ matrix.filter == 'nonX64' && github.repository == 'episode6/redux-store-flow' }}
+        if: ${{ matrix.filter == 'macos' && github.repository == 'episode6/redux-store-flow' }}
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

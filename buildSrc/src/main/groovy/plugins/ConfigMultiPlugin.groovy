@@ -11,10 +11,13 @@ class ConfigMultiPlugin implements Plugin<Project> {
 
       def skipTargets = (findProperty("skipTargets")?.split(",") ?: []) as List
       def filter = findProperty("filter")
-      if (filter == "x64") {
-        skipTargets.addAll(Config.KMPTargets.getNonX64())
-      } else if (filter == "nonX64") {
-        skipTargets.addAll(Config.KMPTargets.getX64())
+      if (filter == "linuxX64") {
+        skipTargets.addAll(Config.KMPTargets.all.findAll { it != "linuxX64" })
+      } else if (filter == "windowsX64") {
+        skipTargets.addAll(Config.KMPTargets.all.findAll { it != "mingwX64" })
+      } else if (filter == "macos") {
+        skipTargets.addAll(Config.KMPTargets.getLinuxX64())
+        skipTargets.addAll(Config.KMPTargets.getWindowsX64())
       }
 
       kotlin {

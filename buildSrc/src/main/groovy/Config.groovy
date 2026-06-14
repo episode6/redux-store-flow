@@ -38,13 +38,18 @@ class Config {
     public static String[] natives = linux + apple + windows
     public static String[] all = natives + wasm + ["jvm", "js"]
 
-    public static List<String> getX64() {
-      return ["linuxX64", "mingwX64"]
+    public static List<String> getLinuxX64() {
+      return ["linuxX64"]
     }
 
-    public static List<String> getNonX64() {
-      def x64 = getX64()
-      return all.findAll { !x64.contains(it) }
+    public static List<String> getWindowsX64() {
+      return ["mingwX64"]
+    }
+
+    public static List<String> getMacos() {
+      def linux = getLinuxX64()
+      def windows = getWindowsX64()
+      return all.findAll { !linux.contains(it) && !windows.contains(it) }
     }
   }
 
