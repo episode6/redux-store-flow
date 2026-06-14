@@ -41,7 +41,13 @@ jobs:
         if: matrix.filter == 'macos'
         run: ./gradlew dokkaGenerateHtml
       - name: Publish
-        run: ./gradlew publish -Pfilter=${{ matrix.filter }}
+        shell: bash
+        run: |
+          if [ "${{ matrix.filter }}" == "macos" ]; then
+            ./gradlew publish -Pfilter=${{ matrix.filter }}
+          else
+            ./gradlew publish -Pfilter=${{ matrix.filter }} -Pkotlin.mpp.enableMetadataPublishing=false
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORG_GRADLE_PROJECT_nexusUsername: ${{ secrets.NEXUS_USERNAME }}

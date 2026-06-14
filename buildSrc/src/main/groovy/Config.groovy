@@ -86,9 +86,9 @@ class Config {
           }
         }
         scm {
-          url = "extensible"
-          connection = "scm:https://github.com/episode6/redux-store-flow.git"
-          developerConnection = "scm:https://github.com/episode6/redux-store-flow.git"
+          url = "https://github.com/episode6/redux-store-flow"
+          connection = "scm:git:https://github.com/episode6/redux-store-flow.git"
+          developerConnection = "scm:git:ssh://github.com/episode6/redux-store-flow.git"
         }
       }
       project.afterEvaluate {
@@ -102,9 +102,9 @@ class Config {
 
     static String getRepoUrl(Project project) {
       if (isReleaseBuild(project)) {
-        return "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+        return "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
       } else {
-        return "https://s01.oss.sonatype.org/content/repositories/snapshots"
+        return "https://oss.sonatype.org/content/repositories/snapshots/"
       }
     }
   }
