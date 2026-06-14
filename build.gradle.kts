@@ -1,5 +1,6 @@
 plugins {
   id("org.jetbrains.kotlin.multiplatform") version (libs.versions.kotlin.core.get()) apply (false)
+  id("org.jetbrains.kotlin.plugin.compose") version (libs.versions.kotlin.core.get()) apply (false)
   id("org.jetbrains.dokka") version (libs.versions.dokka.core.get())
   id("org.jetbrains.compose") version (libs.versions.compose.core.get()) apply (false)
   id("config-site")

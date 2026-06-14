@@ -1,9 +1,9 @@
 [versions]
-gradle-core = "7.5.1"
-kotlin-core = "1.7.10"
-kotlinx-coroutines = "1.6.4"
-dokka-core = "1.7.10"
-compose-core = "1.2.0-beta01"
+gradle-core = "8.10.2"
+kotlin-core = "2.0.21"
+kotlinx-coroutines = "1.9.0"
+dokka-core = "1.9.20"
+compose-core = "1.6.11"
 
 # test utils
 assertk-core = "0.25"

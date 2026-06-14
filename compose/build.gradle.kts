@@ -3,6 +3,7 @@ description = "Jetpack Compose support for Redux StoreFlow"
 plugins {
   id("config-multi-deploy")
   id("org.jetbrains.compose")
+  id("org.jetbrains.kotlin.plugin.compose")
 }
 
 kotlin {
