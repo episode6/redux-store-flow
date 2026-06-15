@@ -1,6 +1,8 @@
 # ChangeLog
 
-## v1.1.0-SNAPSHOT - Unreleased
+## v1.1.1 - Unreleased
+
+## v1.1.0 - Released 06/15/2026
 
 - CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (Azul Zulu); enable enhanced Gradle caching in GitHub workflows
 - Added GitHub Actions workflow and local script (`scripts/verify-docs-updated.sh`) for verifying documentation updates on pull requests.
