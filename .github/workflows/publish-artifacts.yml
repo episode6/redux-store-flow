@@ -42,6 +42,11 @@ jobs:
         run: |
           if [ "${{ matrix.filter }}" == "macos" ]; then
             ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }}
+            if [ "${{ github.ref_type }}" == "tag" ]; then
+              SONATYPE_TOKEN=$(echo -n "${ORG_GRADLE_PROJECT_nexusUsername}:${ORG_GRADLE_PROJECT_nexusPassword}" | base64 | tr -d '\n')
+              curl -X POST "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/com.episode6" \
+                   -H "Authorization: Bearer ${SONATYPE_TOKEN}"
+            fi
           else
             ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }} -Pkotlin.mpp.enableMetadataPublishing=false
           fi
