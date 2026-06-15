@@ -10,6 +10,7 @@
   "required_actions": [
     "Check CI status on main",
     "Create release branch",
-    "Create version bump PRs for main and release branches"
+    "Create version bump PRs for main and release branches",
+    "Update docs/CHANGELOG.md in both PRs (VITAL)"
   ]
 }

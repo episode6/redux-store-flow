@@ -16,6 +16,10 @@ This skill guides the agent in shipping a release branch by creating and publish
 ## Dependencies
 - `release-branch-skill`: Typically run after a release branch is cut and hardened.
 
+## Prerequisites
+- Ensure the local release branch is up-to-date by pulling from `origin` before starting the release process.
+- **Verify Version**: The version in `build.gradle.kts` must NOT end with `-SNAPSHOT`. If it does, the release process must be aborted until the version is properly bumped.
+
 ## Quick Start
 To perform a dry-run and verify release notes/version before shipping:
 ```bash
@@ -52,3 +56,4 @@ The skill uses the `./scripts/ship-release.py` script.
 1. **Shipping a Snapshot**: Trying to ship when the version in `build.gradle.kts` still contains `-SNAPSHOT`. The script will detect this and fail.
 2. **Missing Changelog Section**: Forgetting to update `docs/CHANGELOG.md` with the release version and date. The script will fail if the section matching `v<VERSION>` cannot be found.
 3. **Mismatched release notes**: Assuming the release notes can be typed manually. Always extract them directly from `docs/CHANGELOG.md` using the script to avoid discrepancies.
+4. **Stale Local Branch**: Forgetting to pull the latest changes from `origin` before shipping, which can lead to releasing an outdated version of the code.

@@ -13,9 +13,9 @@
 - Create 2 PRs to bump version
     - `[VERSION] Snapshot v<version>` points at `main`
     - `[VERSION] Release v<version>` points at new release branch
-    - Update version in files:
+    - Update version in files (VITAL):
         - `build.gradle.kts`
-        - `docs/CHANGELOG.md`
+        - `docs/CHANGELOG.md` (Update with release date and/or new unreleased section)
 
 ### Harden Release Branch
 
