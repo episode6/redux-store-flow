@@ -28,7 +28,6 @@ Create two separate Pull Requests to update versions.
 - **Changes:**
     - Update `version` in `build.gradle.kts` (remove `-SNAPSHOT` if present).
     - Update `docs/CHANGELOG.md` with release date and final version.
-    - Run `./gradlew syncDocs` and include any resulting changes in the commit.
 
 ## Verification
 - After these steps, the project is ready for the "Harden Release Branch" phase, which requires manual verification and cherry-picking of bug fixes.
