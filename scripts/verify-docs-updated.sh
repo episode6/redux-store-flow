@@ -6,11 +6,18 @@ set -euo pipefail
 
 BASE_REF=${1:-origin/main}
 
+# If the specified ref doesn't exist locally, try resolving it as origin/<ref>
+if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+  if git rev-parse --verify "origin/$BASE_REF" >/dev/null 2>&1; then
+    BASE_REF="origin/$BASE_REF"
+  fi
+fi
+
 # Ensure we have the base for comparison
 git fetch origin --no-tags --prune || true
 
 # Compute changed files between base and HEAD
-CHANGED_FILES=$(git diff --name-only "$BASE_REF"...HEAD || true)
+CHANGED_FILES=$(git diff --name-only "$BASE_REF"...HEAD)
 
 if [ -z "$CHANGED_FILES" ]; then
   echo "No changes detected between $BASE_REF and HEAD."
