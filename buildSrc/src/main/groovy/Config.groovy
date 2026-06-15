@@ -102,9 +102,9 @@ class Config {
 
     static String getRepoUrl(Project project) {
       if (isReleaseBuild(project)) {
-        return "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        return "https://oss.sonatype.org/service/local/staging/deploy/maven2"
       } else {
-        return "https://oss.sonatype.org/content/repositories/snapshots/"
+        return "https://oss.sonatype.org/content/repositories/snapshots"
       }
     }
   }

@@ -37,6 +37,7 @@ class CommonDeployablePlugin implements Plugin<Project> {
       publishing {
         repositories {
           maven {
+            name = "sonatype"
             url Config.Maven.getRepoUrl(target)
             credentials {
               username findProperty("nexusUsername")

@@ -44,9 +44,9 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.filter }}" == "macos" ]; then
-            ./gradlew publish -Pfilter=${{ matrix.filter }}
+            ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }}
           else
-            ./gradlew publish -Pfilter=${{ matrix.filter }} -Pkotlin.mpp.enableMetadataPublishing=false
+            ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }} -Pkotlin.mpp.enableMetadataPublishing=false
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
