@@ -1,0 +1,15 @@
+{
+  "id": "release-branch-skill",
+  "name": "Cut Release Branch",
+  "version": "1.0.0",
+  "description": "Process for cutting a new release branch and performing version bumps.",
+  "author": "ghackett",
+  "entry": "SKILL.md",
+  "created_at": "2026-06-14T17:00:00-04:00",
+  "tags": ["release", "git", "versioning"],
+  "required_actions": [
+    "Check CI status on main",
+    "Create release branch",
+    "Create version bump PRs for main and release branches"
+  ]
+}
