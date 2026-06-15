@@ -8,7 +8,7 @@ plugins {
 
 allprojects {
   group = "com.episode6.redux"
-  version = "1.1.1-SNAPSHOT"
+  version = "1.1.1"
 }
 description = "Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines"
 
