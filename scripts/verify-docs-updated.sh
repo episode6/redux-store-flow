@@ -20,7 +20,7 @@ git fetch origin --no-tags --prune || true
 CHANGED_FILES=$(git diff --name-only "$BASE_REF"...HEAD)
 
 if [ -z "$CHANGED_FILES" ]; then
-  echo "No changes detected between $BASE_REF and HEAD."
+  echo "No code changes detected."
   exit 0
 fi
 
@@ -55,5 +55,9 @@ if [ "$CODE_CHANGED" = true ] && [ "$DOCS_UPDATED" = false ]; then
   exit 1
 fi
 
-echo "Docs updated or no code changes detected."
+if [ "$DOCS_UPDATED" = true ]; then
+  echo "Docs updated."
+else
+  echo "No code changes detected."
+fi
 exit 0
