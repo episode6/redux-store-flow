@@ -2,7 +2,7 @@
 
 ## v1.1.0-SNAPSHOT - Unreleased
 
-- CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (Azul Zulu); enable basic Gradle caching in GitHub workflows
+- CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (Azul Zulu); enable enhanced Gradle caching in GitHub workflows
 - Added GitHub Actions workflow and local script (`scripts/verify-docs-updated.sh`) for verifying documentation updates on pull requests.
 - Upgraded Kotlin to 2.4.0
 - Added Compose Compiler plugin to the build for Kotlin 2.x support.
