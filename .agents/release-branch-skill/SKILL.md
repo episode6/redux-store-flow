@@ -20,14 +20,14 @@ Create two separate Pull Requests to update versions.
 - **PR Title:** `[VERSION] Snapshot v<NEXT_VERSION>-SNAPSHOT`
 - **Changes:**
     - Update `version` in `build.gradle.kts`.
-    - Update `docs/CHANGELOG.md` if necessary.
+    - **(VITAL)** Update `docs/CHANGELOG.md` to include a new "Unreleased" section for the next version.
 
 #### PR 2: Release Version on Release Branch
 - **Target Branch:** `release/v<VERSION>`
 - **PR Title:** `[VERSION] Release v<VERSION>`
 - **Changes:**
     - Update `version` in `build.gradle.kts` (remove `-SNAPSHOT` if present).
-    - Update `docs/CHANGELOG.md` with release date and final version.
+    - **(VITAL)** Update `docs/CHANGELOG.md` with the release date and the final version. Ensure all changes since the last release are documented.
 
 ## Verification
 - After these steps, the project is ready for the "Harden Release Branch" phase, which requires manual verification and cherry-picking of bug fixes.
