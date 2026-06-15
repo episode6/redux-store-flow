@@ -1,5 +1,9 @@
 # ChangeLog
 
+## v1.1.1 - Released 06/15/2026
+
+- Fix publication failure from v1.1.0 ([711a9c2](https://github.com/episode6/redux-store-flow/commit/711a9c2803e40f5aa6feaef99193a0f473c92d45))
+
 ## v1.1.0 - Released 06/15/2026
 
 - CI: Use gradle/actions/setup-gradle@v6 and actions/setup-java@v5 (Azul Zulu); enable enhanced Gradle caching in GitHub workflows
