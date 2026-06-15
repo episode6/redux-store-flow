@@ -18,6 +18,7 @@ This skill guides the agent in shipping a release branch by creating and publish
 
 ## Prerequisites
 - Ensure the local release branch is up-to-date by pulling from `origin` before starting the release process.
+- **Verify Version**: The version in `build.gradle.kts` must NOT end with `-SNAPSHOT`. If it does, the release process must be aborted until the version is properly bumped.
 
 ## Quick Start
 To perform a dry-run and verify release notes/version before shipping:
