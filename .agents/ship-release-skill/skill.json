@@ -1,0 +1,15 @@
+{
+  "id": "ship-release-skill",
+  "name": "Ship Release Branch",
+  "version": "1.0.0",
+  "description": "Process for shipping a release branch by publishing a GitHub release pointing to the tip of the release branch with version and notes extracted from the codebase.",
+  "author": "ghackett",
+  "entry": "SKILL.md",
+  "created_at": "2026-06-15T16:47:00-04:00",
+  "tags": ["release", "git", "github", "gh-cli"],
+  "required_actions": [
+    "Parse version from build.gradle.kts on the release branch",
+    "Extract release notes from docs/CHANGELOG.md",
+    "Publish GitHub release using gh CLI pointing to the tip of the release branch"
+  ]
+}
