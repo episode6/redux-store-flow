@@ -13,6 +13,10 @@ jobs:
     strategy:
       matrix:
         include:
+          - os: ubuntu-latest
+            filter: linuxX64
+          - os: windows-latest
+            filter: windowsX64
           - os: macos-latest
             filter: macos
     runs-on: ${{ matrix.os }}
