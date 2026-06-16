@@ -45,7 +45,7 @@ jobs:
         run: |
           mkdir -p ~/m2-archive
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            powershell -Command "Compress-Archive -Path $HOME\.m2\repository\com\episode6\redux -DestinationPath $HOME\m2-archive\m2-repository.zip"
+            powershell -Command "Compress-Archive -Path \$env:USERPROFILE\\.m2\\repository\\com\\episode6\\redux -DestinationPath \$env:USERPROFILE\\m2-archive\\m2-repository.zip"
           else
             cd ~/.m2/repository
             zip -r ~/m2-archive/m2-repository.zip com/episode6/redux
