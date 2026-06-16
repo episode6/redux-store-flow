@@ -19,7 +19,7 @@ jobs:
             filter: macos
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: Assert Architecture
       shell: bash
       run: bash scripts/assert-architecture.sh "${{ matrix.os }}"
