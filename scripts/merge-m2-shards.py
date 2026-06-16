@@ -158,7 +158,7 @@ def main():
                                     os.makedirs(target_path, exist_ok=True)
                                 else:
                                     os.makedirs(os.path.dirname(target_path), exist_ok=True)
-                                    with zip_ref.open(member) as source, open(target_path, \"wb\") as target:
+                                    with zip_ref.open(member) as source, open(target_path, "wb") as target:
                                         shutil.copyfileobj(source, target)
 
                         process_shard_dir(tmpdir, output_dir)
