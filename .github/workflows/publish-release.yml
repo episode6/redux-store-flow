@@ -91,7 +91,7 @@ jobs:
           curl --request POST \
             --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
             --form bundle=@sonatype-bundle.zip \
-            'https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC'
+            'https://central.sonatype.com/api/v1/publisher/upload'
 
   docs-and-deploy:
     needs: aggregate-and-publish
