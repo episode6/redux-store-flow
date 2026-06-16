@@ -52,11 +52,11 @@ jobs:
             cd ~/.m2/repository
             zip -r ~/m2-archive/m2-repository.zip com/episode6/redux
           fi
-          mv ~/m2-archive/m2-repository.zip ~/m2-archive/m2-${{ matrix.filter }}.zip
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ~/m2-archive/m2-${{ matrix.filter }}.zip
+          name: m2-${{ matrix.filter }}
+          path: ~/m2-archive/m2-repository.zip
           archive: false
 
   aggregate-and-publish:
@@ -90,5 +90,6 @@ jobs:
       - name: Upload Bundle to GitHub
         uses: actions/upload-artifact@v7
         with:
+          name: sonatype-bundle.zip
           path: sonatype-bundle.zip
           archive: false
