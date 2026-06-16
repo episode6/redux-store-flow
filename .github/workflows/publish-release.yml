@@ -86,13 +86,15 @@ jobs:
           echo "$GPG_KEY" | gpg --batch --import
           
           cd bundle
-          # Re-sign all .module files because they were merged
-          find . -name "*.module" | while read -r file; do
-            rm -f "$file.asc"
+          # Remove any existing signatures or checksums from shards
+          find . -type f \( -name "*.asc" -o -name "*.md5" -o -name "*.sha1" -o -name "*.sha256" -o -name "*.sha512" \) -delete
+
+          # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
+          find . -type f | while read -r file; do
             gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
           done
 
-          # Generate checksums for ALL files (including .asc files)
+          # Generate checksums for ALL files (including the .asc files we just created)
           find . -type f ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
             for alg in md5 sha1 sha256 sha512; do
               if [ "$alg" == "md5" ]; then

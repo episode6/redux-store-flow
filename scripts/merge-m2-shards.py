@@ -7,6 +7,7 @@ import traceback
 import sys
 import zipfile
 import tempfile
+import filecmp
 
 def merge_module_files(base_file, new_file):
     print(f"DEBUG: Merging module files: {base_file} and {new_file}")
@@ -56,7 +57,7 @@ def merge_module_files(base_file, new_file):
         raise
 
 def process_shard_dir(shard_path, output_dir):
-    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc"}
+    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated"}
     excluded_files = {
         "maven-metadata.xml",
         "resolver-status.properties",
@@ -86,7 +87,13 @@ def process_shard_dir(shard_path, output_dir):
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                 shutil.copy2(os.path.join(root, file), dest_path)
             else:
-                # File already exists, assume identical
+                # File already exists.
+                # If it's not a checksum/metadata, check if it's identical.
+                if not filecmp.cmp(os.path.join(root, file), dest_path, shallow=False):
+                    if file.endswith(".pom"):
+                        print(f"WARNING: POM collision for {rel_path}. Files differ! Keeping the existing one.")
+                    else:
+                        print(f"DEBUG: File collision for {rel_path}. Files differ! Keeping the existing one.")
                 pass
 
 def main():
