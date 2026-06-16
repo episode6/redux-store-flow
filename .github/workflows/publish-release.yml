@@ -56,6 +56,7 @@ jobs:
         with:
           name: m2-${{ matrix.filter }}
           path: ~/m2-archive/m2-repository.zip
+          compression-level: 0
 
   aggregate-and-publish:
     needs: build-shards
@@ -90,6 +91,7 @@ jobs:
         with:
           name: sonatype-bundle
           path: sonatype-bundle.zip
+          compression-level: 0
       - name: Publish to Sonatype Central
         run: |
           SONATYPE_TOKEN=$(printf "%s:%s" "${{ secrets.NEXUS_USERNAME }}" "${{ secrets.NEXUS_PASSWORD }}" | base64 | tr -d '\n')
