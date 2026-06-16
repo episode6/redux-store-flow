@@ -73,9 +73,11 @@ jobs:
         run: |
           mkdir -p shards
           find m2-zips -name "*.zip" | while read -r zipfile; do
-            dirname=$(basename "$zipfile" .zip)
-            mkdir -p "shards/$dirname"
-            unzip -o "$zipfile" -d "shards/$dirname"
+            # Use the name of the artifact (the directory name) as the shard name
+            shardname=$(basename "$(dirname "$zipfile")")
+            echo "Extracting $zipfile to shards/$shardname"
+            mkdir -p "shards/$shardname"
+            unzip -o "$zipfile" -d "shards/$shardname"
           done
           python3 scripts/merge-m2-shards.py --input shards --output bundle
       - name: Sign and Checksum

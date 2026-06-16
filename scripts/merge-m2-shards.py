@@ -5,20 +5,25 @@ import shutil
 import argparse
 
 def merge_module_files(base_file, new_file):
-    with open(base_file, 'r') as f:
-        base_data = json.load(f)
-    with open(new_file, 'r') as f:
-        new_data = json.load(f)
+    print(f"Merging module files: {base_file} and {new_file}")
+    try:
+        with open(base_file, 'r') as f:
+            base_data = json.load(f)
+        with open(new_file, 'r') as f:
+            new_data = json.load(f)
 
-    # Use a dict for variants keyed by name to merge them
-    base_variants = {v['name']: v for v in base_data.get('variants', [])}
-    new_variants = {v['name']: v for v in new_data.get('variants', [])}
+        # Use a dict for variants keyed by name to merge them
+        base_variants = {v['name']: v for v in base_data.get('variants', [])}
+        new_variants = {v['name']: v for v in new_data.get('variants', [])}
 
-    base_variants.update(new_variants)
-    base_data['variants'] = list(base_variants.values())
+        base_variants.update(new_variants)
+        base_data['variants'] = list(base_variants.values())
 
-    with open(base_file, 'w') as f:
-        json.dump(base_data, f, indent=2)
+        with open(base_file, 'w') as f:
+            json.dump(base_data, f, indent=2)
+    except Exception as e:
+        print(f"Error merging {base_file} and {new_file}: {e}")
+        raise
 
 def main():
     parser = argparse.ArgumentParser(description="Merge multiple Maven Local shards into one bundle.")
@@ -34,6 +39,7 @@ def main():
     os.makedirs(output_dir)
 
     shards = sorted([d for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))])
+    print(f"Found shards: {shards}")
 
     # We want to skip checksums because we'll regenerate them
     excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated"}
@@ -44,6 +50,7 @@ def main():
     }
 
     for shard in shards:
+        print(f"Processing shard: {shard}")
         shard_path = os.path.join(input_dir, shard)
         for root, dirs, files in os.walk(shard_path):
             for file in files:
