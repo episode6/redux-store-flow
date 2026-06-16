@@ -29,5 +29,8 @@ Create two separate Pull Requests to update versions.
     - Update `version` in `build.gradle.kts` (remove `-SNAPSHOT` if present).
     - **(VITAL)** Update `docs/CHANGELOG.md` with the release date and the final version. Ensure all changes since the last release are documented.
 
+### 4. Create Pull Requests
+- Use `gh pr create` or the GitHub UI to create the Pull Requests for the version bump branches created in step 3.
+
 ## Verification
 - After these steps, the project is ready for the "Harden Release Branch" phase, which requires manual verification and cherry-picking of bug fixes.
