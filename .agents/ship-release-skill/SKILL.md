@@ -17,7 +17,8 @@ This skill guides the agent in shipping a release branch by creating and publish
 - `release-branch-skill`: Typically run after a release branch is cut and hardened.
 
 ## Prerequisites
-- Ensure the local release branch is up-to-date by pulling from `origin` before starting the release process.
+- **Merge PRs via GitHub**: Ensure the version bump PR (and any hardening PRs) are merged via the GitHub UI or `gh pr merge`. **NEVER** use local merge commits on the release branch.
+- **Pull Latest**: Once PRs are merged on GitHub, checkout the release branch locally and pull the latest changes from `origin` to ensure the local branch is up-to-date before starting the release process.
 - **Verify Version**: The version in `build.gradle.kts` must NOT end with `-SNAPSHOT`. If it does, the release process must be aborted until the version is properly bumped.
 
 ## Quick Start
