@@ -52,7 +52,7 @@ jobs:
             zip -r ~/m2-archive/m2-repository.zip com/episode6/redux
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: m2-${{ matrix.filter }}
           path: ~/m2-archive/m2-repository.zip
@@ -64,7 +64,7 @@ jobs:
     if: github.repository == 'episode6/redux-store-flow'
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: m2-zips
       - name: Merge Artifacts
@@ -87,7 +87,7 @@ jobs:
           cd bundle
           zip -r ../sonatype-bundle.zip .
       - name: Upload Bundle to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sonatype-bundle
           path: sonatype-bundle.zip
