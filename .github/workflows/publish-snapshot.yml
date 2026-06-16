@@ -1,10 +1,8 @@
-name: Publish Artifacts
+name: Publish Snapshot
 on:
   push:
     branches:
       - main
-    tags:
-      - '**'
 env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 jobs:
@@ -42,11 +40,6 @@ jobs:
         run: |
           if [ "${{ matrix.filter }}" == "macos" ]; then
             ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }}
-            if [ "${{ github.ref_type }}" == "tag" ]; then
-              SONATYPE_TOKEN=$(echo -n "${ORG_GRADLE_PROJECT_nexusUsername}:${ORG_GRADLE_PROJECT_nexusPassword}" | base64 | tr -d '\n')
-              curl -X POST "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/com.episode6" \
-                   -H "Authorization: Bearer ${SONATYPE_TOKEN}"
-            fi
           else
             ./gradlew publishAllPublicationsToSonatypeRepository -Pfilter=${{ matrix.filter }} -Pkotlin.mpp.enableMetadataPublishing=false
           fi
@@ -59,15 +52,6 @@ jobs:
       - name: Sync Docs
         if: matrix.filter == 'macos'
         run: ./gradlew syncDocs
-      - name: Deploy root docs to website
-        if: ${{ matrix.filter == 'macos' && github.ref_type == 'tag' && github.repository == 'episode6/redux-store-flow' }}
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: build/site
-          TARGET_FOLDER: /
-          CLEAN: false
       - name: Deploy dokka to website
         if: ${{ matrix.filter == 'macos' && github.repository == 'episode6/redux-store-flow' }}
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
