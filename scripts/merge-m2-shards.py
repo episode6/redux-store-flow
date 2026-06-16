@@ -57,7 +57,7 @@ def merge_module_files(base_file, new_file):
         raise
 
 def process_shard_dir(shard_path, output_dir):
-    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated"}
+    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc"}
     excluded_files = {
         "maven-metadata.xml",
         "resolver-status.properties",
@@ -69,14 +69,25 @@ def process_shard_dir(shard_path, output_dir):
             continue
 
         for file in files:
-            ext = os.path.splitext(file)[1]
-            if file in excluded_files or ext in excluded_extensions or "maven-metadata.xml" in file or file.startswith("._"):
+            # Normalize path separators in case we're on a system that extracted backslashes as part of the filename
+            # This can happen if a ZIP entry name literally contained backslashes.
+            normalized_file_path = file.replace('\\', '/')
+            if normalized_file_path != file:
+                 print(f"DEBUG: Normalizing backslashes in filename: {file} -> {normalized_file_path}")
+
+            ext = os.path.splitext(normalized_file_path)[1]
+            if normalized_file_path in excluded_files or ext in excluded_extensions or "maven-metadata.xml" in normalized_file_path or normalized_file_path.startswith("._"):
                 continue
 
-            rel_path = os.path.relpath(os.path.join(root, file), shard_path)
+            rel_root = os.path.relpath(root, shard_path).replace('\\', '/')
+            rel_path = os.path.join(rel_root, normalized_file_path).replace('\\', '/')
+
+            # rel_path could still contain backslashes if rel_root had them
+            rel_path = rel_path.replace('\\', '/')
+
             dest_path = os.path.join(output_dir, rel_path)
 
-            if file.endswith(".module"):
+            if normalized_file_path.endswith(".module"):
                 if os.path.exists(dest_path):
                     merge_module_files(dest_path, os.path.join(root, file))
                 else:
@@ -90,7 +101,7 @@ def process_shard_dir(shard_path, output_dir):
                 # File already exists.
                 # If it's not a checksum/metadata, check if it's identical.
                 if not filecmp.cmp(os.path.join(root, file), dest_path, shallow=False):
-                    if file.endswith(".pom"):
+                    if normalized_file_path.endswith(".pom"):
                         print(f"WARNING: POM collision for {rel_path}. Files differ! Keeping the existing one.")
                     else:
                         print(f"DEBUG: File collision for {rel_path}. Files differ! Keeping the existing one.")
@@ -136,7 +147,22 @@ def main():
                 with tempfile.TemporaryDirectory() as tmpdir:
                     try:
                         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                            zip_ref.extractall(tmpdir)
+                            # We manually extract to handle backslashes in ZIP entry names
+                            for member in zip_ref.infolist():
+                                # ZIP standard uses forward slashes, but Windows sometimes uses backslashes
+                                normalized_name = member.filename.replace('\\', '/')
+                                # Skip directories or entries that would escape tmpdir (security)
+                                if normalized_name.startswith('/') or '..' in normalized_name:
+                                    continue
+
+                                target_path = os.path.join(tmpdir, normalized_name)
+                                if member.is_dir():
+                                    os.makedirs(target_path, exist_ok=True)
+                                else:
+                                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                                    with zip_ref.open(member) as source, open(target_path, "wb") as target:
+                                        shutil.copyfileobj(source, target)
+
                         process_shard_dir(tmpdir, output_dir)
                     except zipfile.BadZipFile:
                         print(f"ERROR: {zip_path} is not a valid zip file", file=sys.stderr)

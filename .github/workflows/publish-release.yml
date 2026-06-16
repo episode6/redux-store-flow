@@ -96,6 +96,7 @@ jobs:
 
           # Generate checksums for ALL files (including the .asc files we just created)
           find . -type f ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
+            echo "Generating checksums for $file"
             for alg in md5 sha1 sha256 sha512; do
               if [ "$alg" == "md5" ]; then
                 md5sum "$file" | cut -d ' ' -f 1 > "$file.md5" || exit 1
