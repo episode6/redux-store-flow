@@ -1,5 +1,7 @@
 # ChangeLog
 
+## v1.1.3 - Unreleased
+
 ## v1.1.2 - Unreleased
 
 - Fix release publication workflow to include missing linux-x64 and windows-x64 artifacts.
