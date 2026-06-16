@@ -120,7 +120,7 @@ jobs:
       - name: Sync Docs
         run: ./gradlew syncDocs
       - name: Deploy root docs to website
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
@@ -128,7 +128,7 @@ jobs:
           TARGET_FOLDER: /
           CLEAN: false
       - name: Deploy dokka to website
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
