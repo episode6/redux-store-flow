@@ -1,5 +1,6 @@
 name: Publish Release
 on:
+  pull_request:
   push:
     tags:
       - 'v*'
@@ -92,46 +93,3 @@ jobs:
           name: sonatype-bundle
           path: sonatype-bundle.zip
           compression-level: 0
-      - name: Publish to Sonatype Central
-        run: |
-          SONATYPE_TOKEN=$(printf "%s:%s" "${{ secrets.NEXUS_USERNAME }}" "${{ secrets.NEXUS_PASSWORD }}" | base64 | tr -d '\n')
-          curl --request POST \
-            --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
-            --form bundle=@sonatype-bundle.zip \
-            'https://central.sonatype.com/api/v1/publisher/upload'
-
-  docs-and-deploy:
-    needs: aggregate-and-publish
-    runs-on: macos-latest
-    if: github.repository == 'episode6/redux-store-flow'
-    steps:
-      - uses: actions/checkout@v6
-      - name: Set up JDK 23
-        uses: actions/setup-java@v5
-        with:
-          java-version: '23'
-          distribution: 'zulu'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-      - name: Clean Project
-        run: ./gradlew clean
-      - name: Generate Docs
-        run: ./gradlew dokkaGenerateHtml
-      - name: Sync Docs
-        run: ./gradlew syncDocs
-      - name: Deploy root docs to website
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: build/site
-          TARGET_FOLDER: /
-          CLEAN: false
-      - name: Deploy dokka to website
-        uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: build/dokka/html
-          TARGET_FOLDER: /docs/${{ github.ref_name }}/
-          CLEAN: true
