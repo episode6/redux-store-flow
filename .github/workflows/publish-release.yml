@@ -75,7 +75,7 @@ jobs:
           python3 scripts/merge-m2-shards.py --input m2-zips --output bundle || { echo "Merge script failed"; exit 1; }
           
           echo "Bundle content summary:"
-          find bundle -maxdepth 4 | head -n 40
+          find bundle -maxdepth 5 | head -n 100
       - name: Sign and Checksum
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}

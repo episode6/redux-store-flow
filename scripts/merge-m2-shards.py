@@ -107,32 +107,33 @@ def main():
             print(f"ERROR: input_dir {input_dir} does not exist", file=sys.stderr)
             sys.exit(1)
 
-        # Find all zip files and all directories in input_dir
-        items = os.listdir(input_dir)
-        zips = sorted([f for f in items if f.endswith(".zip")])
-        subdirs = sorted([d for d in items if os.path.isdir(os.path.join(input_dir, d))])
+        # Walk through the input directory and find all zip files recursively
+        all_zips = []
+        for root, dirs, files in os.walk(input_dir):
+            for file in files:
+                if file.endswith(".zip") and "__MACOSX" not in root:
+                    all_zips.append(os.path.join(root, file))
 
-        print(f"Found zips: {zips}")
-        print(f"Found subdirs: {subdirs}")
+        all_zips.sort()
+        print(f"Found zip shards: {all_zips}")
 
-        # Process subdirs first (if any)
-        for d in subdirs:
-            print(f"DEBUG: Processing subdir shard: {d}")
-            process_shard_dir(os.path.join(input_dir, d), output_dir)
-
-        # Process zips
-        for z in zips:
-            print(f"DEBUG: Processing zip shard: {z}")
-            zip_path = os.path.join(input_dir, z)
-            with tempfile.TemporaryDirectory() as tmpdir:
-                try:
-                    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                        zip_ref.extractall(tmpdir)
-                    process_shard_dir(tmpdir, output_dir)
-                except zipfile.BadZipFile:
-                    print(f"ERROR: {zip_path} is not a valid zip file", file=sys.stderr)
-                    # If we find a bad zip, we should probably fail
-                    sys.exit(1)
+        if not all_zips:
+            print(f"WARNING: No zip shards found in {input_dir}, checking for direct subdirs")
+            subdirs = sorted([d for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))])
+            for d in subdirs:
+                print(f"DEBUG: Processing subdir shard: {d}")
+                process_shard_dir(os.path.join(input_dir, d), output_dir)
+        else:
+            for zip_path in all_zips:
+                print(f"DEBUG: Processing zip shard: {zip_path}")
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    try:
+                        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                            zip_ref.extractall(tmpdir)
+                        process_shard_dir(tmpdir, output_dir)
+                    except zipfile.BadZipFile:
+                        print(f"ERROR: {zip_path} is not a valid zip file", file=sys.stderr)
+                        sys.exit(1)
 
         print("DEBUG: Merge completed successfully")
     except Exception as e:
