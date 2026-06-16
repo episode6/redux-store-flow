@@ -72,13 +72,23 @@ jobs:
       - name: Merge Artifacts
         run: |
           mkdir -p shards
-          find m2-zips -name "*.zip" | while read -r zipfile; do
-            # Use the name of the artifact (the directory name) as the shard name
+          # Use a temporary file to store the list of zip files to avoid issues with pipes and exit codes
+          find m2-zips -name "*.zip" > zip_list.txt
+          if [ ! -s zip_list.txt ]; then
+            echo "No zip files found in m2-zips!"
+            ls -R m2-zips
+            exit 1
+          fi
+          while read -r zipfile; do
             shardname=$(basename "$(dirname "$zipfile")")
             echo "Extracting $zipfile to shards/$shardname"
             mkdir -p "shards/$shardname"
-            unzip -o "$zipfile" -d "shards/$shardname"
-          done
+            unzip -o "$zipfile" -d "shards/$shardname" || exit 1
+          done < zip_list.txt
+          
+          echo "Current shards structure:"
+          ls -R shards
+
           python3 scripts/merge-m2-shards.py --input shards --output bundle
       - name: Sign and Checksum
         env:
