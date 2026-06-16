@@ -89,20 +89,20 @@ jobs:
           # Re-sign all .module files because they were merged
           find . -name "*.module" | while read -r file; do
             rm -f "$file.asc"
-            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file"
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
           done
 
           # Generate checksums for ALL files (including .asc files)
           find . -type f ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
             for alg in md5 sha1 sha256 sha512; do
               if [ "$alg" == "md5" ]; then
-                md5sum "$file" | cut -d ' ' -f 1 > "$file.md5"
+                md5sum "$file" | cut -d ' ' -f 1 > "$file.md5" || exit 1
               elif [ "$alg" == "sha1" ]; then
-                sha1sum "$file" | cut -d ' ' -f 1 > "$file.sha1"
+                sha1sum "$file" | cut -d ' ' -f 1 > "$file.sha1" || exit 1
               elif [ "$alg" == "sha256" ]; then
-                sha256sum "$file" | cut -d ' ' -f 1 > "$file.sha256"
+                sha256sum "$file" | cut -d ' ' -f 1 > "$file.sha256" || exit 1
               elif [ "$alg" == "sha512" ]; then
-                sha512sum "$file" | cut -d ' ' -f 1 > "$file.sha512"
+                sha512sum "$file" | cut -d ' ' -f 1 > "$file.sha512" || exit 1
               fi
             done
           done
