@@ -5,6 +5,8 @@ import shutil
 import argparse
 import traceback
 import sys
+import zipfile
+import tempfile
 
 def merge_module_files(base_file, new_file):
     print(f"DEBUG: Merging module files: {base_file} and {new_file}")
@@ -53,10 +55,44 @@ def merge_module_files(base_file, new_file):
         traceback.print_exc()
         raise
 
+def process_shard_dir(shard_path, output_dir):
+    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc"}
+    excluded_files = {
+        "maven-metadata.xml",
+        "resolver-status.properties",
+        "_remote.repositories",
+    }
+
+    for root, dirs, files in os.walk(shard_path):
+        if "__MACOSX" in root:
+            continue
+
+        for file in files:
+            ext = os.path.splitext(file)[1]
+            if file in excluded_files or ext in excluded_extensions or "maven-metadata.xml" in file or file.startswith("._"):
+                continue
+
+            rel_path = os.path.relpath(os.path.join(root, file), shard_path)
+            dest_path = os.path.join(output_dir, rel_path)
+
+            if file.endswith(".module"):
+                if os.path.exists(dest_path):
+                    merge_module_files(dest_path, os.path.join(root, file))
+                else:
+                    print(f"DEBUG: First .module for {rel_path}, copying from {shard_path}")
+                    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                    shutil.copy2(os.path.join(root, file), dest_path)
+            elif not os.path.exists(dest_path):
+                os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                shutil.copy2(os.path.join(root, file), dest_path)
+            else:
+                # File already exists, assume identical
+                pass
+
 def main():
     try:
         parser = argparse.ArgumentParser(description="Merge multiple Maven Local shards into one bundle.")
-        parser.add_argument("--input", required=True, help="Directory containing shard subdirectories")
+        parser.add_argument("--input", required=True, help="Directory containing shard zip files or subdirectories")
         parser.add_argument("--output", required=True, help="Output directory for the merged bundle")
         args = parser.parse_args()
 
@@ -71,45 +107,33 @@ def main():
             print(f"ERROR: input_dir {input_dir} does not exist", file=sys.stderr)
             sys.exit(1)
 
-        shards = sorted([d for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))])
-        print(f"Found shards: {shards}")
+        # Find all zip files and all directories in input_dir
+        items = os.listdir(input_dir)
+        zips = sorted([f for f in items if f.endswith(".zip")])
+        subdirs = sorted([d for d in items if os.path.isdir(os.path.join(input_dir, d))])
 
-        if not shards:
-            print(f"WARNING: No shards found in {input_dir}")
+        print(f"Found zips: {zips}")
+        print(f"Found subdirs: {subdirs}")
 
-        # We want to skip checksums because we'll regenerate them
-        excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc"}
-        excluded_files = {
-            "maven-metadata.xml",
-            "resolver-status.properties",
-            "_remote.repositories",
-        }
+        # Process subdirs first (if any)
+        for d in subdirs:
+            print(f"DEBUG: Processing subdir shard: {d}")
+            process_shard_dir(os.path.join(input_dir, d), output_dir)
 
-        for shard in shards:
-            print(f"DEBUG: Processing shard: {shard}")
-            shard_path = os.path.join(input_dir, shard)
-            for root, dirs, files in os.walk(shard_path):
-                for file in files:
-                    ext = os.path.splitext(file)[1]
-                    if file in excluded_files or ext in excluded_extensions or "maven-metadata.xml" in file:
-                        continue
+        # Process zips
+        for z in zips:
+            print(f"DEBUG: Processing zip shard: {z}")
+            zip_path = os.path.join(input_dir, z)
+            with tempfile.TemporaryDirectory() as tmpdir:
+                try:
+                    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                        zip_ref.extractall(tmpdir)
+                    process_shard_dir(tmpdir, output_dir)
+                except zipfile.BadZipFile:
+                    print(f"ERROR: {zip_path} is not a valid zip file", file=sys.stderr)
+                    # If we find a bad zip, we should probably fail
+                    sys.exit(1)
 
-                    rel_path = os.path.relpath(os.path.join(root, file), shard_path)
-                    dest_path = os.path.join(output_dir, rel_path)
-
-                    if file.endswith(".module"):
-                        if os.path.exists(dest_path):
-                            merge_module_files(dest_path, os.path.join(root, file))
-                        else:
-                            print(f"DEBUG: First .module for {rel_path}, copying from {shard}")
-                            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-                            shutil.copy2(os.path.join(root, file), dest_path)
-                    elif not os.path.exists(dest_path):
-                        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-                        shutil.copy2(os.path.join(root, file), dest_path)
-                    else:
-                        # File already exists, assume identical
-                        pass
         print("DEBUG: Merge completed successfully")
     except Exception as e:
         print(f"FATAL ERROR in merge script: {e}", file=sys.stderr)

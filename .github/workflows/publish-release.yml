@@ -72,38 +72,16 @@ jobs:
       - name: Merge Artifacts
         run: |
           set -x
-          mkdir -p shards
-          # Use a temporary file to store the list of zip files
-          find m2-zips -name "*.zip" > zip_list.txt
-          echo "Found these zip files:"
-          cat zip_list.txt
-          
-          if [ ! -s zip_list.txt ]; then
-            echo "No zip files found in m2-zips!"
-            find m2-zips
-            exit 1
-          fi
-          
-          while read -r zipfile; do
-            # The directory name under m2-zips is the artifact name
-            shardname=$(basename "$(dirname "$zipfile")")
-            echo "Extracting $zipfile to shards/$shardname"
-            mkdir -p "shards/$shardname"
-            unzip -o "$zipfile" -d "shards/$shardname" || { echo "Failed to unzip $zipfile"; exit 1; }
-          done < zip_list.txt
-          
-          echo "Shards content summary:"
-          find shards -maxdepth 4
-          
-          python3 scripts/merge-m2-shards.py --input shards --output bundle || { echo "Merge script failed"; exit 1; }
+          python3 scripts/merge-m2-shards.py --input m2-zips --output bundle || { echo "Merge script failed"; exit 1; }
           
           echo "Bundle content summary:"
-          find bundle -maxdepth 4 | head -n 20
+          find bundle -maxdepth 4 | head -n 40
       - name: Sign and Checksum
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
+          set -e
           # Import GPG key
           echo "$GPG_KEY" | gpg --batch --import
           
