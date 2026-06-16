@@ -90,7 +90,7 @@ jobs:
           find . -type f \( -name "*.asc" -o -name "*.md5" -o -name "*.sha1" -o -name "*.sha256" -o -name "*.sha512" \) -delete
 
           # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
-          find . -type f | while read -r file; do
+          find . -type f ! -name "*.asc" ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
             gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
           done
 

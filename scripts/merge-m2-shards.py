@@ -57,9 +57,10 @@ def merge_module_files(base_file, new_file):
         raise
 
 def process_shard_dir(shard_path, output_dir):
-    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc"}
+    excluded_extensions = {".md5", ".sha1", ".sha256", ".sha512", ".lastUpdated", ".asc", ".effective"}
     excluded_files = {
         "maven-metadata.xml",
+        "maven-metadata-local.xml",
         "resolver-status.properties",
         "_remote.repositories",
     }
@@ -80,10 +81,7 @@ def process_shard_dir(shard_path, output_dir):
                 continue
 
             rel_root = os.path.relpath(root, shard_path).replace('\\', '/')
-            rel_path = os.path.join(rel_root, normalized_file_path).replace('\\', '/')
-
-            # rel_path could still contain backslashes if rel_root had them
-            rel_path = rel_path.replace('\\', '/')
+            rel_path = os.path.normpath(os.path.join(rel_root, normalized_file_path)).replace('\\', '/')
 
             dest_path = os.path.join(output_dir, rel_path)
 
@@ -155,12 +153,12 @@ def main():
                                 if normalized_name.startswith('/') or '..' in normalized_name:
                                     continue
 
-                                target_path = os.path.join(tmpdir, normalized_name)
-                                if member.is_dir():
+                                target_path = os.path.normpath(os.path.join(tmpdir, normalized_name))
+                                if normalized_name.endswith('/') or member.is_dir():
                                     os.makedirs(target_path, exist_ok=True)
                                 else:
                                     os.makedirs(os.path.dirname(target_path), exist_ok=True)
-                                    with zip_ref.open(member) as source, open(target_path, "wb") as target:
+                                    with zip_ref.open(member) as source, open(target_path, \"wb\") as target:
                                         shutil.copyfileobj(source, target)
 
                         process_shard_dir(tmpdir, output_dir)
