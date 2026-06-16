@@ -71,25 +71,34 @@ jobs:
           path: m2-zips
       - name: Merge Artifacts
         run: |
+          set -x
           mkdir -p shards
-          # Use a temporary file to store the list of zip files to avoid issues with pipes and exit codes
+          # Use a temporary file to store the list of zip files
           find m2-zips -name "*.zip" > zip_list.txt
+          echo "Found these zip files:"
+          cat zip_list.txt
+          
           if [ ! -s zip_list.txt ]; then
             echo "No zip files found in m2-zips!"
-            ls -R m2-zips
+            find m2-zips
             exit 1
           fi
+          
           while read -r zipfile; do
+            # The directory name under m2-zips is the artifact name
             shardname=$(basename "$(dirname "$zipfile")")
             echo "Extracting $zipfile to shards/$shardname"
             mkdir -p "shards/$shardname"
-            unzip -o "$zipfile" -d "shards/$shardname" || exit 1
+            unzip -o "$zipfile" -d "shards/$shardname" || { echo "Failed to unzip $zipfile"; exit 1; }
           done < zip_list.txt
           
-          echo "Current shards structure:"
-          ls -R shards
-
-          python3 scripts/merge-m2-shards.py --input shards --output bundle
+          echo "Shards content summary:"
+          find shards -maxdepth 4
+          
+          python3 scripts/merge-m2-shards.py --input shards --output bundle || { echo "Merge script failed"; exit 1; }
+          
+          echo "Bundle content summary:"
+          find bundle -maxdepth 4 | head -n 20
       - name: Sign and Checksum
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
