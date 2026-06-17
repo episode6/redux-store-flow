@@ -63,24 +63,50 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'episode6/redux-store-flow'
     steps:
+      - uses: actions/checkout@v6
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
           path: m2-zips
       - name: Merge Artifacts
         run: |
-          mkdir -p bundle
-          find m2-zips -name "*.zip" -exec unzip -o {} -d bundle \;
-      - name: Generate Checksums
+          set -x
+          python3 scripts/merge-m2-shards.py --input m2-zips --output bundle || { echo "Merge script failed"; exit 1; }
+          
+          echo "Bundle content summary:"
+          find bundle -maxdepth 5 | head -n 100
+      - name: Sign and Checksum
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
+          set -e
+          # Import GPG key
+          echo "$GPG_KEY" | gpg --batch --import
+          
           cd bundle
-          find . -type f \( -name "*.jar" -o -name "*.pom" -o -name "*.module" -o -name "*.asc" \) | while read -r file; do
-            if [ ! -f "$file.md5" ]; then
-              md5sum "$file" | cut -d ' ' -f 1 > "$file.md5"
-            fi
-            if [ ! -f "$file.sha1" ]; then
-              sha1sum "$file" | cut -d ' ' -f 1 > "$file.sha1"
-            fi
+          # Remove any existing signatures or checksums from shards
+          find . -type f \( -name "*.asc" -o -name "*.md5" -o -name "*.sha1" -o -name "*.sha256" -o -name "*.sha512" \) -delete
+
+          # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
+          find . -type f ! -name "*.asc" ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
+          done
+
+          # Generate checksums for ALL files (including the .asc files we just created)
+          find . -type f ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
+            echo "Generating checksums for $file"
+            for alg in md5 sha1 sha256 sha512; do
+              if [ "$alg" == "md5" ]; then
+                md5sum "$file" | cut -d ' ' -f 1 > "$file.md5" || exit 1
+              elif [ "$alg" == "sha1" ]; then
+                sha1sum "$file" | cut -d ' ' -f 1 > "$file.sha1" || exit 1
+              elif [ "$alg" == "sha256" ]; then
+                sha256sum "$file" | cut -d ' ' -f 1 > "$file.sha256" || exit 1
+              elif [ "$alg" == "sha512" ]; then
+                sha512sum "$file" | cut -d ' ' -f 1 > "$file.sha512" || exit 1
+              fi
+            done
           done
       - name: Create Sonatype Bundle
         run: |
