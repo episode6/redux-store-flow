@@ -129,11 +129,16 @@ jobs:
           # If any file path contains -SNAPSHOT treat as a snapshot and upload files individually
           if cd bundle && find . -type f | grep -q -- '-SNAPSHOT'; then
             echo "Snapshot artifacts detected — uploading files individually to maven-snapshots"
+            AUTH_BASIC=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
             find . -type f | while read -r file; do
               rel="${file#./}"
               url="https://central.sonatype.com/repository/maven-snapshots/${rel}"
               echo "Uploading $rel"
-              curl --silent --show-error --fail -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" --upload-file "$file" "$url" || { echo "Failed uploading $rel"; exit 1; }
+              # Use HTTP PUT with Basic auth and binary data to mimic Maven Wagon behavior
+              curl --silent --show-error --fail -X PUT \
+                -H "Authorization: Basic ${AUTH_BASIC}" \
+                -H "Content-Type: application/octet-stream" \
+                --data-binary @"$file" "$url" || { echo "Failed uploading $rel"; exit 1; }
             done
           else
             SONATYPE_TOKEN=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
