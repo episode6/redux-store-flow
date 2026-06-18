@@ -131,7 +131,8 @@ jobs:
           if cd bundle && find . -type f | grep -q -- '-SNAPSHOT'; then
             echo "Snapshot artifacts detected — uploading files individually to maven-snapshots"
             AUTH_BASIC=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
-            find . -type f | while read -r file; do
+            # Exclude signature and checksum files from snapshot uploads
+            find . -type f \( ! -name "*.asc" -a ! -name "*.md5" -a ! -name "*.sha1" -a ! -name "*.sha256" -a ! -name "*.sha512" \) -print | while read -r file; do
               rel="${file#./}"
               url="https://central.sonatype.com/repository/maven-snapshots/${rel}"
               echo "Uploading $rel"
