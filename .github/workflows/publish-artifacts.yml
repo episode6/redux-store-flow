@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew clean
       - name: Publish to Maven Local
         shell: bash
-        run: ./gradlew publishToMavenLocal -Pfilter=${{ matrix.filter }}
+        run: ./gradlew check publishToMavenLocal -Pfilter=${{ matrix.filter }}
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
