@@ -83,34 +83,23 @@ jobs:
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
-          set -euo pipefail
+          set -e
           # Skip signing/checksumming for snapshot bundles
           if cd bundle && find . -type f | grep -q -- '-SNAPSHOT'; then
             echo "Snapshot bundle detected — skipping Sign and Checksum step"
             exit 0
           fi
 
-          # Basic pre-checks and debug info
-          if [ -z "${GPG_KEY:-}" ] || [ -z "${GPG_PASS:-}" ]; then
-            echo "ERROR: GPG_KEY or GPG_PASS is not set. Cannot sign artifacts." >&2
-            exit 1
-          fi
-
-          command -v gpg >/dev/null 2>&1 || { echo "ERROR: gpg not found on runner" >&2; exit 1; }
-          echo "gpg: $(gpg --version | head -n1)"
-
-          # Import GPG key (showing list afterwards for debugging)
-          echo "$GPG_KEY" | gpg --batch --import || { echo "ERROR: gpg import failed" >&2; exit 1; }
-          gpg --list-secret-keys --keyid-format LONG || true
-
+          # Import GPG key
+          echo "$GPG_KEY" | gpg --batch --import
+          
           cd bundle
           # Remove any existing signatures or checksums from shards
           find . -type f \( -name "*.asc" -o -name "*.md5" -o -name "*.sha1" -o -name "*.sha256" -o -name "*.sha512" \) -delete
 
           # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
           find . -type f ! -name "*.asc" ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
-            echo "Signing $file"
-            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || { echo "ERROR: signing failed for $file" >&2; exit 1; }
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
           done
 
           # Generate checksums for ALL files (including the .asc files we just created)
