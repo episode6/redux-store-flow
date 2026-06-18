@@ -1,8 +1,6 @@
 # ChangeLog
 
-## v1.1.3 - Unreleased
-
-## v1.1.2 - Unreleased
+## v1.1.3 - Released 06/18/2026
 
 - Fix release publication workflow to include missing linux-x64 and windows-x64 artifacts.
 
