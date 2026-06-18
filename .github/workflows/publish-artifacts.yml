@@ -1,6 +1,5 @@
 name: Publish Artifacts
 on:
-  pull_request:
   push:
     branches:
       - main
