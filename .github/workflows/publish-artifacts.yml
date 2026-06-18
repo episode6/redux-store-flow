@@ -121,12 +121,27 @@ jobs:
           path: sonatype-bundle.zip
           compression-level: 0
       - name: Publish to Sonatype Central
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
-          SONATYPE_TOKEN=$(printf "%s:%s" "${{ secrets.NEXUS_USERNAME }}" "${{ secrets.NEXUS_PASSWORD }}" | base64 | tr -d '\n')
-          curl --request POST \
-            --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
-            --form bundle=@sonatype-bundle.zip \
-            'https://central.sonatype.com/api/v1/publisher/upload'
+          set -e
+          # If any file path contains -SNAPSHOT treat as a snapshot and upload files individually
+          if cd bundle && find . -type f | grep -q -- '-SNAPSHOT'; then
+            echo "Snapshot artifacts detected — uploading files individually to maven-snapshots"
+            find . -type f | while read -r file; do
+              rel="${file#./}"
+              url="https://central.sonatype.com/repository/maven-snapshots/${rel}"
+              echo "Uploading $rel"
+              curl --silent --show-error --fail -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" --upload-file "$file" "$url" || { echo "Failed uploading $rel"; exit 1; }
+            done
+          else
+            SONATYPE_TOKEN=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
+            curl --request POST \
+              --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
+              --form bundle=@sonatype-bundle.zip \
+              'https://central.sonatype.com/api/v1/publisher/upload'
+          fi
 
   docs-and-deploy:
     needs: aggregate-and-publish
