@@ -84,12 +84,6 @@ jobs:
           GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
           set -e
-          # Skip signing/checksumming for snapshot bundles
-          if cd bundle && find . -type f | grep -q -- '-SNAPSHOT'; then
-            echo "Snapshot bundle detected — skipping Sign and Checksum step"
-            exit 0
-          fi
-
           # Import GPG key
           echo "$GPG_KEY" | gpg --batch --import
           
