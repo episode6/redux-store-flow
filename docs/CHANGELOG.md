@@ -1,5 +1,7 @@
 # ChangeLog
 
+## v1.1.5 - Unreleased
+
 ## v1.1.4 - Unreleased
 
 - CI: Fix snapshot artifact detection and upload in `publish-artifacts` workflow.
