@@ -1,6 +1,8 @@
 # ChangeLog
 
-## v1.1.5 - Unreleased
+## v1.1.5 - Released 06/18/2026
+
+- Attempting to fix site deployment issue.
 
 ## v1.1.4 - Unreleased
 
