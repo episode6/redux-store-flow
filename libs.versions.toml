@@ -19,3 +19,9 @@ assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "a
 assertk-jvm = { module = "com.willowtreeapps.assertk:assertk-jvm", version.ref = "assertk-core" }
 mockk-core = { module = "io.mockk:mockk", version.ref = "mockk-core" }
 turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-core" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-core" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka-core" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-core" }
