@@ -17,6 +17,14 @@ class CommonDeployablePlugin implements Plugin<Project> {
         explicitApi()
       }
 
+      dokka {
+        dokkaSourceSets.configureEach {
+          externalDocumentationLinks.register("coroutines") {
+            url.set(new URI("https://kotlinlang.org/api/kotlinx.coroutines/"))
+          }
+        }
+      }
+
       tasks.register("deploy") {
         dependsOn(tasks.named("publish"))
       }
