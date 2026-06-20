@@ -23,8 +23,9 @@ class ConfigMultiPlugin implements Plugin<Project> {
       kotlin {
         if (!skipTargets.contains("jvm")) {
           jvm {
+            def jvmTargetClass = it.class.classLoader.loadClass("org.jetbrains.kotlin.gradle.dsl.JvmTarget")
             compilerOptions {
-              jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(Config.Jvm.name))
+              jvmTarget.set(jvmTargetClass.fromTarget(Config.Jvm.name))
               freeCompilerArgs.add(Config.Kotlin.compilerArgs)
             }
             java {
