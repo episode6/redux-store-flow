@@ -1,0 +1,13 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:compose
+com.episode6.redux.compose
+module:side-effects
+com.episode6.redux.sideeffects
+module:store-flow
+com.episode6.redux
+module:subscriber-aware
+com.episode6.redux.subscriberaware
+module:test-support
+com.episode6.redux.testsupport
