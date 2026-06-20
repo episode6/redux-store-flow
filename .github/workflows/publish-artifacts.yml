@@ -165,10 +165,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Clean Project
         run: ./gradlew clean
-      - name: Generate Docs
+      - name: Generate API Docs
         run: ./gradlew dokkaGenerateHtml
-      - name: Sync Docs
-        run: ./gradlew syncDocs
+      - name: Prepare Site Docs
+        run: ./gradlew configSite
       - name: Deploy root docs to website
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:

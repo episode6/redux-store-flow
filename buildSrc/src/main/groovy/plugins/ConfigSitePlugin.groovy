@@ -1,6 +1,7 @@
 package plugins
 
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
@@ -10,7 +11,7 @@ class ConfigSitePlugin implements Plugin<Project> {
   @Override
   void apply(Project target) {
 
-    if (target != target.rootProject) throw GradleException("Can only apply ConfigSitePlugin to root project")
+    if (target != target.rootProject) throw new GradleException("Can only apply ConfigSitePlugin to root project")
 
     target.with {
       def dokkaDir = "${rootProject.buildDir}/dokka/html"
@@ -30,6 +31,15 @@ class ConfigSitePlugin implements Plugin<Project> {
         outputDirectory.set(file(dokkaDir))
       }
 
+      dependencies {
+        subprojects.each { sub ->
+          // In Dokka 2, aggregation is done by adding subprojects as 'dokka' dependencies
+          if (sub.path != ":test-support:internal") { 
+            dokka(sub)
+          }
+        }
+      }
+
       tasks.create("copyReadmes", Copy) {
         from(file("docs/"))
         exclude(".gitignore", "_site/", "_config.yml")
@@ -41,10 +51,6 @@ class ConfigSitePlugin implements Plugin<Project> {
         doLast {
           file("$siteDir/_config.yml").write(Config.Site.generateJekyllConfig(target))
         }
-      }
-
-      tasks.create("syncDocs") {
-        dependsOn("dokkaGenerateHtml", "configSite")
       }
     }
   }
