@@ -11,7 +11,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(libs.kotlinx.coroutines.core)
-        api(compose.runtime)
+        api(libs.compose.runtime)
         api(project(":store-flow"))
       }
     }

@@ -12,6 +12,7 @@ mockk-core = "1.14.11"
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-core" }
 
 # test utils
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk-core" }
