@@ -17,10 +17,15 @@ class CommonDeployablePlugin implements Plugin<Project> {
         explicitApi()
       }
 
-      task("deploy", dependsOn: tasks.publish)
-      task("install", dependsOn: tasks.publishToMavenLocal)
+      tasks.register("deploy") {
+        dependsOn(tasks.named("publish"))
+      }
+      tasks.register("install") {
+        dependsOn(tasks.named("publishToMavenLocal"))
+      }
 
-      task("javadocJar", type: Jar, dependsOn: "dokkaGeneratePublicationHtml") {
+      tasks.register("javadocJar", Jar) {
+        dependsOn("dokkaGeneratePublicationHtml")
         archiveClassifier.set('javadoc')
         from tasks.named("dokkaGeneratePublicationHtml")
       }
