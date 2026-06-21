@@ -143,10 +143,11 @@ jobs:
                 --data-binary @"$file" "$url" || { echo "Failed uploading $rel"; exit 1; }
             done
           else
+            mv sonatype-bundle.zip ${{ github.event.repository.name }}.zip
             SONATYPE_TOKEN=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
             curl --request POST \
               --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
-              --form bundle=@sonatype-bundle.zip \
+              --form bundle=@${{ github.event.repository.name }}.zip \
               'https://central.sonatype.com/api/v1/publisher/upload'
           fi
 
