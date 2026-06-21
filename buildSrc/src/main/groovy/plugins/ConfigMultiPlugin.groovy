@@ -23,11 +23,10 @@ class ConfigMultiPlugin implements Plugin<Project> {
       kotlin {
         if (!skipTargets.contains("jvm")) {
           jvm {
-            compilations.all {
-              kotlinOptions {
-                jvmTarget = Config.Jvm.name
-                freeCompilerArgs += Config.Kotlin.compilerArgs
-              }
+            def jvmTargetClass = it.class.classLoader.loadClass("org.jetbrains.kotlin.gradle.dsl.JvmTarget")
+            compilerOptions {
+              jvmTarget.set(jvmTargetClass.fromTarget(Config.Jvm.name))
+              freeCompilerArgs.add(Config.Kotlin.compilerArgs)
             }
             java {
               sourceCompatibility = Config.Jvm.sourceCompat
@@ -42,14 +41,12 @@ class ConfigMultiPlugin implements Plugin<Project> {
           }
         }
         if (!skipTargets.contains("js")) {
-          js(IR) {
+          js {
             nodejs()
             browser()
             binaries.library()
-            compilations.all {
-              kotlinOptions {
-                freeCompilerArgs += Config.Kotlin.compilerArgs
-              }
+            compilerOptions {
+              freeCompilerArgs.add(Config.Kotlin.compilerArgs)
             }
           }
         }
@@ -70,10 +67,8 @@ class ConfigMultiPlugin implements Plugin<Project> {
 
         for (t in Config.KMPTargets.natives - skipTargets) {
           invokeMethod(t, {
-            compilations.all {
-              kotlinOptions {
-                freeCompilerArgs += Config.Kotlin.compilerArgs
-              }
+            compilerOptions {
+              freeCompilerArgs.add(Config.Kotlin.compilerArgs)
             }
           })
         }

@@ -14,42 +14,42 @@ class ConfigSitePlugin implements Plugin<Project> {
     if (target != target.rootProject) throw new GradleException("Can only apply ConfigSitePlugin to root project")
 
     target.with {
-      def dokkaDir = "${rootProject.buildDir}/dokka/html"
-      def siteDir = "${rootProject.buildDir}/site"
+      def dokkaDir = layout.buildDirectory.dir("dokka/html")
+      def siteDir = layout.buildDirectory.dir("site")
 
-      tasks.create("clearDokkaDir", Delete) {
+      tasks.register("clearDokkaDir", Delete) {
         delete(dokkaDir)
-        doLast { file(dokkaDir).mkdirs() }
+        doLast { dokkaDir.get().asFile.mkdirs() }
       }
 
-      tasks.create("clearSiteDir", Delete) {
+      tasks.register("clearSiteDir", Delete) {
         delete(siteDir)
-        doLast { file(siteDir).mkdirs() }
+        doLast { siteDir.get().asFile.mkdirs() }
       }
 
       tasks.named("dokkaGeneratePublicationHtml") {
-        outputDirectory.set(file(dokkaDir))
+        outputDirectory.set(dokkaDir)
       }
 
       dependencies {
         subprojects.each { sub ->
           // In Dokka 2, aggregation is done by adding subprojects as 'dokka' dependencies
-          if (sub.path != ":test-support:internal") { 
+          if (sub.path != ":test-support:internal") {
             dokka(sub)
           }
         }
       }
 
-      tasks.create("copyReadmes", Copy) {
+      tasks.register("copyReadmes", Copy) {
         from(file("docs/"))
         exclude(".gitignore", "_site/", "_config.yml")
-        into(file(siteDir))
+        into(siteDir)
       }
 
-      tasks.create("configSite") {
+      tasks.register("configSite") {
         dependsOn("copyReadmes")
         doLast {
-          file("$siteDir/_config.yml").write(Config.Site.generateJekyllConfig(target))
+          siteDir.get().file("_config.yml").asFile.write(Config.Site.generateJekyllConfig(target))
         }
       }
     }

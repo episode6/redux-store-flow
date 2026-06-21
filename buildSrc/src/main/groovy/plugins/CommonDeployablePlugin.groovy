@@ -17,10 +17,23 @@ class CommonDeployablePlugin implements Plugin<Project> {
         explicitApi()
       }
 
-      task("deploy", dependsOn: tasks.publish)
-      task("install", dependsOn: tasks.publishToMavenLocal)
+      dokka {
+        dokkaSourceSets.configureEach {
+          externalDocumentationLinks.register("coroutines") {
+            url.set(new URI("https://kotlinlang.org/api/kotlinx.coroutines/"))
+          }
+        }
+      }
 
-      task("javadocJar", type: Jar, dependsOn: "dokkaGeneratePublicationHtml") {
+      tasks.register("deploy") {
+        dependsOn(tasks.named("publish"))
+      }
+      tasks.register("install") {
+        dependsOn(tasks.named("publishToMavenLocal"))
+      }
+
+      tasks.register("javadocJar", Jar) {
+        dependsOn("dokkaGeneratePublicationHtml")
         archiveClassifier.set('javadoc')
         from tasks.named("dokkaGeneratePublicationHtml")
       }

@@ -17,16 +17,14 @@ class ConfigMultiDeployablePlugin implements Plugin<Project> {
 
       // mitigate gradle warnings by ensuring all pub tasks depend on all sign tasks
       def signTasks = tasks.withType(Sign)
-      tasks.withType(AbstractPublishToMaven).forEach { pubTask ->
-        signTasks.forEach {
-          pubTask.dependsOn(it)
-        }
+      tasks.withType(AbstractPublishToMaven).configureEach { pubTask ->
+        pubTask.dependsOn(signTasks)
       }
 
       publishing {
-        publications.withType(MavenPublication) {
-          Config.Maven.applyPomConfig(target, pom)
-          artifact javadocJar
+        publications.withType(MavenPublication).configureEach { pub ->
+          Config.Maven.applyPomConfig(target, pub.pom)
+          pub.artifact tasks.named("javadocJar")
         }
       }
     }
