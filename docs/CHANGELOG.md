@@ -1,6 +1,6 @@
 # ChangeLog
 
-## v1.1.6 - Unreleased
+## v1.1.6 - Released 06/20/2026
 
 - Modernized Gradle configuration: replaced deprecated function calls and patterns with modern equivalents (Task Configuration Avoidance, Kotlin 2.0 `compilerOptions` DSL, and `layout.buildDirectory`).
 
