@@ -1,20 +1,20 @@
 # ChangeLog
 
-## v1.1.6 - Unreleased
+## v1.1.6 - Released 06/20/2026
 
 - Modernized Gradle configuration: replaced deprecated function calls and patterns with modern equivalents (Task Configuration Avoidance, Kotlin 2.0 `compilerOptions` DSL, and `layout.buildDirectory`).
 
-## v1.1.5 - Released 06/18/2026
+## v1.1.5 - Released 06/19/2026
 
 - Attempting to fix site deployment issue.
 
-## v1.1.4 - Unreleased
+## v1.1.4 - Released 06/19/2026
 
 - CI: Fix snapshot artifact detection and upload in `publish-artifacts` workflow.
 
-## v1.1.3 - Unreleased
+## v1.1.3 - Released 06/18/2026
 
-## v1.1.2 - Unreleased
+## v1.1.2 - Released 06/16/2026
 
 - Fix release publication workflow to include missing linux-x64 and windows-x64 artifacts.
 
