@@ -2,6 +2,8 @@
 
 ## v1.1.7 - Unreleased
 
+- Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
+
 ## v1.1.6 - Released 06/20/2026
 
 - Modernized Gradle configuration: replaced deprecated function calls and patterns with modern equivalents (Task Configuration Avoidance, Kotlin 2.0 `compilerOptions` DSL, and `layout.buildDirectory`).
