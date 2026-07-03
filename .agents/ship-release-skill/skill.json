@@ -9,8 +9,8 @@
   "tags": ["release", "git", "github", "gh-cli"],
   "required_actions": [
     "Pull latest changes from origin to ensure local branch is up-to-date",
-    "Verify version in build.gradle.kts does not end with -SNAPSHOT (abort if it does)",
-    "Parse version from build.gradle.kts on the release branch",
+    "Verify version in self.versions.toml does not end with -SNAPSHOT (abort if it does)",
+    "Parse version from self.versions.toml on the release branch",
     "Extract release notes from docs/CHANGELOG.md",
     "Publish GitHub release using gh CLI pointing to the tip of the release branch"
   ]

@@ -19,14 +19,14 @@ Create two separate Pull Requests to update versions.
 - **Target Branch:** `main`
 - **PR Title:** `[VERSION] Snapshot v<NEXT_VERSION>-SNAPSHOT`
 - **Changes:**
-    - Update `version` in `build.gradle.kts`.
+    - Update `version` in `self.versions.toml`.
     - **(VITAL)** Update `docs/CHANGELOG.md` to include a new "Unreleased" section for the next version, AND update the version being released with its release date.
 
 #### PR 2: Release Version on Release Branch
 - **Target Branch:** `release/v<VERSION>`
 - **PR Title:** `[VERSION] Release v<VERSION>`
 - **Changes:**
-    - Update `version` in `build.gradle.kts` (remove `-SNAPSHOT` if present).
+    - Update `version` in `self.versions.toml` (remove `-SNAPSHOT` if present).
     - **(VITAL)** Update `docs/CHANGELOG.md` with the release date and the final version. Ensure all changes since the last release are documented.
 
 ### 4. Create Pull Requests

@@ -6,9 +6,10 @@ plugins {
   id("config-site")
 }
 
+val selfVersion = self.versions.name.get()
 allprojects {
   group = "com.episode6.redux"
-  version = "1.1.7-SNAPSHOT"
+  version = selfVersion
 }
 description = "Yet another kotlin implementation of Redux, backed by StateFlows and Coroutines"
 

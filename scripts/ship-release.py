@@ -22,18 +22,18 @@ def get_current_branch():
         sys.exit(1)
 
 def get_version():
-    gradle_file = "build.gradle.kts"
-    if not os.path.exists(gradle_file):
-        print(f"Error: {gradle_file} not found in the current directory.", file=sys.stderr)
+    version_file = "self.versions.toml"
+    if not os.path.exists(version_file):
+        print(f"Error: {version_file} not found in the current directory.", file=sys.stderr)
         sys.exit(1)
         
-    with open(gradle_file, "r") as f:
+    with open(version_file, "r") as f:
         content = f.read()
         
-    # Search for version = "..."
-    match = re.search(r'version\s*=\s*"([^"]+)"', content)
+    # Search for name = "..." (source of truth for the project version)
+    match = re.search(r'name\s*=\s*"([^"]+)"', content)
     if not match:
-        print("Error: Could not find version pattern in build.gradle.kts", file=sys.stderr)
+        print("Error: Could not find version pattern in self.versions.toml", file=sys.stderr)
         sys.exit(1)
         
     version = match.group(1)
