@@ -11,10 +11,14 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Collects values from this [StoreFlow] and represents its latest value via [State].
+ *
+ * The returned [State] is seeded with the store's current [StoreFlow.state], so the first
+ * composition reflects the store's real state even if the store was created (and mutated)
+ * long before this composable entered the composition.
  */
 @Composable public fun <T> StoreFlow<T>.collectAsState(
   context: CoroutineContext = EmptyCoroutineContext
-): State<T> = collectAsState(initial = initialState, context = context)
+): State<T> = collectAsState(initial = state, context = context)
 
 /**
  * Map this [StoreFlow] before collecting values from it.
