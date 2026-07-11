@@ -15,5 +15,10 @@ kotlin {
         api(project(":store-flow"))
       }
     }
+    findByName("jvmTest")?.apply {
+      dependencies {
+        implementation(project(":test-support:internal"))
+      }
+    }
   }
 }
