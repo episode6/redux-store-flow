@@ -1,6 +1,8 @@
 # ChangeLog
 
-## v1.1.7 - Unreleased
+## v1.1.8 - Unreleased
+
+## v1.1.7 - Released 07/11/2026
 
 - Fix composable `StoreFlow.collectAsState` rendering its first frame from stale state: it now seeds compose with the store's current `state` instead of the construction-time `initialState`
 - Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
