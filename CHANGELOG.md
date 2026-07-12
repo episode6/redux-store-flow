@@ -1,5 +1,9 @@
 # ChangeLog
 
+## v1.1.8 - Unreleased
+
+- Remove legacy Jenkinsfile (CI runs entirely on GitHub Actions)
+
 ## v1.1.7 - Released 07/11/2026
 
 - Fix composable `StoreFlow.collectAsState` rendering its first frame from stale state: it now seeds compose with the store's current `state` instead of the construction-time `initialState`
