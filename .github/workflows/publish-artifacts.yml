@@ -179,6 +179,7 @@ jobs:
       - name: Prepare Site Docs
         run: ./gradlew configSite
       - name: Deploy root docs to website
+        if: github.ref_type == 'tag'
         uses: JamesIves/github-pages-deploy-action@132898c54c57c7cc6b80eb3a89968de8fc283505
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
