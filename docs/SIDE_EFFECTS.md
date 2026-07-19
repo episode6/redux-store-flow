@@ -22,6 +22,27 @@ interface SideEffectContext<State : Any?> {
 }
 ```
 
+### Action delivery contract
+
+The `SideEffectMiddleware` guarantees the following...
+
+- Each SideEffect's `act()` is invoked synchronously while the StoreFlow is being set up, before the
+  store processes its first action. `act()` should build and return a cold flow without performing
+  any work itself; only the collection of the returned flow happens asynchronously.
+- Each access of `actions` is backed by its own unlimited buffer, registered at access-time. Actions
+  are delivered to each buffer in dispatch order and consumed in FIFO order. Access `actions` while
+  building your flow chain (the normal case) and the buffer is guaranteed to receive every action
+  dispatched to the store.
+- A SideEffect that suspends while processing an action only delays its own queue of actions; other
+  side-effects are unaffected.
+- A SideEffect that never reads `actions` (e.g. one that only observes an external flow) simply opts
+  out of receiving actions; this has no impact on any other side-effect.
+- Actions are always reduced (and the resulting state published) *before* being relayed to
+  side-effects, and the store's reducer is never blocked by a slow side-effect.
+- No delivery order is guaranteed *across* different side-effects; each consumes its own queue at its
+  own pace. Side-effects should never depend on when another side-effect observes an action (if they
+  do, they're probably observing the wrong actions).
+
 In our traffic light example, we can add a few side-effects to turn it into a state-machine that runs indefinitely...
 
 ```kotlin
