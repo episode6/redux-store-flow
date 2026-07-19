@@ -134,22 +134,14 @@ jobs:
             echo "Refusing to publish a non-snapshot version from a pull request"
             exit 1
           fi
-          # If any file path contains -SNAPSHOT treat as a snapshot and upload files individually
+          # If any file path contains -SNAPSHOT treat as a snapshot and upload via the
+          # timestamped unique-snapshot protocol. Plain PUTs of non-unique snapshot
+          # filenames only register on a version's first publish — central keeps serving
+          # the first build forever after that (see scripts/upload-snapshots.py).
           if find bundle -type f | grep -q -- '-SNAPSHOT'; then
-            echo "Snapshot artifacts detected — uploading files individually to maven-snapshots"
-            cd bundle
-            AUTH_BASIC=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
-            # Exclude signature and checksum files from snapshot uploads
-            find . -type f \( ! -name "*.asc" -a ! -name "*.md5" -a ! -name "*.sha1" -a ! -name "*.sha256" -a ! -name "*.sha512" \) -print | while read -r file; do
-              rel="${file#./}"
-              url="https://central.sonatype.com/repository/maven-snapshots/${rel}"
-              echo "Uploading $rel"
-              # Use HTTP PUT with Basic auth and binary data to mimic Maven Wagon behavior
-              curl --silent --show-error --fail -X PUT \
-                -H "Authorization: Basic ${AUTH_BASIC}" \
-                -H "Content-Type: application/octet-stream" \
-                --data-binary @"$file" "$url" || { echo "Failed uploading $rel"; exit 1; }
-            done
+            echo "Snapshot artifacts detected — uploading timestamped snapshot builds to maven-snapshots"
+            python3 scripts/upload-snapshots.py --bundle bundle \
+              --repo-url https://central.sonatype.com/repository/maven-snapshots
           else
             mv sonatype-bundle.zip ${{ github.event.repository.name }}.zip
             SONATYPE_TOKEN=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
