@@ -1,7 +1,12 @@
 # ChangeLog
 
-## v1.1.8 - Unreleased
+## v1.2.0 - Unreleased
 
+- Reworked `SideEffectMiddleware`'s action relay to be safe by default ([issue 116](https://github.com/episode6/redux-store-flow/issues/116), problem P1): each side-effect now gets its own unlimited action buffer instead of sharing a single zero-buffer relay gated on every side-effect subscribing.
+  - A side-effect that never reads `actions` (e.g. one that only observes an external flow) no longer starves all other side-effects; it simply opts out of receiving actions. The `merge(actions.filter { false }, ...)` workaround is no longer necessary (but remains harmless).
+  - A side-effect that suspends inline while processing an action no longer stalls action delivery to other side-effects; it only delays its own queue.
+  - `SideEffect.act()` is now invoked synchronously during store setup, before the store processes its first action; only the collection of the returned flow is launched asynchronously.
+  - Actions are delivered to each side-effect in dispatch order and consumed in FIFO order; delivery order *across* different side-effects remains intentionally unspecified.
 - Remove legacy Jenkinsfile (CI runs entirely on GitHub Actions)
 
 ## v1.1.7 - Released 07/11/2026

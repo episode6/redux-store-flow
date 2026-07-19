@@ -15,7 +15,9 @@ import com.episode6.redux.testsupport.runStoreTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlin.test.Test
 
@@ -68,6 +70,106 @@ class SideEffectMiddlewareTest {
       ensureAllEventsConsumed()
     }
   }
+
+  // regression: an observe-only side-effect (one that never touches `actions`) must not
+  // prevent other side-effects from receiving actions
+  @Test fun testObserveOnlyEffect_doesNotStarveOtherEffects() {
+    val externalActions = MutableSharedFlow<Action>()
+    runStoreTest({
+      createStopLightStore(
+        SideEffectMiddleware(
+          SideEffect { externalActions }, // observe-only: ignores actions entirely
+          SideEffect {
+            actions.filterIsInstance<SwitchToGreen>().transform { emitLights(green = true) }
+          },
+        )
+      )
+    }) { store ->
+      store.dispatch(SwitchToGreen)
+
+      assertThat(store.state).hasLights(green = true)
+    }
+  }
+
+  // regression: an observe-only side-effect's output is still dispatched back into the store
+  @Test fun testObserveOnlyEffect_outputIsDispatched() {
+    val externalActions = MutableSharedFlow<Action>()
+    runStoreTest({
+      createStopLightStore(
+        SideEffectMiddleware(
+          SideEffect { externalActions },
+        )
+      )
+    }) { store ->
+      externalActions.emit(SetGreenLightOn(true))
+
+      assertThat(store.state).hasLights(green = true, red = true)
+    }
+  }
+
+  // regression: a side-effect that suspends inline in its collect path must not
+  // block delivery of subsequent actions to other side-effects
+  @Test fun testSuspendingEffect_doesNotStallOtherEffects() = runStoreTest({
+    createStopLightStore(
+      SideEffectMiddleware(
+        SideEffect {
+          actions.filterIsInstance<SwitchToYellow>().transform {
+            timing.await(SLOW_EFFECT_DELAY) // suspends inline while processing
+            emitLights(yellow = true)
+          }
+        },
+        SideEffect {
+          actions.filterIsInstance<SwitchToGreen>().transform { emitLights(green = true) }
+        },
+      )
+    )
+  }) { store ->
+    store.dispatch(SwitchToYellow) // slow effect is now suspended mid-processing
+    store.dispatch(SwitchToGreen) // fast effect should receive this immediately
+
+    assertThat(store.state).hasLights(green = true)
+
+    timing.advanceBy(SLOW_EFFECT_DELAY)
+    assertThat(store.state).hasLights(yellow = true)
+  }
+
+  // regression: actions dispatched while a side-effect is busy are buffered and
+  // delivered to it in dispatch order once it resumes
+  @Test fun testSuspendingEffect_processesItsOwnQueueInOrder() = runStoreTest({
+    createStopLightStore(
+      SideEffectMiddleware(
+        SideEffect {
+          actions.transform { action ->
+            when (action) {
+              SwitchToGreen -> { timing.await(SLOW_EFFECT_DELAY); emitLights(green = true) }
+              SwitchToYellow -> { timing.await(SLOW_EFFECT_DELAY); emitLights(yellow = true) }
+              SwitchToRed -> { timing.await(SLOW_EFFECT_DELAY); emitLights(red = true) }
+              else -> Unit
+            }
+          }
+        },
+      )
+    )
+  }) { store ->
+    store.test {
+      assertThat(awaitItem()).hasDefaultLights()
+
+      store.dispatch(SwitchToGreen)
+      store.dispatch(SwitchToYellow)
+      store.dispatch(SwitchToRed)
+
+      timing.advanceBy(SLOW_EFFECT_DELAY)
+      assertThat(awaitItem()).hasLights(green = true)
+
+      timing.advanceBy(SLOW_EFFECT_DELAY)
+      assertThat(awaitItem()).hasLights(yellow = true)
+
+      timing.advanceBy(SLOW_EFFECT_DELAY)
+      assertThat(awaitItem()).hasLights(red = true)
+
+      ensureAllEventsConsumed()
+    }
+  }
 }
 
 private object SwitchToGreen : Action
@@ -77,6 +179,7 @@ private object SwitchToRed : Action
 private const val RED_TO_GREEN_DELAY = 75L
 private const val GREEN_TO_YELLOW_DELAY = 60L
 private const val YELLOW_TO_RED_DELAY = 15L
+private const val SLOW_EFFECT_DELAY = 100L
 
 private fun CoroutineScope.stopLightStore(timing: TimingController): StoreFlow<StopLightState> = createStopLightStore(
   SideEffectMiddleware(
