@@ -2,6 +2,8 @@
 
 ## v1.1.8 - Unreleased
 
+- Add a root `project-icon.svg` (the per-project sidebar icon convention used by the
+  Collins session manager) — a redux dispatch loop around a state flow
 - CI: snapshot publishes now use Maven's timestamped unique-snapshot protocol (new
   `scripts/upload-snapshots.py`, ported from tacita — uploads timestamped filenames and
   re-PUTs each module's `maven-metadata.xml` with an incremented buildNumber). The

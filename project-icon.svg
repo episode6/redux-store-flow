@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sidebar icon for the Collins session manager (which shows a project's
+root-level project-icon.svg at 16px). A redux dispatch loop around a flow.
+-->
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- terminal tile -->
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="#262320"/>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="none" stroke="#4a443c" stroke-width="2" opacity="0.6"/>
+
+  <!-- dispatch loop -->
+  <path d="M 34.6 47 A 34 34 0 0 1 93.4 47" fill="none" stroke="#EDE9E1" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 93.4 81 A 34 34 0 0 1 34.6 81" fill="none" stroke="#EDE9E1" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="98.4,55.7 99.5,43.5 87.3,50.5" fill="#EDE9E1"/>
+  <polygon points="29.6,72.3 28.5,84.5 40.7,77.5" fill="#EDE9E1"/>
+
+  <!-- state flow -->
+  <path d="M 46 64 q 6 -11 12 0 t 12 0 t 12 0" fill="none" stroke="#9575CD" stroke-width="7" stroke-linecap="round"/>
+</svg>
