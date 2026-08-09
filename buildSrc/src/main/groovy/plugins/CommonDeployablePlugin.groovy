@@ -10,7 +10,6 @@ class CommonDeployablePlugin implements Plugin<Project> {
       plugins.with {
         apply("org.jetbrains.dokka")
         apply("maven-publish")
-        apply("signing")
       }
 
       kotlin {
@@ -36,15 +35,6 @@ class CommonDeployablePlugin implements Plugin<Project> {
         dependsOn("dokkaGeneratePublicationHtml")
         archiveClassifier.set('javadoc')
         from tasks.named("dokkaGeneratePublicationHtml")
-      }
-
-      signing {
-        def signingKey = findProperty("signingKey")
-        def signingPassword = findProperty("signingPassword")
-        if (signingKey != null && signingPassword != null) {
-          useInMemoryPgpKeys(signingKey, signingPassword)
-        }
-        sign publishing.publications
       }
 
       publishing {
