@@ -41,8 +41,6 @@ jobs:
         shell: bash
         run: ./gradlew check publishToMavenLocal -Pfilter=${{ matrix.filter }}
         env:
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASS }}
           ORG_GRADLE_PROJECT_nexusUsername: ${{ secrets.NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_nexusPassword: ${{ secrets.NEXUS_PASSWORD }}
       - name: Zip Maven Local
