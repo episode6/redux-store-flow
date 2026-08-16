@@ -80,12 +80,18 @@ jobs:
           find bundle -maxdepth 5 | head -n 100
       - name: Sign and Checksum
         env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_MAVEN_KEY: ${{ secrets.GPG_MAVEN_KEY }}
           GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
           set -e
-          # Import GPG key
-          echo "$GPG_KEY" | gpg --batch --import
+          # Import the dedicated signing subkey, and fail loudly if the secret holds
+          # anything else — an unpinned gpg would happily fall back to whatever
+          # signing-capable key it found.
+          echo "$GPG_MAVEN_KEY" | gpg --batch --import
+          gpg --list-secret-keys 3EBBA2410EE1077E > /dev/null 2>&1 || {
+            echo "::error::GPG_MAVEN_KEY does not contain signing subkey 3EBBA2410EE1077E"
+            exit 1
+          }
           
           cd bundle
           # Remove any existing signatures or checksums from shards
@@ -93,7 +99,7 @@ jobs:
 
           # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
           find . -type f ! -name "*.asc" ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
-            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --local-user '3EBBA2410EE1077E!' --detach-sign --armor "$file" || exit 1
           done
 
           # Generate checksums for ALL files (including the .asc files we just created)
