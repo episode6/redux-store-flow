@@ -80,12 +80,18 @@ jobs:
           find bundle -maxdepth 5 | head -n 100
       - name: Sign and Checksum
         env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
+          GPG_MAVEN_KEY: ${{ secrets.GPG_MAVEN_KEY }}
           GPG_PASS: ${{ secrets.GPG_PASS }}
         run: |
           set -e
-          # Import GPG key
-          echo "$GPG_KEY" | gpg --batch --import
+          # Import the dedicated signing subkey, and fail loudly if the secret holds
+          # anything else — an unpinned gpg would happily fall back to whatever
+          # signing-capable key it found.
+          echo "$GPG_MAVEN_KEY" | gpg --batch --import
+          gpg --list-secret-keys 3EBBA2410EE1077E > /dev/null 2>&1 || {
+            echo "::error::GPG_MAVEN_KEY does not contain signing subkey 3EBBA2410EE1077E"
+            exit 1
+          }
           
           cd bundle
           # Remove any existing signatures or checksums from shards
@@ -93,7 +99,7 @@ jobs:
 
           # Sign all artifacts (JARs, POMs, Modules, Klibs, etc.)
           find . -type f ! -name "*.asc" ! -name "*.md5" ! -name "*.sha1" ! -name "*.sha256" ! -name "*.sha512" | while read -r file; do
-            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --detach-sign --armor "$file" || exit 1
+            gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASS" --local-user '3EBBA2410EE1077E!' --digest-algo SHA512 --detach-sign --armor "$file" || exit 1
           done
 
           # Generate checksums for ALL files (including the .asc files we just created)
@@ -143,10 +149,40 @@ jobs:
           else
             mv sonatype-bundle.zip ${{ github.event.repository.name }}.zip
             SONATYPE_TOKEN=$(printf "%s:%s" "$NEXUS_USERNAME" "$NEXUS_PASSWORD" | base64 | tr -d '\n')
-            curl --request POST \
+            # publishingType=AUTOMATIC publishes to Maven Central as soon as validation
+            # passes, with no manual step in the portal. Central is append-only — once a
+            # version publishes it can never be replaced or withdrawn.
+            DEPLOYMENT_ID=$(curl --fail-with-body --silent --show-error --request POST \
               --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
               --form bundle=@${{ github.event.repository.name }}.zip \
-              'https://central.sonatype.com/api/v1/publisher/upload'
+              'https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC')
+            echo "Uploaded deployment ${DEPLOYMENT_ID}"
+
+            # Upload returns as soon as the bundle is accepted; validation and publication
+            # run asynchronously. Poll to completion, so a rejected deployment fails the
+            # release instead of passing silently with nothing on central.
+            PUBLISHED=false
+            for _ in $(seq 1 60); do
+              STATE=$(curl --fail-with-body --silent --show-error --request POST \
+                --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
+                "https://central.sonatype.com/api/v1/publisher/status?id=${DEPLOYMENT_ID}" \
+                | python3 -c 'import json,sys; print(json.load(sys.stdin)["deploymentState"])')
+              echo "  deploymentState=${STATE}"
+              if [ "$STATE" == "PUBLISHED" ]; then PUBLISHED=true; break; fi
+              if [ "$STATE" == "FAILED" ]; then
+                echo "::error::Deployment ${DEPLOYMENT_ID} failed validation"
+                curl --silent --request POST \
+                  --header "Authorization: Bearer ${SONATYPE_TOKEN}" \
+                  "https://central.sonatype.com/api/v1/publisher/status?id=${DEPLOYMENT_ID}"
+                exit 1
+              fi
+              sleep 30
+            done
+            if [ "$PUBLISHED" != true ]; then
+              echo "::error::Deployment ${DEPLOYMENT_ID} never reached PUBLISHED (last state: ${STATE})"
+              exit 1
+            fi
+            echo "Published ${DEPLOYMENT_ID} to Maven Central"
           fi
 
   docs-and-deploy:
